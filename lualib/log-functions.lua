@@ -41,7 +41,7 @@ end
 local function get_event(event, category)
     local data = {
             type = "event",
-            name = event_name(e),
+            name = event_name(event),
             category=category,
         }
     return data
