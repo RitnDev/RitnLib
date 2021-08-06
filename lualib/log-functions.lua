@@ -85,9 +85,14 @@ end
 local function get_ItemStack(ItemStack)
     local data = {
         type = "stack",
-        name = ItemStack.name,
-        count = ItemStack.count
     }
+    if ItemStack ~= nil and ItemStack.valid and ItemStack.valid_for_read then
+        data.name = ItemStack.name
+        data.count = ItemStack.count
+    else
+        data.name = ""
+        data.count = 0
+    end
     return data
 end
 
