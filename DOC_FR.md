@@ -44,7 +44,7 @@ ritnlib = {
     }
 }
 ```
-ritnlib étant pas une variable local il est disponible par votre mod.
+ritnlib n'étant pas une variable local, elle est donc disponible dans votre mod.
 
 Si dans votre mod vous avez besoin de fonction "recipe" il vous sufira de charger celle-ci de cette façon :
 ```lua
