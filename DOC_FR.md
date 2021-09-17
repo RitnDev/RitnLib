@@ -90,7 +90,7 @@ Ensuite, créer un fichier ``modules.lua`` où vous chargerez tous vos modules.
 ```lua
 local modules = {}
 -----------------------
-modules.player = require(ritnmods.gedit.defines.modules.player)
+modules.player = require(player)
 
 -----------------------
 return modules
@@ -101,7 +101,7 @@ Ainsi dans le ``control.lua`` vous aurez que 2 lignes à écrire pour tous vos �
 -- Chargement de l'event listener :
 local event_listener = require(ritnlib.defines.event)
 -- envoie des modules à l'event listener :
-event_listener.add_libraries(require(ritnmods.gedit.defines.modules.core))
+event_listener.add_libraries(require(modules))
 ```
 
 
