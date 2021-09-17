@@ -56,16 +56,16 @@ ritnlib.recipe = require(ritnlib.defines.recipe)
 
 ``ritnlib.recipe`` obtiendra l'intégralité de la librairie de fonction des recettes.
 
-### gvv et event-listener
+## gvv et event-listener
 
-#### gvv
+### gvv
 Le mod [gvv](https://mods.factorio.com/mod/gvv) doit être mis en dépendance et chargé la ligne suivante dans ``control.lua``
 ```lua
 -- Activation de gvv s'il est présent
 if script.active_mods["gvv"] then require(ritnlib.defines.gvv)() end
 ```
-
-#### event-listener
+---
+### event-listener
 Permet la conception d'un mod par module, ce qui rend plus simple les mise à jour du mod et plus comprehensible la lecture de code.
 Les modules sont un découpage des différents type d'événements dans le ``control.lua``.
 Par exemple, tous les événements pour la partie joueur peut être fait dans ``player.lua``.
