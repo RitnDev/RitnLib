@@ -48,7 +48,7 @@ ritnlib n'étant pas une variable local, elle est donc disponible dans votre mod
 
 Si dans votre mod vous avez besoin de fonction "recipe" il vous sufira de charger celle-ci de cette façon :
 ```lua
-ritnlib.item = require(ritnlib.defines.item)
+ritnlib.recipe = require(ritnlib.defines.recipe)
 ```
 
-``ritnlib.item`` obtiendra l'intégralité de la librairie de fonction des items.
+``ritnlib.recipe`` obtiendra l'intégralité de la librairie de fonction des items.
