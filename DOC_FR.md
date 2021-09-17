@@ -51,4 +51,4 @@ Si dans votre mod vous avez besoin de fonction "recipe" il vous sufira de charge
 ritnlib.recipe = require(ritnlib.defines.recipe)
 ```
 
-``ritnlib.recipe`` obtiendra l'intégralité de la librairie de fonction des items.
+``ritnlib.recipe`` obtiendra l'intégralité de la librairie de fonction des recettes.
