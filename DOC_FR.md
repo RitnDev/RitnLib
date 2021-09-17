@@ -55,3 +55,58 @@ ritnlib.recipe = require(ritnlib.defines.recipe)
 ```
 
 ``ritnlib.recipe`` obtiendra l'intégralité de la librairie de fonction des recettes.
+
+### gvv et event-listener
+
+#### gvv
+Le mod [gvv](https://mods.factorio.com/mod/gvv) doit être mis en dépendance et chargé la ligne suivante dans ``control.lua``
+```lua
+-- Activation de gvv s'il est présent
+if script.active_mods["gvv"] then require(ritnlib.defines.gvv)() end
+```
+
+#### event-listener
+Permet la conception d'un mod par module, ce qui rend plus simple les mise à jour du mod et plus comprehensible la lecture de code.
+Les modules sont un découpage des différents type d'événements dans le ``control.lua``.
+Par exemple, tous les événements pour la partie joueur peut être fait dans ``player.lua``.
+
+```lua
+-- Module player
+
+local function on_player_joined_game(e)
+    local LuaPlayer = game.players[e.player_index]
+    LuaPlayer.print("Hello !")
+end
+
+
+-- Chargement des events
+local module = {events = {}}
+module.events[defines.events.on_player_joined_game] = on_player_joined_game
+-------------------------------------------------------------------------
+return module
+```
+
+Ensuite, créer un fichier ``modules.lua`` où vous chargerez tous vos modules.
+```lua
+local modules = {}
+-----------------------
+modules.player = require(ritnmods.gedit.defines.modules.player)
+
+-----------------------
+return modules
+```
+
+Ainsi dans le ``control.lua`` vous aurez que 2 lignes à écrire pour tous vos événements :
+```lua
+-- Chargement de l'event listener :
+local event_listener = require(ritnlib.defines.event)
+-- envoie des modules à l'event listener :
+event_listener.add_libraries(require(ritnmods.gedit.defines.modules.core))
+```
+
+
+
+
+
+
+
