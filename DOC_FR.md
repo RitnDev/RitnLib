@@ -20,7 +20,7 @@ Cette librairie de fonctions est classé pas type de fonction, en voici la liste
 
 RitnLib charge automatiquement un fichier de définiton quand le mod est utilisé. Il charge ce fichier dans le ``data.lua`` et le ``control.lua`` ce qui rend ces définitions disponibles dans les 2 parties moddable du jeu.
 
-voici comment le fichier de définition est chargé :
+Voici comment le fichier de définition est chargé :
 
 ```lua
 ritnlib = {
