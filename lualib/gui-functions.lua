@@ -77,12 +77,15 @@ local function createTextField(source, name, text)
         type = "textfield",
         name = name,
     }
+    if text ~= nil then 
+        textfield.text = text 
+    end
     return source.add(textfield)
 end
 
 -- Create Sprite-Button
 local function createSpriteButton(source, name, sprite, style, tooltip)
-    local sprite = {
+    local sprite_button = {
         type = "sprite-button",
         name = name,
         sprite = sprite,
@@ -90,10 +93,10 @@ local function createSpriteButton(source, name, sprite, style, tooltip)
     }
 
     if tooltip ~= nil then 
-        sprite.tooltip = tooltip
+        sprite_button.tooltip = tooltip
     end
 
-    return source.add(sprite)
+    return source.add(sprite_button)
 end
 
 -- Create Button
@@ -146,6 +149,89 @@ local function createEmptyWidget(source)
     return source.add(empty)
 end
 
+
+-- Create Sprite (image)
+local function createSprite(source, name, path, resize)
+    local rts = true
+    if resize ~= nil then rts = resize end
+    
+    local sprite = {
+        type = "sprite",
+        name = name,
+        sprite = path,
+        resize_to_sprite = rts
+    }
+
+    return source.add(sprite)
+end
+
+
+-- Create Drop-Down
+local function createDropDown(source, name)
+    local dropdown = {
+        type = "drop-down",
+        name = name,
+    }
+
+    return source.add(dropdown)
+end
+
+--Create Line
+local function createLineH(source, name, visible)
+    local vis = true
+    if visible ~= nil then vis = visible end
+
+    local line = {
+        type = "line",
+        name = name,
+        direction = "horizontal",
+        visible = vis,
+    }
+
+    return source.add(line)
+end
+
+local function createLineV(source, name, visible)
+    local vis = true
+    if visible ~= nil then vis = visible end
+
+    local line = {
+        type = "line",
+        name = name,
+        direction = "vertical",
+        visible = vis,
+    }
+
+    return source.add(line)
+end
+
+
+local function createTable(source, name, nbColumn) 
+    local table = {
+        type = "table",
+        name = name,
+        column_count = nbColumn
+    }
+
+    return source.add(table)
+end
+
+local function createCheckbox(source, name, state)
+    local check = true
+    if state ~= nil then check = state end 
+
+    local checkbox = {
+        type = "checkbox",
+        name = name,
+        state = check
+    }
+
+    return source.add(checkbox)
+end
+
+
+
+
 ----------------------------
 -- Chargement des fonctions
 flib.createFrame = createFrame
@@ -159,6 +245,13 @@ flib.createButton = createButton
 flib.createScrollPane = createScrollPane
 flib.createList = createList
 flib.createEmptyWidget = createEmptyWidget
+flib.createSprite = createSprite
+flib.createDropDown = createDropDown
+flib.createLineH = createLineH
+flib.createLineV = createLineV
+flib.createTable = createTable
+flib.createCheckbox = createCheckbox
+
 
 -- Retourne la liste des fonctions
 return flib
