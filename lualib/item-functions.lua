@@ -183,6 +183,20 @@ local function set(list, item_in)
   end
 end
 
+local function disable(item_name, entity_type)
+  local entity_name = data.raw.item[item_name].place_result
+  data.raw.item[item_name] = nil
+  if entity_type ~= nil then 
+    if entity_name ~= nil then 
+      if data.raw[entity_type] then 
+        if data.raw[entity_type][entity_name] then 
+          data.raw[entity_type][entity_name] = nil
+        end
+      end
+    end
+  end
+end
+
 
 ---------------------------------------------------
 -- Chargement des fonctions
@@ -198,7 +212,8 @@ ritnlib.item = {
   add = add,
   add_new = add_new,
   remove = remove,
-  set = set
+  set = set,
+  disable = disable
 }
 
 return ritnlib.item

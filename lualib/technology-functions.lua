@@ -1,15 +1,8 @@
 -- INIT
 local ritnlib = {}
 --------------------------
-
---DISABLE TECHNOLOGY
-local function disable(technology_name)
-	if data.raw.technology[technology_name] then
-		data.raw.technology[technology_name]["enabled"] = false
-		data.raw.technology[technology_name]["hidden"] = true
-	end
-end
-
+local flib = {recipe = require("recipe-functions")}
+--------------------------
 
 --ADD RECIPE UNLOCK
 local function add_recipe_unlock(technology, recipe)
@@ -27,11 +20,16 @@ end
   
 
 --REMOVE RECIPE UNLOCK
-local function remove_recipe_unlock(technology, recipe)
+local function remove_recipe_unlock(technology, recipe, complete)
+	local disable_recipe = false
+	if complete ~= nil then disable_recipe = complete end
 	if data.raw.technology[technology] and data.raw.technology[technology].effects then
 	  for i, effect in pairs(data.raw.technology[technology].effects) do
 		if effect.type == "unlock-recipe" and effect.recipe == recipe then
-		  table.remove(data.raw.technology[technology].effects,i)
+		  	table.remove(data.raw.technology[technology].effects,i)
+			if disable_recipe then 
+				flib.recipe.disable(recipe)
+			end
 		end
 	  end
 	end
@@ -39,7 +37,9 @@ end
 
 
 --ADD SCIENCE PACK
-local function add_science_pack(technology, pack, amount)
+local function add_science_pack(technology, pack, count)
+	local amount = 1
+	if count ~= nil then amount = count end
 	if data.raw.technology[technology] and data.raw.tool[pack] then
 	  local addit = true
 	  for i, ingredient in pairs(data.raw.technology[technology].unit.ingredients) do
@@ -176,6 +176,23 @@ local function add_pack_lab(pack, index)
 	end
 end
 
+--DISABLE TECHNOLOGY
+local function disable(technology_name, delete_prerequisite)
+	if data.raw.technology[technology_name] then
+		data.raw.technology[technology_name]["enabled"] = false
+		data.raw.technology[technology_name]["hidden"] = true
+	end
+	
+	local prereq = false
+	if delete_prerequisite ~= nil then prereq = delete_prerequisite end
+	if prereq then 
+		for _,tech in pairs(data.raw.technology) do 
+			if tech.prerequisites ~= nil then 
+				remove_prerequisite(tech.name, technology_name)
+			end
+		end
+	end
+end
 
 ---------------------------------------------------
 -- Chargement des fonctions

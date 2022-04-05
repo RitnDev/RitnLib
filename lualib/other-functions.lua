@@ -8,6 +8,17 @@ local function ritnPrint(txt)
   end
 end
 
+
+local function ritnLog(txt) 
+  local statut, errorMsg = pcall(function() 
+      print(txt)
+  end)
+  if statut == (false or nil) then 
+      print(">> error ritnlog : " .. errorMsg)
+  end
+end
+
+
 --La chaîne de caractère 'str' commence par 'start'
 local function str_start(str, start)
     return str:sub(1, #start) == start
@@ -138,14 +149,14 @@ local function assembler1pipepictures(path)
     {
       north =
       {
-        filename = path.."/assembling-machine-1-pipe-N.png",
+        filename = path .."/assembling-machine-1-pipe-N.png",
         priority = "extra-high",
         width = 35,
         height = 18,
         shift = util.by_pixel(2.5, 14),
         hr_version =
         {
-          filename = path.."/hr-assembling-machine-1-pipe-N.png",
+          filename = path .."/hr-assembling-machine-1-pipe-N.png",
           priority = "extra-high",
           width = 71,
           height = 38,
@@ -155,14 +166,14 @@ local function assembler1pipepictures(path)
       },
       east =
       {
-        filename = path.."/assembling-machine-1-pipe-E.png",
+        filename = path .."/assembling-machine-1-pipe-E.png",
         priority = "extra-high",
         width = 20,
         height = 38,
         shift = util.by_pixel(-25, 1),
         hr_version =
         {
-          filename = path.."/hr-assembling-machine-1-pipe-E.png",
+          filename = path .."/hr-assembling-machine-1-pipe-E.png",
           priority = "extra-high",
           width = 42,
           height = 76,
@@ -172,7 +183,7 @@ local function assembler1pipepictures(path)
       },
       south =
       {
-        filename = path.."/assembling-machine-1-pipe-S.png",
+        filename = path .."/assembling-machine-1-pipe-S.png",
         priority = "extra-high",
         width = 44,
         height = 31,
@@ -189,14 +200,14 @@ local function assembler1pipepictures(path)
       },
       west =
       {
-        filename = path.."/assembling-machine-1-pipe-W.png",
+        filename = path .."/assembling-machine-1-pipe-W.png",
         priority = "extra-high",
         width = 19,
         height = 37,
         shift = util.by_pixel(25.5, 1.5),
         hr_version =
         {
-          filename = path.."/hr-assembling-machine-1-pipe-W.png",
+          filename = path .."/hr-assembling-machine-1-pipe-W.png",
           priority = "extra-high",
           width = 39,
           height = 73,
@@ -215,13 +226,13 @@ local function pipecoverspictures(path)
         layers =
         {
           {
-            filename = path.."/pipe-cover-north.png",
+            filename = path .."/pipe-cover-north.png",
             priority = "extra-high",
             width = 64,
             height = 64,
             hr_version =
             {
-              filename = path.."/hr-pipe-cover-north.png",
+              filename = path .."/hr-pipe-cover-north.png",
               priority = "extra-high",
               width = 128,
               height = 128,
@@ -229,14 +240,14 @@ local function pipecoverspictures(path)
             }
           },
           {
-            filename = path.."/pipe-cover-north-shadow.png",
+            filename = path .."/pipe-cover-north-shadow.png",
             priority = "extra-high",
             width = 64,
             height = 64,
             draw_as_shadow = true,
             hr_version =
             {
-              filename = path.."/hr-pipe-cover-north-shadow.png", -- "__base__/graphics/entity/pipe-covers/hr-pipe-cover-north-shadow.png"
+              filename = path .."/hr-pipe-cover-north-shadow.png", -- "__base__/graphics/entity/pipe-covers/hr-pipe-cover-north-shadow.png"
               priority = "extra-high",
               width = 128,
               height = 128,
@@ -251,13 +262,13 @@ local function pipecoverspictures(path)
         layers =
         {
           {
-            filename = path.."/pipe-cover-east.png",
+            filename = path .."/pipe-cover-east.png",
             priority = "extra-high",
             width = 64,
             height = 64,
             hr_version =
             {
-              filename = path.."/hr-pipe-cover-east.png",
+              filename = path .."/hr-pipe-cover-east.png",
               priority = "extra-high",
               width = 128,
               height = 128,
@@ -265,14 +276,14 @@ local function pipecoverspictures(path)
             }
           },
           {
-            filename = path.."/pipe-cover-east-shadow.png",
+            filename = path .."/pipe-cover-east-shadow.png",
             priority = "extra-high",
             width = 64,
             height = 64,
             draw_as_shadow = true,
             hr_version =
             {
-              filename = path.."/hr-pipe-cover-east-shadow.png",
+              filename = path .."/hr-pipe-cover-east-shadow.png",
               priority = "extra-high",
               width = 128,
               height = 128,
@@ -287,13 +298,13 @@ local function pipecoverspictures(path)
         layers =
         {
           {
-            filename = path.."/pipe-cover-south.png",
+            filename = path .."/pipe-cover-south.png",
             priority = "extra-high",
             width = 64,
             height = 64,
             hr_version =
             {
-              filename = path.."/hr-pipe-cover-south.png",
+              filename = path .."/hr-pipe-cover-south.png",
               priority = "extra-high",
               width = 128,
               height = 128,
@@ -301,14 +312,14 @@ local function pipecoverspictures(path)
             }
           },
           {
-            filename = path.."/pipe-cover-south-shadow.png",
+            filename = path .."/pipe-cover-south-shadow.png",
             priority = "extra-high",
             width = 64,
             height = 64,
             draw_as_shadow = true,
             hr_version =
             {
-              filename = path.."/hr-pipe-cover-south-shadow.png",
+              filename = path .."/hr-pipe-cover-south-shadow.png",
               priority = "extra-high",
               width = 128,
               height = 128,
@@ -323,13 +334,13 @@ local function pipecoverspictures(path)
         layers =
         {
           {
-            filename = path.."/pipe-cover-west.png",
+            filename = path .."/pipe-cover-west.png",
             priority = "extra-high",
             width = 64,
             height = 64,
             hr_version =
             {
-              filename = path.."/hr-pipe-cover-west.png",
+              filename = path .."/hr-pipe-cover-west.png",
               priority = "extra-high",
               width = 128,
               height = 128,
@@ -337,14 +348,14 @@ local function pipecoverspictures(path)
             }
           },
           {
-            filename = path.."/pipe-cover-west-shadow.png",
+            filename = path .."/pipe-cover-west-shadow.png",
             priority = "extra-high",
             width = 64,
             height = 64,
             draw_as_shadow = true,
             hr_version =
             {
-              filename = path.."/hr-pipe-cover-west-shadow.png",
+              filename = path .."/hr-pipe-cover-west-shadow.png",
               priority = "extra-high",
               width = 128,
               height = 128,
@@ -357,6 +368,34 @@ local function pipecoverspictures(path)
     }
   end
 
+  
+local function addFluidBoxes(entity)
+  if entity == nil then return end
+
+  return {
+    {
+      production_type = "input",
+      pipe_picture = assembler1pipepictures(entity .. "pipe_connections"),
+      pipe_covers = pipecoverspictures(entity .. "pipe-covers"),
+      base_area = 10,
+      base_level = -1,
+      pipe_connections = {{type="input", position = {0,-2}}},
+      secondary_draw_orders = { north = -1 }
+    },
+    {
+      production_type = "output",
+      pipe_picture = assembler1pipepictures(entity .. "pipe_connections"),
+      pipe_covers = pipecoverspictures(entity .. "pipe-covers"),
+      base_area = 10,
+      base_level = 1,
+      pipe_connections = {{type="output", position={0, 2}}},
+      secondary_draw_orders = {north = -1}
+    },
+      off_when_no_fluid_recipe = true
+  }
+end
+
+
 
 
 ---------------------------------------------------
@@ -365,6 +404,7 @@ local ritnlib = {}
 ritnlib = {
   tableBusy = tableBusy,
   ritnPrint = ritnPrint,
+  ritnLog = ritnLog,
   str_start = str_start,
   tablelength = tablelength,
   split = split,
@@ -379,6 +419,7 @@ ritnlib = {
   clearOutput = clearOutput,
   writeToOutput = writeToOutput,
   writeToProductionStats = writeToProductionStats,
+  addFluidBoxes = addFluidBoxes
 }
 
 return ritnlib

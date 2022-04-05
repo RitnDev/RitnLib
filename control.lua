@@ -1,3 +1,2 @@
--- Definition de RitnLib
--- Accessibilité des functions depuis un autres mods
-require("defines")
+-- Activation de gvv s'il est présent
+if script.active_mods["gvv"] then require("__gvv__.gvv")() end

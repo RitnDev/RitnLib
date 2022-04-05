@@ -1,16 +1,24 @@
 -- INIT
 local ritnlib = {}
 --------------------------
-ritnlib.item = require("item-functions")
+local flib = {item = require("item-functions")}
 --------------------------
 
 --DISABLE RECIPE
-local function disable(recipe_name)
-	if data.raw.recipe[recipe_name] then
+local function disable(recipe_name, type)
+	local type_item = "item"
+	if type ~= nil then type_item = type end
+
+	if data.raw.recipe[recipe_name] then 
 		data.raw.recipe[recipe_name]["enabled"] = false
 		data.raw.recipe[recipe_name]["hidden"] = true
+		
+		if data.raw[type_item][recipe_name] then 
+			data.raw[type_item][recipe_name].flags = {"hidden"}
+		end
 	end
 end
+
 
 --SET TIME, ENERGY REQUIERED
 local function set_energy_required(recipe_name, time)
@@ -33,13 +41,13 @@ local function remove_ingredient(recipe, item)
 	if data.raw.recipe[recipe] then
   
 	  if data.raw.recipe[recipe].expensive then
-		ritnlib.item.remove(data.raw.recipe[recipe].expensive.ingredients, item)
+		flib.item.remove(data.raw.recipe[recipe].expensive.ingredients, item)
 	  end
 	  if data.raw.recipe[recipe].normal then
-		ritnlib.item.remove(data.raw.recipe[recipe].normal.ingredients, item)
+		flib.item.remove(data.raw.recipe[recipe].normal.ingredients, item)
 	  end
 	  if data.raw.recipe[recipe].ingredients then
-		ritnlib.item.remove(data.raw.recipe[recipe].ingredients, item)
+		flib.item.remove(data.raw.recipe[recipe].ingredients, item)
 	  end
 	  
 	end
@@ -48,15 +56,15 @@ local function remove_ingredient(recipe, item)
   
 --ADD NEW INGREDIENT
 local function add_new_ingredient(recipe, item)
-	if data.raw.recipe[recipe] and ritnlib.item.get.type(ritnlib.item.basic_item(item).name) then
+	if data.raw.recipe[recipe] and flib.item.get.type(flib.item.basic_item(item).name) then
 	  if data.raw.recipe[recipe].expensive then
-		ritnlib.item.add_new(data.raw.recipe[recipe].expensive.ingredients, ritnlib.item.basic_item(item))
+		flib.item.add_new(data.raw.recipe[recipe].expensive.ingredients, flib.item.basic_item(item))
 	  end
 	  if data.raw.recipe[recipe].normal then
-		ritnlib.item.add_new(data.raw.recipe[recipe].normal.ingredients, ritnlib.item.basic_item(item))
+		flib.item.add_new(data.raw.recipe[recipe].normal.ingredients, flib.item.basic_item(item))
 	  end
 	  if data.raw.recipe[recipe].ingredients then
-		ritnlib.item.add_new(data.raw.recipe[recipe].ingredients, ritnlib.item.basic_item(item))
+		flib.item.add_new(data.raw.recipe[recipe].ingredients, flib.item.basic_item(item))
 	  end
 	end
 end
@@ -65,15 +73,15 @@ end
 
   --ADD INGREDIENT
 local function add_ingredient(recipe, item)
-	if data.raw.recipe[recipe] and ritnlib.item.get.type(ritnlib.item.basic_item(item).name) then
+	if data.raw.recipe[recipe] and flib.item.get.type(flib.item.basic_item(item).name) then
 	  if data.raw.recipe[recipe].expensive then
-		ritnlib.item.add(data.raw.recipe[recipe].expensive.ingredients, ritnlib.item.basic_item(item))
+		flib.item.add(data.raw.recipe[recipe].expensive.ingredients, flib.item.basic_item(item))
 	  end
 	  if data.raw.recipe[recipe].normal then
-		ritnlib.item.add(data.raw.recipe[recipe].normal.ingredients, ritnlib.item.basic_item(item))
+		flib.item.add(data.raw.recipe[recipe].normal.ingredients, flib.item.basic_item(item))
 	  end
 	  if data.raw.recipe[recipe].ingredients then
-		ritnlib.item.add(data.raw.recipe[recipe].ingredients, ritnlib.item.basic_item(item))
+		flib.item.add(data.raw.recipe[recipe].ingredients, flib.item.basic_item(item))
 	  end
 	end
 end
@@ -82,28 +90,123 @@ end
 
  --SET INGREDIENT
 local function set_ingredient(recipe, item)
-	if data.raw.recipe[recipe] and ritnlib.item.get.type(ritnlib.item.basic_item(item).name) then
-  
+	if data.raw.recipe[recipe] and flib.item.get.type(flib.item.basic_item(item).name) then
 	  if data.raw.recipe[recipe].expensive then
-		ritnlib.item.set(data.raw.recipe[recipe].expensive.ingredients, ritnlib.item.basic_item(item))
+		flib.item.set(data.raw.recipe[recipe].expensive.ingredients, flib.item.basic_item(item))
 	  end
 	  if data.raw.recipe[recipe].normal then
-		ritnlib.item.set(data.raw.recipe[recipe].normal.ingredients, ritnlib.item.basic_item(item))
+		flib.item.set(data.raw.recipe[recipe].normal.ingredients, flib.item.basic_item(item))
 	  end
 	  if data.raw.recipe[recipe].ingredients then
-		ritnlib.item.set(data.raw.recipe[recipe].ingredients, ritnlib.item.basic_item(item))
-	  end
-  
-	else
-	  if not data.raw.recipe[recipe] then
-		log("Recipe " .. recipe .. " does not exist.")
-	  end
-	  if not ritnlib.item.get.basicType(ritnlib.item.basic_item(item).name) then
-		log("Ingredient " .. ritnlib.item.basic_item(item).name .. " does not exist.")
+		flib.item.set(data.raw.recipe[recipe].ingredients, flib.item.basic_item(item))
 	  end
 	end
 end
 
+
+-- change subgroup
+local function change_subgroup(item_name, subgroup, order)
+	if data.raw.item[item_name] then 
+		data.raw.item[item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw.item[item_name].order = order
+		end
+	end
+	if data.raw["module"][item_name] then 
+		data.raw["module"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["module"][item_name].order = order
+		end
+	end
+	if data.raw["gun"][item_name] then 
+		data.raw["gun"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["gun"][item_name].order = order
+		end
+	end
+	if data.raw["rail-planner"][item_name] then 
+		data.raw["rail-planner"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["rail-planner"][item_name].order = order
+		end
+	end
+	if data.raw["tool"][item_name] then 
+		data.raw["tool"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["tool"][item_name].order = order
+		end
+	end
+	if data.raw["blueprint"][item_name] then 
+		data.raw["blueprint"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["blueprint"][item_name].order = order
+		end
+	end
+	if data.raw["deconstruction-item"][item_name] then 
+		data.raw["deconstruction-item"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["deconstruction-item"][item_name].order = order
+		end
+	end
+	if data.raw["upgrade-item"][item_name] then 
+		data.raw["upgrade-item"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["upgrade-item"][item_name].order = order
+		end
+	end
+	if data.raw["blueprint-book"][item_name] then 
+		data.raw["blueprint-book"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["blueprint-book"][item_name].order = order
+		end
+	end
+	if data.raw["capsule"][item_name] then 
+		data.raw["capsule"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["capsule"][item_name].order = order
+		end
+	end
+	if data.raw["spidertron-remote"][item_name] then 
+		data.raw["spidertron-remote"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["spidertron-remote"][item_name].order = order
+		end
+	end
+	if data.raw["item-with-entity-data"][item_name] then 
+		data.raw["item-with-entity-data"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["item-with-entity-data"][item_name].order = order
+		end
+	end
+	if data.raw["item-with-label"][item_name] then 
+		data.raw["item-with-label"][item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw["item-with-label"][item_name].order = order
+		end
+	end
+	if data.raw.recipe[item_name] then 
+		data.raw.recipe[item_name].subgroup = subgroup
+		if order ~= nil then 
+			data.raw.recipe[item_name].order = order
+		end
+	end
+end
+
+
+local function change_group(subgroup, group, order)
+    if data.raw["item-subgroup"][subgroup] then 
+        data.raw["item-subgroup"][subgroup].group = group
+    end
+	if order ~= nil then 
+		data.raw["item-subgroup"][subgroup].order = order
+	end
+end
+
+local function change_recipe_category(recipe, category)
+    if data.raw.recipe[recipe] then 
+        data.raw.recipe[recipe].category = category
+    end
+end
 
 ---------------------------------------------------
 -- Chargement des fonctions
@@ -116,6 +219,11 @@ ritnlib.recipe = {
 		addNew = add_new_ingredient,
 		remove = remove_ingredient,
 		set = set_ingredient
+	},
+	change = {
+		subgroup = change_subgroup,
+		group = change_group,
+		category = change_recipe_category
 	}
 }
   

@@ -3,6 +3,7 @@
 ---
 local flib = {}
 
+
 -- Create Frame
 local function createFrame(source, name, caption, direction)
     local dir = "vertical"
@@ -27,7 +28,7 @@ local function frameAutoCenter(frame)
 end
 
 -- Create Flow (vertical)
-local function createFlowV(source, name, visible)
+local function createFlowV(source, name, visible, index)
     local vis = true
     if visible ~= nil then vis = visible end
 
@@ -35,8 +36,9 @@ local function createFlowV(source, name, visible)
         type = "flow",
         name = name,
         direction = "vertical",
-        visible = vis,
+        visible = vis
     }
+    flow.index = index
 
     return source.add(flow)
 end
@@ -50,25 +52,25 @@ local function createFlowH(source, name, visible)
         type = "flow",
         name = name,
         direction = "horizontal",
-        visible = vis,
+        visible = vis
     }
 
     return source.add(flow)
 end
 
--- Create Empty-widget
+-- Create Label
 local function createLabel(source, name, caption, visible)
     local vis = true
     if visible ~= nil then vis = visible end
 
-    local empty = {
+    local label = {
         type = "label",
         name = name,
         caption = caption,
-        visible = vis,
+        visible = vis
     }
 
-    return source.add(empty)
+    return source.add(label)
 end
 
 -- Create Textfield
@@ -80,6 +82,7 @@ local function createTextField(source, name, text)
     if text ~= nil then 
         textfield.text = text 
     end
+
     return source.add(textfield)
 end
 
@@ -176,7 +179,7 @@ local function createDropDown(source, name)
     return source.add(dropdown)
 end
 
---Create Line
+--Create Line (horizontal)
 local function createLineH(source, name, visible)
     local vis = true
     if visible ~= nil then vis = visible end
@@ -191,6 +194,7 @@ local function createLineH(source, name, visible)
     return source.add(line)
 end
 
+--Create Line (vertical)
 local function createLineV(source, name, visible)
     local vis = true
     if visible ~= nil then vis = visible end
@@ -205,7 +209,7 @@ local function createLineV(source, name, visible)
     return source.add(line)
 end
 
-
+-- create Table
 local function createTable(source, name, nbColumn) 
     local table = {
         type = "table",
@@ -216,6 +220,7 @@ local function createTable(source, name, nbColumn)
     return source.add(table)
 end
 
+-- create checkbox
 local function createCheckbox(source, name, state)
     local check = true
     if state ~= nil then check = state end 
@@ -229,6 +234,19 @@ local function createCheckbox(source, name, state)
     return source.add(checkbox)
 end
 
+-- create ProgressBar
+local function createProgressBar(source, name, value)
+    local val = 0
+    if value ~= nil then val = value end 
+
+    local progressBar = {
+        type = "progressbar",
+        name = name,
+        value = val
+    }
+
+    return source.add(progressBar)
+end
 
 
 
@@ -251,7 +269,7 @@ flib.createLineH = createLineH
 flib.createLineV = createLineV
 flib.createTable = createTable
 flib.createCheckbox = createCheckbox
-
+flib.createProgressBar = createProgressBar
 
 -- Retourne la liste des fonctions
 return flib
