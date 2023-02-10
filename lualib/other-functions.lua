@@ -31,13 +31,13 @@ end
 
 
 -- tableau est plein ?
-local function tableBusy(T)
-  for k,v in pairs(T) do
-    if T[k] ~= nil then 
-      return true
+local function tableBusy(table)
+    for key,_ in pairs(table) do
+        if table[key] ~= nil then 
+            return true
+        end
     end
-  end
-  return false
+    return false
 end
 
 
@@ -396,6 +396,41 @@ local function addFluidBoxes(entity)
 end
 
 
+local function callRemoteFreeplay(function_call, value)
+    if function_call == "set_created_items" then 
+
+        local default = {}
+        if value ~= nil then default = value end
+        pcall(function() remote.call("freeplay", "set_created_items", default) end) 
+
+    elseif function_call == "set_respawn_items" then 
+
+        local default = {}
+        if value ~= nil then default = value end
+        pcall(function() remote.call("freeplay", "set_respawn_items", default) end) 
+
+    elseif function_call == "set_skip_intro" then 
+
+        local default = true
+        if value == false then default = false end
+        pcall(function() remote.call("freeplay", "set_skip_intro", default) end) 
+
+    elseif function_call == "set_disable_crashsite" then 
+
+        local default = true
+        if value == false then default = false end
+        pcall(function() remote.call("freeplay", "set_disable_crashsite", true) end) 
+
+    elseif function_call == "all" then
+
+        pcall(function() remote.call("freeplay", "set_created_items", default) end) 
+        pcall(function() remote.call("freeplay", "set_respawn_items", default) end)
+        pcall(function() remote.call("freeplay", "set_skip_intro", default) end)
+        pcall(function() remote.call("freeplay", "set_disable_crashsite", true) end)
+
+    end
+end
+
 
 
 ---------------------------------------------------
@@ -419,7 +454,8 @@ ritnlib = {
   clearOutput = clearOutput,
   writeToOutput = writeToOutput,
   writeToProductionStats = writeToProductionStats,
-  addFluidBoxes = addFluidBoxes
+  addFluidBoxes = addFluidBoxes,
+  callRemoteFreeplay = callRemoteFreeplay,
 }
 
 return ritnlib

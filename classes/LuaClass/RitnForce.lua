@@ -15,10 +15,7 @@ local RitnForce = class.newclass(function(base, LuaForce)
     if LuaForce.object_name ~= "LuaForce" then return end
     --------------------------------------------------
     base.force = LuaForce
-    ----
-
-    ----
-    return self
+    --------------------------------------------------
 end)
 ----------------------------------------------------------------
 

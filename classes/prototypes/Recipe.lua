@@ -45,21 +45,82 @@ function RitnProtoRecipe:setEnabled(value)
 	if value == nil then return self end
     if type(value) ~= 'boolean' then return self end
     if self.prototype == nil then return self end
-    log('RitnProtoRecipe:setEnabled()')
     
     if self.prototype.enabled ~= nil then
         self.prototype.enabled = value
-        log('-> self.prototype.enabled')
+        log("RitnProtoRecipe:setEnabled -> enabled")
     end
 
     if self.prototype.normal ~= nil then
         self.prototype.normal.enabled = value
-        log('-> self.prototype.normal.enabled')
+        log("RitnProtoRecipe:setEnabled -> normal.enabled")
     end
 
     if self.prototype.expensive ~= nil then
         self.prototype.expensive.enabled = value
-        log('-> self.prototype.expensive.enabled')
+        log("RitnProtoRecipe:setEnabled -> expensive.enabled")
+    end
+
+    self:update()
+    return self
+end
+
+
+--DISABLE RECIPE
+function RitnProtoRecipe:setHidden(value, crafting, stats) 
+    log("RitnProtoRecipe:setHidden -> pass !")
+	if value == nil then return self end
+    if type(value) ~= 'boolean' then return self end
+    if self.prototype == nil then return self end
+    log("RitnProtoRecipe:setHidden -> prototype ok !")
+
+    local hidden_ok = false
+    
+    if self.prototype.hidden ~= nil then
+        self.prototype.hidden = value
+        log("RitnProtoRecipe:setHidden -> hidden")
+        hidden_ok = true
+        if crafting ~= nil then 
+            self.prototype.hide_from_player_crafting = value
+        end
+        if stats ~= nil then
+            self.prototype.hide_from_player_stats = value
+        end
+    end
+
+    if self.prototype.normal ~= nil then
+        self.prototype.normal.hidden = value
+        log("RitnProtoRecipe:setHidden -> normal.hidden")
+        hidden_ok = true
+        if crafting ~= nil then 
+            self.prototype.normal.hide_from_player_crafting = value
+        end
+        if stats ~= nil then
+            self.prototype.normal.hide_from_player_stats = value
+        end
+    end
+
+    if self.prototype.expensive ~= nil then
+        self.prototype.expensive.hidden = value
+        hidden_ok = true
+        log("RitnProtoRecipe:setHidden -> expensive.hidden")
+        if crafting ~= nil then 
+            self.prototype.expensive.hide_from_player_crafting = value
+        end
+        if stats ~= nil then
+            self.prototype.expensive.hide_from_player_stats = value
+        end
+    end
+
+    if hidden_ok == false then 
+        self.prototype.hidden = value
+        log("RitnProtoRecipe:setHidden -> hidden")
+        if crafting ~= nil then 
+            self.prototype.hide_from_player_crafting = value
+        end
+        if stats ~= nil then
+            self.prototype.hide_from_player_stats = value
+        end
     end
 
     self:update()
@@ -162,6 +223,66 @@ function RitnProtoRecipe:setIngredient(ingredient)
     self:update()
     return self
 end
+
+
+function RitnProtoRecipe:getIngredient(ingredient)
+    if self.prototype == nil then return self end
+
+    if self.prototype.expensive then 
+        for _, ingredient1 in pairs(self.prototype.expensive.ingredients) do 
+            if RitnIngredient(ingredient1).name == ingredient then 
+                return RitnIngredient(ingredient1).item
+            end
+        end
+    end
+    if self.prototype.normal then   
+        for _, ingredient1 in pairs(self.prototype.expensive.normal) do 
+            if RitnIngredient(ingredient1).name == ingredient then 
+                return RitnIngredient(ingredient1).item
+            end
+        end
+    end
+    if self.prototype.ingredients then      
+        for _, ingredient1 in pairs(self.prototype.ingredients) do 
+            if RitnIngredient(ingredient1).name == ingredient then 
+                return RitnIngredient(ingredient1).item
+            end
+        end
+    end
+
+    return nil
+end
+
+
+ --INGREDIENT EXISTE (return boolean)
+ function RitnProtoRecipe:ingredientExiste(ingredient)
+    if self.prototype == nil then return self end
+
+    if self.prototype.expensive then 
+        for _, ingredient1 in pairs(self.prototype.expensive.ingredients) do 
+            if RitnIngredient(ingredient1).name == ingredient then 
+                return true
+            end
+        end
+    end
+    if self.prototype.normal then   
+        for _, ingredient1 in pairs(self.prototype.expensive.normal) do 
+            if RitnIngredient(ingredient1).name == ingredient then 
+                return true
+            end
+        end
+    end
+    if self.prototype.ingredients then      
+        for _, ingredient1 in pairs(self.prototype.ingredients) do 
+            if RitnIngredient(ingredient1).name == ingredient then 
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
 
 
 function RitnProtoRecipe:changeTint(parameter, tint) 

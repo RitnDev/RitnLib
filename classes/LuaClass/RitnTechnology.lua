@@ -22,10 +22,10 @@ local RitnTechnology = class.newclass(function(base, LuaTechnology)
     base.technology = LuaTechnology
     ----
     base.name = LuaTechnology.name
+    base.force = LuaTechnology.force
     ----
     base.entity_type = "assembling-machine"
-    ----
-    return self
+    --------------------------------------------------
 end)
 
 ----------------------------------------------------------------
@@ -62,6 +62,9 @@ function RitnTechnology:updateRecipe(techFinished, disableTabRecipes, setRecipe,
 
     return self
 end
+
+
+
 
 
 

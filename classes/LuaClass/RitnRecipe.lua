@@ -20,11 +20,9 @@ local RitnRecipe = class.newclass(function(base, LuaRecipe)
     if LuaRecipe.valid == false then return end
     if LuaRecipe.object_name ~= "LuaRecipe" then return end
     --------------------------------------------------
-    
     base.recipe = LuaRecipe
     base.prototype = LuaRecipe.prototype
-
-    return self
+    --------------------------------------------------
 end)
 
 
@@ -43,8 +41,7 @@ end
 
 ----------------------------------------------------------------
 
--- SETTER
-
+-- SET ENABLED
 function RitnRecipe:setEnabled(value) 
     if self.recipe == nil then return self end
     if value == nil then return self end

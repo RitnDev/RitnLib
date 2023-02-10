@@ -19,7 +19,7 @@ local RitnProtoEntity = class.newclass(RitnProtoBase, function(base, entity_name
     ----
     if base.lua_prototype == nil then return end
     base.prototype = table.deepcopy(data.raw[base.type][base.name])
-    ----
+    --------------------------------------------------
 end)
 
 ----------------------------------------------------------------

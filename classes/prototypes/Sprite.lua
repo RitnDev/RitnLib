@@ -18,8 +18,8 @@ local RitnProtoSprite = class.newclass(RitnProtoBase, function(base, sprite_name
 end)
 
 
---ADD NEW ITEM-SUBGROUP
-function RitnProtoSprite.extendStandard(name, file_name)
+--ADD NEW SPRITE
+function RitnProtoSprite:extend(name, file_name)
     if name == nil then return end
     if file_name == nil then return end
     
@@ -38,4 +38,4 @@ end
 
 
 
-return RitnProtoFuelCategory
+return RitnProtoSprite
