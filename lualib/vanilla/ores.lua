@@ -14,11 +14,12 @@ local function data_ore()
 end
 
 local ores = {
+    resource_autoplace = resource_autoplace,
     ["coal"] = data_ore(),
     ["iron-ore"] = data_ore(),
     ["copper-ore"] = data_ore(),
     ["stone"] = data_ore(),
-    ["sand"] = data_ore(),
+    ["silica-sand"] = data_ore(),
     ["crude-oil"] = data_ore(),
     ["uranium-ore"] = data_ore(),
     ["none"] = data_ore(),
@@ -405,9 +406,9 @@ local autoplace_parameters = {
     candidate_spot_count = 22, -- To match 0.17.50 placement
 }
 
-ores["sand"].path_graphics = path_graphics
+ores["silica-sand"].path_graphics = path_graphics
 
-ores["sand"].autoplace_control = {
+ores["silica-sand"].autoplace_control = {
     type = "autoplace-control",
     name = "silica-sand",
     localised_name = {"", "[entity=silica-sand] ", {"entity-name.silica-sand"}},
@@ -417,7 +418,7 @@ ores["sand"].autoplace_control = {
   }
 
 
-ores["sand"].resource = {
+ores["silica-sand"].resource = {
     type = "resource",
     name = resource_parameters.name,
     icon = path_graphics .. "icons/" .. resource_parameters.name .. ".png",
@@ -432,7 +433,7 @@ ores["sand"].resource = {
         hardness = 1,
         mining_particle = "stone-particle",
         mining_time = 1,
-        result = "item-silica-sand",
+        result = "silica-sand",
         fluid_amount = 5,
         required_fluid = "water"
     },

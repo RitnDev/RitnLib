@@ -1,5 +1,4 @@
 -- INIT
-local ritnlib = {}
 --------------------------
 
 
@@ -28,85 +27,128 @@ end
 
 
 local function basic_item(inputs)
-  local item = {}
+    local item = {}
 
-  if inputs.name then
-    item.name = inputs.name
-  else
-    item.name = inputs[1]
-  end
-
-  if inputs.amount then
-    item.amount = inputs.amount
-  else
-    if inputs[2] then
-      item.amount = inputs[2]
-    end
-  end
-  if not item.amount then
-    item.amount = 1
-  end
-
-  if inputs.type then
-    item.type = inputs.type
-  else
-    item.type = get_basic_type(item.name)
-  end
-
-  if item.type == "item" then
-    if item.amount > 0 and item.amount < 1 then
-      item.amount = 1
+    if inputs.name then
+        item.name = inputs.name
     else
-      item.amount = math.floor(item.amount)
+        item.name = inputs[1]
     end
-  end
 
-  return item
+    if inputs.amount then
+        item.amount = inputs.amount
+    else
+        if inputs[2] then item.amount = inputs[2] end
+    end
+    
+    if not item.amount then item.amount = 1 end
+
+    if inputs.type then
+        item.type = inputs.type
+    else
+        item.type = get_basic_type(item.name)
+    end
+
+    if item.type == "item" then
+        if item.amount > 0 and item.amount < 1 then
+            item.amount = 1
+        else
+            item.amount = math.floor(item.amount)
+        end
+    end
+
+    return item
 end
 
 
 
 local function item(inputs)
-  local item = {}
+    local item = {}
 
-  if inputs.name then
-    item.name = inputs.name
-  else
-    item.name = inputs[1]
-  end
-
-  if inputs.amount then
-    item.amount = inputs.amount
-  else
-    if inputs[2] then
-      item.amount = inputs[2]
-    end
-  end
-  if not item.amount then
-    if inputs.amount_min and inputs.amount_max then
-      item.amount_min = inputs.amount_min
-      item.amount_max = inputs.amount_max
+    if inputs.name then
+        item.name = inputs.name
     else
-      item.amount = 1
+        item.name = inputs[1]
     end
-  end
-  if inputs.probability then item.probability = inputs.probability end
 
-  if inputs.type then
-    item.type = inputs.type
-  else
-    item.type = get_basic_type(item.name)
-  end
+    if inputs.amount then
+        item.amount = inputs.amount
+    else
+        if inputs[2] then item.amount = inputs[2] end
+    end
 
-  return item
+    if not item.amount then
+        if inputs.amount_min and inputs.amount_max then
+            item.amount_min = inputs.amount_min
+            item.amount_max = inputs.amount_max
+        else
+            item.amount = 1
+        end
+    end
+
+    if inputs.probability then item.probability = inputs.probability end
+
+    if inputs.type then
+        item.type = inputs.type
+    else
+        item.type = get_basic_type(item.name)
+    end
+
+    return item
 end
+
+
+local function itemV2(inputs)
+    local item = {}
+
+    if inputs.name then
+        item.name = inputs.name
+    else
+        item.name = inputs[1]
+    end
+
+    if inputs.amount then
+        item.amount = inputs.amount
+    else
+        if inputs[2] then item.amount = inputs[2] end
+    end
+
+    if not item.amount then
+        if inputs.amount_min and inputs.amount_max then
+            item.amount_min = inputs.amount_min
+            item.amount_max = inputs.amount_max
+        else
+            item.amount = 1
+        end
+    end
+
+    if inputs.probability then item.probability = inputs.probability end
+
+    if inputs.type then
+        item.type = inputs.type
+    else
+        item.type = get_basic_type(item.name)
+    end
+
+
+    if item.type == "item" then
+        if item.amount > 0 and item.amount < 1 then
+            item.amount = 1
+        else
+            item.amount = math.floor(item.amount)
+        end
+    end
+
+    return item
+end
+
 
 
 
 local function combine(item1_in, item2_in)
   local item = {}
-  local item1 = item(item1_in)
-  local item2 = item(item2_in)
+  local item1 = itemV2(item1_in)
+  local item2 = itemV2(item2_in)
 
   item.name = item1.name
   item.type = item1.type
@@ -183,6 +225,10 @@ local function set(list, item_in)
   end
 end
 
+
+
+
+
 local function disable(item_name, entity_type)
   local entity_name = data.raw.item[item_name].place_result
   data.raw.item[item_name] = nil
@@ -201,19 +247,20 @@ end
 ---------------------------------------------------
 -- Chargement des fonctions
 
-ritnlib.item = {
-  get = {
-    type = get_type,
-    basicType = get_basic_type
-  },
-  basic_item = basic_item,
-  item = item,
-  combine = combine,
+return {
+  --get = {
+  --  type = get_type,
+  --  basicType = get_basic_type
+  --},
+  getType = get_type,
+  --basic_item = basic_item,
+  item = itemV2,
+  --combine = combine,
   add = add,
-  add_new = add_new,
+  addNew = add_new,
   remove = remove,
   set = set,
-  disable = disable
+  --disable = disable
 }
 
-return ritnlib.item
+

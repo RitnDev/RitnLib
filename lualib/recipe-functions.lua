@@ -51,7 +51,7 @@ local function remove_ingredient(recipe, item)
 	  end
 	  
 	end
-  end
+end
   
   
 --ADD NEW INGREDIENT
