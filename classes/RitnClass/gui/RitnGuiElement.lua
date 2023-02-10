@@ -110,6 +110,15 @@ function RitnGuiElement:visible(visible)
     return self
 end
 
+function RitnGuiElement:enabled(enabled)
+    log(self.gui_name .. ' > RitnGuiElement:enabled()')
+    if type(enabled) ~= "boolean" then return self end 
+
+    self.gui_element.enabled = enabled
+
+    return self
+end
+
 function RitnGuiElement:caption(caption)
     log(self.gui_name .. ' > RitnGuiElement:caption()')
     if self.string_valid[type(caption)] then 
