@@ -24,6 +24,7 @@ local RitnPlayer = class.newclass(function(base, LuaPlayer)
     base.surface = LuaPlayer.surface
     base.force = LuaPlayer.force
     base.controller_type = LuaPlayer.controller_type
+    base.admin = LuaPlayer.admin
     ----
     base.name = LuaPlayer.name
     base.connected = LuaPlayer.connected

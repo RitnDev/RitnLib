@@ -130,11 +130,41 @@ end
 
 -- all stretchable
 function RitnStyle:stretchable()
-    self.style.horizontally_stretchable = self.stretch
-    self.style.vertically_stretchable = self.stretch
+
+    self:horizontalStretch()
+    self:verticalStretch()
     
     return self
 end
+
+-- horizontally stretchable
+function RitnStyle:horizontalStretch(value)
+    if value ~= nil then
+        if type(value) == "boolean" then 
+            self.stretch = value
+        end
+    end
+
+    self.style.horizontally_stretchable = self.stretch
+    
+    self.stretch = true
+    return self
+end
+
+-- vertically stretchable
+function RitnStyle:verticalStretch(value)
+    if value ~= nil then
+        if type(value) == "boolean" then 
+            self.stretch = value
+        end
+    end
+
+    self.style.vertically_stretchable = self.stretch
+    
+    self.stretch = true
+    return self
+end
+
 
 -- alignment (default center)
 function RitnStyle:align(valueH, valueV)
@@ -194,6 +224,26 @@ function RitnStyle:maxWidth(value)
     if type(value) ~= 'number' then return self end 
     
     self.style.maximal_width = value
+    
+    return self
+end
+
+-- set value max height
+function RitnStyle:minHeight(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self.style.minimal_height = value
+    
+    return self
+end
+
+-- set value max width
+function RitnStyle:minWidth(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self.style.minimal_width = value
     
     return self
 end
