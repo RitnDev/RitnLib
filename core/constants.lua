@@ -119,9 +119,22 @@ local listTint = {
 }
 
 
+local color = {
+    white = {r=1,g=1,b=1,a=1},
+    black = {r=0,g=0,b=0,a=1},
+    darkgrey = {r=0.109804,g=0.109804,b=0.109804,a=1},
+    grey = {r=0.557,g=0.557,b=0.557,a=1},
+    lightgrey = {r=0.763,g=0.763,b=0.763,a=1},
+    titlecolor = {r=1,g=0.901961,b=0.752941,a=1},
+    orange = {r = 0.98, g = 0.66, b = 0.22},
+    green = {r = 0.529, g = 0.847, b = 0.545, a=1},
+}
+
+
 
 ------------------------------
 constants.listTint = listTint
 constants.tint = tint
+constants.color = color
 ------------------------------
 return constants

@@ -1,6 +1,7 @@
 -- RitnStyle
 ----------------------------------------------------------------
 local class = require("__RitnLib__.core.class")
+local color = require("__RitnLib__.core.constants").color
 ----------------------------------------------------------------
 
 
@@ -13,9 +14,7 @@ local RitnStyle = class.newclass(function(base, LuaGuiElement)
     base.visible = false
     base.center = "center"
     ----
-    base.color = {
-        darkGrey = {0.109804, 0.109804, 0.109804}
-    }
+    base.color = color
     ----
     base.alignH = base.center 
     base.alignV = base.center
@@ -73,20 +72,67 @@ end
 function RitnStyle:menuButton()
     self:normalButton()
     self.style.minimal_width = 220
-    self.style.font_color = color
-    self.style.hovered_font_color = color
-    self.style.clicked_font_color = color
+    self.style.font_color = self.color.darkgrey
+    self.style.hovered_font_color = self.color.darkgrey
+    self.style.clicked_font_color = self.color.darkgrey
+
+    return self
+end
+
+
+function RitnStyle:fontColor(color, hovered, clicked)
+    local defaultColor = self.color.white
+    local optHovered = false
+    local optClicked = false
+
+    if type(color) == "string" then 
+        if self.color[color] then 
+            defaultColor = self.color[color]
+        end
+    elseif type(color) == "table" then 
+        defaultColor = color
+    else
+        return self
+    end
+
+    self.style.font_color = defaultColor
+
+    if hovered ~= nil and type(hovered) == "boolean" then
+        optHovered = hovered
+    end
+    if clicked ~= nil and type(clicked) == "boolean" then
+        optClicked = clicked
+    end
+
+    if optHovered then
+        self.style.hovered_font_color = defaultColor
+    end
+    if optClicked then
+        self.style.clicked_font_color = defaultColor
+    end
 
     return self
 end
 
 
 -- Preset : normal button
-function RitnStyle:spriteButton()
+function RitnStyle:spriteButton(size)
+
+    local default_size = 32
+    if type(size) == "number" then 
+        if size ~= nil then default_size = size end
+    end
+    local width = default_size
+    local height = default_size
+
+    if type(size) == "table" then 
+        width = size[1]
+		height = size[2]
+    end 
 
     self.style.padding = 0
-    self.style.minimal_width = 32
-    self.style.maximal_width = 32
+    self.style.minimal_width = width
+    self.style.maximal_width = height
 
     return self
 end
@@ -120,6 +166,17 @@ function RitnStyle:straitFrame()
     
     return self
 end
+
+
+function RitnStyle:visible(visible)
+    log(self.gui_name .. ' > RitnStyle:visible()')
+    if type(visible) ~= "boolean" then return self end 
+
+    self.style.visible = visible
+
+    return self
+end
+
 
 -- no padding -> padding = 0
 function RitnStyle:noPadding()
@@ -162,6 +219,33 @@ function RitnStyle:verticalStretch(value)
     self.style.vertically_stretchable = self.stretch
     
     self.stretch = true
+    return self
+end
+
+
+-- horizontally stretchable
+function RitnStyle:horizontalSpacing(value)
+    if value == nil then return self end
+    if type(value) ~= "number" then return self end
+
+    self.style.horizontal_spacing = value
+
+    return self
+end
+
+-- vertically stretchable
+function RitnStyle:verticalSpacing(value)
+    if value == nil then return self end
+    if type(value) ~= "number" then return self end
+
+    self.style.vertical_spacing = value
+
+    return self
+end
+
+function RitnStyle:spacing(horizontal, vertical)
+    self:horizontalSpacing(horizontal)
+    self:verticalSpacing(vertical)
     return self
 end
 
@@ -257,6 +341,20 @@ function RitnStyle:font(font)
     
     return self
 end
+
+-- set padding
+function RitnStyle:padding(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self:topPadding(value)
+    self:bottomPadding(value)
+    self:leftPadding(value)
+    self:rightPadding(value)
+    
+    return self
+end
+
 
 -- set top_padding
 function RitnStyle:topPadding(value)

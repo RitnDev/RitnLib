@@ -8,6 +8,14 @@ local RitnTechnology = require(ritnlib.defines.class.luaClass.tech)
 ----------------------------------------------------------------
 --- FUNCTIONS
 ----------------------------------------------------------------
+local events_filter = {
+    position = {
+        ["on_chunk_charted"] = true,
+        ["on_chunk_generated"] = true,
+    }
+}
+----------------------------------------------------------------
+
 
 local function getEventName(event)
     for name,ev in pairs(defines.events) do
@@ -64,7 +72,7 @@ end
 
 local function getEntity(event)
     if event.created_entity then 
-        return event.entity
+        return event.created_entity
     end
     if event.vehicle then 
         return event.vehicle
@@ -109,6 +117,15 @@ local function getGuiType(gui_type)
     end
 end
 
+local function getPosition(event, name)
+    if event.cursor_position then 
+        return event.cursor_position
+    end
+    if not events_filter.position[name] then 
+        return event.position
+    end
+end
+
 
 ----------------------------------------------------------------
 --- CLASSE DEFINES
@@ -121,27 +138,28 @@ local RitnEvent = class.newclass(function(base, event, mod_name)
     ---------------------------------
     base.mod_name = modName
     base.event = event
-    base.name = getEventName(event)
-    base.index = event.name                 -- index
+    base.name = getEventName(event)                 -- defines
+    base.index = event.name                         -- index
     ---------------------------------
-    base.player = getPlayer(event)          -- (LuaPlayer)
-    base.surface = getSurface(event)        -- (LuaSurface)
-    base.force = getForce(event)            -- (LuaForce)
-    base.recipe = getRecipe(event)          -- (LuaRecipe)
-    base.technology = getTech(event)        -- (LuaTechnology)
-    base.entity = getEntity(event)          -- (LuaEntity)
-    base.robot = getRobot(event)            -- (LuaEntity)
-    base.inventory = getInventory(event)    -- (LuaInventory)
-    base.cause = event.cause                -- (LuaEntity)?
+    base.player = getPlayer(event)                  -- (LuaPlayer)
+    base.surface = getSurface(event)                -- (LuaSurface)
+    base.force = getForce(event)                    -- (LuaForce)
+    base.recipe = getRecipe(event)                  -- (LuaRecipe)
+    base.technology = getTech(event)                -- (LuaTechnology)
+    base.entity = getEntity(event)                  -- (LuaEntity)
+    base.robot = getRobot(event)                    -- (LuaEntity)
+    base.inventory = getInventory(event)            -- (LuaInventory)
+    base.cause = event.cause                        -- (LuaEntity)?
     ----
-    base.reason = event.reason              -- defines.disconnect_reason
-    base.queued_count = event.queued_count  -- (number)
+    base.reason = event.reason                      -- defines.disconnect_reason
+    base.queued_count = event.queued_count          -- (number)
     base.gui_type = getGuiType(event.gui_type)
-    base.source = event.source              -- (LuaForce) -> on_forces_merging(event)
-    base.area = event.area                  -- (area :: BoundingBox)
-    base.element = event.element            -- (LuaGuiElement)
-    base.setting_name = event.setting       -- (string)
-    base.setting_type = event.setting_type  -- (string)
+    base.source = event.source                      -- (LuaForce) -> on_forces_merging(event)
+    base.area = event.area                          -- (area :: BoundingBox)
+    base.element = event.element                    -- (LuaGuiElement)
+    base.setting_name = event.setting               -- (string)
+    base.setting_type = event.setting_type          -- (string)
+    base.position = getPosition(event, base.name)   -- (MapPosition)
     --------------------------------------------------
 end)
 ----------------------------------------------------------------

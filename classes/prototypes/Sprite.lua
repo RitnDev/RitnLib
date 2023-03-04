@@ -19,16 +19,29 @@ end)
 
 
 --ADD NEW SPRITE
-function RitnProtoSprite:extend(name, file_name)
+function RitnProtoSprite:extend(name, file_name, size)
     if name == nil then return end
     if file_name == nil then return end
+    
+    local default_size = 32
+    if type(size) == "number" then 
+        if size ~= nil then default_size = size end
+    end
+    local width = default_size
+    local height = default_size
+
+    if type(size) == "table" then 
+        width = size[1]
+		height = size[2]
+    end 
+
     
     local sprite = {
 		type = "sprite",
 		name = name,
 		filename = file_name,
-		width = 32,
-		height = 32,
+		width = width,
+		height = height,
 		flags = {"gui-icon"},
 		mipmap_count = 1,
 	}

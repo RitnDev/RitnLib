@@ -67,8 +67,7 @@ function RitnGui:getElement(element_type, element_name)
     end
 
     -- build LuaGui
-    for index,name in pairs(element) do
-        --self:print(LuaGui.name) 
+    for _,name in pairs(element) do
         LuaGui = LuaGui[prefix..name]
     end
 

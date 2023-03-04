@@ -61,7 +61,7 @@ local RitnGuiElement = class.newclass(function(base, ui_name, element_type, elem
     base.gui_element = {
         type = base.type,
         name = base.gui_name,
-        visible = true
+        visible = true,
     }
 
     if element_type == "scroll-pane" then 
@@ -100,6 +100,18 @@ function RitnGuiElement:vertical()
     end
     return self
 end
+
+
+
+--> auto_center = true (frame)
+function RitnGuiElement:autoCenter()
+    log(self.gui_name .. ' > RitnGuiElement:autoCenter()')
+    if self.type == "frame" then 
+        self.gui_element.auto_center = true
+    end
+    return self
+end
+
 
 function RitnGuiElement:visible(visible)
     log(self.gui_name .. ' > RitnGuiElement:visible()')

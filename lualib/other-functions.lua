@@ -25,8 +25,12 @@ local function str_start(str, start)
 end
 
 -- Retourne taille du tableau
-local function tablelength(T)
-    return #T
+
+local function tableLength(T)
+  local size = 0
+  if T == nil then return size end
+  for _ in pairs(T) do size = size + 1 end
+  return size
 end
 
 
@@ -437,11 +441,15 @@ end
 -- Chargement des fonctions
 local ritnlib = {}
 ritnlib = {
+  table = {
+    busy = tableBusy,
+    length = tableLength,
+  },
   tableBusy = tableBusy,
   ritnPrint = ritnPrint,
   ritnLog = ritnLog,
   str_start = str_start,
-  tablelength = tablelength,
+  tablelength = tableLength,
   split = split,
   getn = getn,
   give_item = give_item,

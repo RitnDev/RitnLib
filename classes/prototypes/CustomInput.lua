@@ -6,7 +6,7 @@ local RitnProtoBase = require("__RitnLib__.classes.RitnClass.RitnPrototype")
 
 local RitnProtoCustomInput = class.newclass(RitnProtoBase, function(base, input_name)
     -- prototype init
-    if constant_name == nil then return end
+    if input_name == nil then return end
     RitnProtoBase.init(base, input_name, "custom-input")
     --------------------------------------------------
     -- prototype base
@@ -34,6 +34,15 @@ function RitnProtoCustomInput:extend(name, key_sequence, consuming)
     return self
 end
 
+
+function RitnProtoCustomInput:linkedControl(linked_game_control)
+    if linked_game_control == nil then return end
+
+    self.prototype.linked_game_control = linked_game_control
+
+    self:update()
+    return self
+end
 
 
 return RitnProtoCustomInput
