@@ -1,7 +1,4 @@
 --[[
-Licensed : CC BY-NC-ND 4.0 https://creativecommons.org/licenses/by-nc-nd/4.0/
-Author: Deadlock989
-Mod portal: https://mods.factorio.com/mod/IndustrialRevolution
 For functions :
 - standard_3x3_collision
 - standard_3x3_selection

@@ -10,6 +10,7 @@ ritnlib = {
         styles = "__RitnLib__/lualib/LuaStyle-functions",
         --ore = "__RitnLib__/lualib/ore-functions",                   -- DEPRECATED
         other = "__RitnLib__/lualib/other-functions",
+        table = "__RitnLib__/lualib/table-functions",
         --recipe = "__RitnLib__/lualib/recipe-functions",             -- DEPRECATED
         --technology = "__RitnLib__/lualib/technology-functions",     -- DEPRECATED
         vanilla = {

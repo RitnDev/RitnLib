@@ -24,27 +24,6 @@ local function str_start(str, start)
     return str:sub(1, #start) == start
 end
 
--- Retourne taille du tableau
-
-local function tableLength(T)
-  local size = 0
-  if T == nil then return size end
-  for _ in pairs(T) do size = size + 1 end
-  return size
-end
-
-
--- tableau est plein ?
-local function tableBusy(table)
-    for key,_ in pairs(table) do
-        if table[key] ~= nil then 
-            return true
-        end
-    end
-    return false
-end
-
-
 
 -- Retourne tableau 
 local function split(inputstr, sep)
@@ -100,29 +79,6 @@ local function build_clock_string(time)
       end
 end
 
-
-local function spairs(t, order)
-	-- bypass
-	if order == nil then return pairs(t) end
-	-- collect the keys
-	local keys = {}
-	for k in pairs(t) do keys[#keys+1] = k end
-
-	-- if order function given, sort by it by passing the table and keys a, b,
-	-- otherwise just sort the keys
-	pcall(function()
-		table.sort(keys, function(a,b) return order(t, a, b) end)
-	end)
-
-	-- return the iterator function
-	local i = 0
-	return function()
-		i = i + 1
-		if keys[i] then
-			return keys[i], t[keys[i]]
-		end
-	end
-end
 
 
 local function writeToProductionStats(identifierer, appendContent)
@@ -441,15 +397,9 @@ end
 -- Chargement des fonctions
 local ritnlib = {}
 ritnlib = {
-  table = {
-    busy = tableBusy,
-    length = tableLength,
-  },
-  tableBusy = tableBusy,
   ritnPrint = ritnPrint,
   ritnLog = ritnLog,
   str_start = str_start,
-  tablelength = tableLength,
   split = split,
   getn = getn,
   give_item = give_item,
