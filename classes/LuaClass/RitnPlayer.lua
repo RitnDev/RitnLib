@@ -7,7 +7,13 @@ local RitnSurface = require(ritnlib.defines.class.luaClass.surface)
 --- FUNCTIONS
 ----------------------------------------------------------------
 
-
+local function getControllerName(LuaPlayer)
+    for name,_ in pairs(defines.controllers) do
+        if defines.controllers[name] == LuaPlayer.controller_type then 
+            return name
+        end
+    end
+end
 
 ----------------------------------------------------------------
 --- CLASSE DEFINES
@@ -24,6 +30,8 @@ local RitnPlayer = class.newclass(function(base, LuaPlayer)
     base.surface = LuaPlayer.surface
     base.force = LuaPlayer.force
     base.controller_type = LuaPlayer.controller_type
+    base.controller_name = getControllerName(LuaPlayer)
+    base.character = LuaPlayer.character
     base.admin = LuaPlayer.admin
     base.driving = LuaPlayer.driving
     base.vehicle = LuaPlayer.vehicle
