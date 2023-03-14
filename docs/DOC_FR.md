@@ -4,4 +4,4 @@ Ce mod est une librairie de fonctions et depuis la version 0.7 elle ajoute surto
 Vous pouvez évidement utiliser cette bibliothèque pour vos mods.
 
 ```markdown
-<!-- include "introduction/usages_FR.md" -->
+include "introduction/usages_FR.md"
