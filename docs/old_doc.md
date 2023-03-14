@@ -1,10 +1,3 @@
-# RitnLib
-
-Ce mod est une librairie de fonctions utilisées dans la plupart des RitnMods.
-
-## Utilisation :
-
-Dans votre mod, ajouté simplement ce RitnLib en dépendance.
 Cette librairie de fonctions est classé pas type de fonction, en voici la liste :
 
 * gvv (pour charger le mod [gvv](https://mods.factorio.com/mod/gvv))
@@ -103,10 +96,4 @@ local event_listener = require(ritnlib.defines.event)
 -- envoie des modules à l'event listener :
 event_listener.add_libraries(require(modules))
 ```
-
-
-
-
-
-
 
