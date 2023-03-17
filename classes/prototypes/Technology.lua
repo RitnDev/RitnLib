@@ -237,10 +237,10 @@ function RitnProtoTech:removePackLab(pack, lab)
 			end
 		end
 	else 
-        if data.raw["lab"][lab] then 
-            for i, input in pairs(data.raw["lab"][lab].inputs) do
-                if data.raw["lab"][lab].inputs[input] == pack or input == pack then
-                    table.remove(data.raw["lab"][lab].inputs, i)
+        if data.raw.lab[lab] then 
+            for i, input in pairs(data.raw.lab[lab].inputs) do
+                if data.raw.lab[lab].inputs[input] == pack or input == pack then
+                    table.remove(data.raw.lab[lab].inputs, i)
                 end
             end
         end
@@ -254,11 +254,17 @@ function RitnProtoTech:addPackLab(pack, index)
     if data.raw.tool[pack] == nil then return self end
 
 	for i, lab in pairs(data.raw.lab) do
-		if index == nil then
-			table.insert(lab.inputs, 1, pack)
-		else 
-			table.insert(lab.inputs, index, pack)
-		end
+        local exist = false 
+        for _, science in pairs(lab.inputs) do 
+            if science == pack then exist = true end
+        end
+        if exist == false then 
+            if index == nil then
+                table.insert(lab.inputs, 1, pack)
+            else 
+                table.insert(lab.inputs, index, pack)
+            end
+        end
 	end
 
     return self
