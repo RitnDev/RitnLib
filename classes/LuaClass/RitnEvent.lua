@@ -50,6 +50,9 @@ local function getForce(event)
     if event.force then 
         return event.force
     end
+    if event.name == defines.events.on_forces_merging then 
+        return event.destination
+    end
     return nil
 end
 
@@ -155,6 +158,7 @@ local RitnEvent = class.newclass(function(base, event, mod_name)
     base.queued_count = event.queued_count          -- (number)
     base.gui_type = getGuiType(event.gui_type)
     base.source = event.source                      -- (LuaForce) -> on_forces_merging(event)
+    base.source_name = event.source_name            -- (String) -> on_forces_merged(event)
     base.area = event.area                          -- (area :: BoundingBox)
     base.element = event.element                    -- (LuaGuiElement)
     base.setting_name = event.setting               -- (string)
