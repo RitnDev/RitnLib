@@ -11,6 +11,7 @@ ritnlib = {
         --ore = "__RitnLib__/lualib/ore-functions",                   -- DEPRECATED
         other = "__RitnLib__/lualib/other-functions",
         table = "__RitnLib__/lualib/table-functions",
+        json = "__RitnLib__/lualib/json-functions",
         --recipe = "__RitnLib__/lualib/recipe-functions",             -- DEPRECATED
         --technology = "__RitnLib__/lualib/technology-functions",     -- DEPRECATED
         vanilla = {
@@ -52,10 +53,11 @@ ritnlib = {
                 prototype = "__RitnLib__/classes/RitnClass/RitnPrototype",
                 ingredient = "__RitnLib__/classes/RitnClass/RitnIngredient",
                 inventory = "__RitnLib__/classes/RitnClass/RitnInventory",
+                setting = "__RitnLib__/classes/RitnClass/RitnSetting",
             },
             gui = {
                 element = "__RitnLib__/classes/RitnClass/gui/RitnGuiElement",
-                style = "__RitnLib__/classes/RitnClass/gui/RitnStyle"
+                style = "__RitnLib__/classes/RitnClass/gui/RitnStyle",
             },
              
         },

@@ -16,7 +16,7 @@ local RitnSurface = class.newclass(function(base, LuaSurface)
     base.name = LuaSurface.name
     base.index = LuaSurface.index
     --------------------------------------------------
-    log('> [RITNLIB] > RitnSurface')
+    --log('> [RITNLIB] > RitnSurface')
 end)
 ----------------------------------------------------------------
 
