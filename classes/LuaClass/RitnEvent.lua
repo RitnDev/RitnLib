@@ -95,6 +95,14 @@ local function getRobot(event)
 end
 
 
+local function getRocket(event)
+    if event.rocket then 
+        return event.rocket
+    end
+    return nil
+end
+
+
 local function getInventory(event)
     if event.buffer then 
         return event.buffer
@@ -119,6 +127,7 @@ local function getGuiType(gui_type)
         end
     end
 end
+
 
 local function getPosition(event, name)
     if event.cursor_position then 
@@ -151,6 +160,7 @@ local RitnEvent = class.newclass(function(base, event, mod_name)
     base.technology = getTech(event)                -- (LuaTechnology)
     base.entity = getEntity(event)                  -- (LuaEntity)
     base.robot = getRobot(event)                    -- (LuaEntity)
+    base.rocket = getRocket(event)                  -- (LuaEntity)
     base.inventory = getInventory(event)            -- (LuaInventory)
     base.cause = event.cause                        -- (LuaEntity)?
     ----

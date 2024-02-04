@@ -379,7 +379,13 @@ local function callRemoteFreeplay(function_call, value)
 
         local default = true
         if value == false then default = false end
-        pcall(function() remote.call("freeplay", "set_disable_crashsite", true) end) 
+        pcall(function() remote.call("freeplay", "set_disable_crashsite", default) end)
+        
+    elseif function_call == "no_finish" then 
+
+      local default = true
+      if value == false then default = false end 
+      pcall(function() remote.call("silo_script", "set_no_victory", default) end)
 
     elseif function_call == "all" then
 
