@@ -15,6 +15,7 @@ local RitnSurface = class.newclass(function(base, LuaSurface)
     base.surface = LuaSurface
     base.name = LuaSurface.name
     base.index = LuaSurface.index
+    base.isNauvis = (LuaSurface.name == "nauvis")
     --------------------------------------------------
     --log('> [RITNLIB] > RitnSurface')
 end)
