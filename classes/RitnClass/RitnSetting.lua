@@ -140,7 +140,20 @@ function RitnSetting:setDefaultValueBool(value)
 end
 
 --------------------------------------------------
+-- Setter du champ 'order' du settings
+function RitnSetting:setOrder(order)
+    if order == nil then return self end 
+    if type(order) ~= "string" then return self end 
 
+    self.data_setting.order = order
+    ---------------------------------------
+    log('> '..self.object_name..':setOrder('.. order ..')') 
+    ---------------------------------------
+
+    return self
+end
+
+--------------------------------------------------
 -- création du nouveau setting
 function RitnSetting:new()
     self:setType()
