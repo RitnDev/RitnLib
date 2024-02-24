@@ -94,7 +94,7 @@ function RitnGui:on_gui_click(...)
     if not self.element.valid then log('element invalid !') return end
     if self.main_gui == nil then log('not main_gui !') return end
     if self.main_gui == "" then log('not main_gui !') return end
-    if self.gui[1] == nil then log('not gui !') return end
+    if self.gui[1] == nil then --[[ log('not gui !') ]] return end
     
 
     local LuaGui = self.gui[1][self.gui_name .. "-" .. self.main_gui]
@@ -104,7 +104,7 @@ function RitnGui:on_gui_click(...)
   
     -- getGui
     if LuaGui == nil then return end
-    log('> ('..self.mod_name..') -> '.. self.object_name ..':on_gui_click('.. self.gui_name ..", " .. self.main_gui ..')')
+    --log('> ('..self.mod_name..') -> '.. self.object_name ..':on_gui_click('.. self.gui_name ..", " .. self.main_gui ..')')
 
     if LuaGui.name ~= self.gui_name .. "-" .. self.main_gui then return end
     if self.element == nil then return end

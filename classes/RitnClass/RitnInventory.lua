@@ -15,12 +15,14 @@ local RitnInventory = class.newclass(function(base, LuaPlayer, inventoryGlobal)
     if LuaPlayer.is_player() == false then return end
     if LuaPlayer.object_name ~= "LuaPlayer" then return end
     if LuaPlayer.character == nil then return end
+    if inventoryGlobal == nil then log('inventoryGlobal is nil') return end
     --------------------------------------------------
     base.data = inventoryGlobal
     base.player = LuaPlayer
     base.name = LuaPlayer.name
     ---
-    base.inventory_size = 65535         -- max value
+    base.INVENTORY_SIZE_MAX = 65535
+    base.inventory_size = base.INVENTORY_SIZE_MAX
     --------------------------------------------------
 end)
 ----------------------------------------------------------------
@@ -29,13 +31,15 @@ end)
 -- init data inventory
 function RitnInventory:init()
     if self.data[self.name] ~= nil then return self end
+    log('> '..self.object_name..':init() -> '..self.name)
+
 
     self.data[self.name] = {
-        [defines.inventory.character_main] = game.create_inventory(65535),
-        [defines.inventory.character_guns] = game.create_inventory(65535),
-        [defines.inventory.character_ammo] = game.create_inventory(65535),
-        [defines.inventory.character_armor] = game.create_inventory(65535),
-        [defines.inventory.character_trash] = game.create_inventory(65535),
+        [defines.inventory.character_main] = game.create_inventory(self.inventory_size),
+        [defines.inventory.character_guns] = game.create_inventory(self.inventory_size),
+        [defines.inventory.character_ammo] = game.create_inventory(self.inventory_size),
+        [defines.inventory.character_armor] = game.create_inventory(self.inventory_size),
+        [defines.inventory.character_trash] = game.create_inventory(self.inventory_size),
         ["cursor"] = game.create_inventory(1),
         ["logistic_param"] = {
             {name="slot_count", value = 0},
@@ -70,7 +74,7 @@ end
   
 --LoadInventory
 function RitnInventory:loadInventory(define)
-    if self.data[self.name] == nil then return end
+    if self.data[self.name] == nil then return self end
 
     local inventory1 = self.player.get_inventory(define)
     local inventory = self.data[self.name][define]
@@ -89,7 +93,7 @@ end
   
 ----------------------------------------------------------------
 -- SAVE ALL INVENTORY
-function RitnInventory:save_all_inventory(LuaPlayer, invGlobal)
+function RitnInventory:save_all_inventory()
     self:saveInventory(defines.inventory.character_main)
     self:saveInventory(defines.inventory.character_guns)
     self:saveInventory(defines.inventory.character_ammo)
@@ -100,7 +104,7 @@ function RitnInventory:save_all_inventory(LuaPlayer, invGlobal)
 end
   
 -- LOAD ALL INVENTORY
-function RitnInventory:load_all_inventory(LuaPlayer, invGlobal)
+function RitnInventory:load_all_inventory()
     self:loadInventory(defines.inventory.character_armor) -- /!\ priority armor
     self:loadInventory(defines.inventory.character_main)
     self:loadInventory(defines.inventory.character_guns)
@@ -148,7 +152,7 @@ end
 
 -- Load Logistic
 function RitnInventory:loadLogistic()
-    if self.data[self.name] == nil then return end
+    if self.data[self.name] == nil then return self end
 
     local slot_count = 0
     if self.data[self.name]["logistic_param"] ~= nil then
@@ -189,7 +193,7 @@ end
   
 -- Load Cursor
 function RitnInventory:loadCursor()
-    if self.data[self.name] == nil then return end
+    if self.data[self.name] == nil then return self end
 
     local stack = self.data[self.name]["cursor"][1]
     if stack.valid then
@@ -207,6 +211,7 @@ function RitnInventory:save(cursor)
     if self.data[self.name] == nil then self:init() end
     local option = false 
     if cursor ~= nil then option = cursor end
+    log('> '..self.object_name..':save('.. tostring(option) ..') -> '..self.name)
 
     self:save_all_inventory():saveLogistic()
     if option then self:saveCursor() end
@@ -216,9 +221,10 @@ end
 
 --- MASTER LOAD
 function RitnInventory:load(cursor)
-    if self.data[self.name] == nil then return end
+    if self.data[self.name] == nil then return self end
     local option = false 
     if cursor ~= nil then option = cursor end
+    log('> '..self.object_name..':load('.. tostring(option) ..') -> '..self.name)
 
     self:load_all_inventory():loadLogistic()
     if option then self:saveCursor() end
