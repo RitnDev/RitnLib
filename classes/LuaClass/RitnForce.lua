@@ -40,6 +40,10 @@ local RitnForce = class.newclass(function(base, LuaForce)
     }
     base.items_launched = LuaForce.items_launched
     base.rockets_launched = LuaForce.rockets_launched
+    ---- CONSTANTES ----
+    base.FORCE_ENEMY_NAME = "enemy"
+    base.FORCE_PLAYER_NAME = "player"
+    base.FORCE_NEUTRAL_NAME = "neutral"
     --------------------------------------------------
 end)
 ----------------------------------------------------------------

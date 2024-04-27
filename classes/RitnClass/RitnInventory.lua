@@ -89,7 +89,27 @@ function RitnInventory:loadInventory(define)
     
     return self
 end
-  
+
+--insertInventory
+function RitnInventory:insertInventory(define)
+    if self.data[self.name] == nil then return self end
+    log('> '..self.object_name..':insertInventory(define) : -> define = '..define)
+
+    local inventory = self.data[self.name][define]
+    if inventory ~= nil then
+        if (#inventory > 0) then 
+            for i=1, #inventory do 
+                local stack = inventory[i]
+                if stack.valid and stack.valid_for_read then
+                    self.player.insert{name = stack.name, count = stack.count}
+                    log('> self.player.insert(stack) -> stack = {name="'.. stack.name ..'", count="'.. stack.count ..'"}')
+                end
+            end
+        end
+    end
+
+    return self
+end
   
 ----------------------------------------------------------------
 -- SAVE ALL INVENTORY
@@ -114,6 +134,15 @@ function RitnInventory:load_all_inventory()
     return self
 end
 
+-- INSERT ALL INVENTORY
+function RitnInventory:insert_all_inventory()
+    self:insertInventory(defines.inventory.character_armor) -- /!\ priority armor
+    self:insertInventory(defines.inventory.character_main)
+    self:insertInventory(defines.inventory.character_guns)
+    self:insertInventory(defines.inventory.character_ammo)
+
+    return self
+end
 
 ----------------------------------------------------------------
 -- LOGISTIC
@@ -228,6 +257,16 @@ function RitnInventory:load(cursor)
 
     self:load_all_inventory():loadLogistic()
     if option then self:saveCursor() end
+
+    return self
+end
+
+-- MASTER INSERT
+function RitnInventory:insert()
+    if self.data[self.name] == nil then return self end
+    log('> '..self.object_name..':insert() -> '..self.name)
+
+    self:insert_all_inventory()--:insertLogistic()
 
     return self
 end
