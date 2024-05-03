@@ -1,7 +1,8 @@
 ritnlib = {
     defines = {
-        gvv = "__gvv__.gvv",             
-        event = "__RitnLib__/core/eventListener",
+        gvv = "__gvv__.gvv",
+        event = "__RitnLib__/core/eventListener",        
+        constants = "__RitnLib__.core.constants",
         gui = "__RitnLib__/lualib/gui-functions",
         inventory = "__RitnLib__/lualib/inventory",
         entity = "__RitnLib__/lualib/entity-functions",

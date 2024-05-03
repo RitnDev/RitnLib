@@ -130,11 +130,24 @@ local color = {
     green = {r = 0.529, g = 0.847, b = 0.545, a=1},
 }
 
-
+local strings = {
+    empty = "", 
+    space = " ",
+    hyphen = "-",
+    ["hyphen-decorator"] = " - ",
+    tilde = "~",
+    ["tilde-decorator"] = " ~ ",
+    tilde3 = "~~~",
+    special = {
+        ["two-way-arrow"] = "↔",
+        ["two-way-arrow-decorator"] = " ↔ ",
+    }
+}
 
 ------------------------------
 constants.listTint = listTint
 constants.tint = tint
 constants.color = color
+constants.strings = strings
 ------------------------------
 return constants
