@@ -3,23 +3,25 @@ ritnlib = {
         gvv = "__gvv__.gvv",
         event = "__RitnLib__/core/eventListener",        
         constants = "__RitnLib__.core.constants",
-        gui = "__RitnLib__/lualib/gui-functions",
-        inventory = "__RitnLib__/lualib/inventory",
-        entity = "__RitnLib__/lualib/entity-functions",
-        --item = "__RitnLib__/lualib/item-functions",                 -- DEPRECATED
-        --log = "__RitnLib__/lualib/log-functions",                   -- DEPRECATED
-        styles = "__RitnLib__/lualib/LuaStyle-functions",
-        --ore = "__RitnLib__/lualib/ore-functions",                   -- DEPRECATED
+
         other = "__RitnLib__/lualib/other-functions",
         table = "__RitnLib__/lualib/table-functions",
         json = "__RitnLib__/lualib/json-functions",
-        --recipe = "__RitnLib__/lualib/recipe-functions",             -- DEPRECATED
-        --technology = "__RitnLib__/lualib/technology-functions",     -- DEPRECATED
         vanilla = {
             util = "__RitnLib__/lualib/vanilla/util",
             crash_site = "__RitnLib__/lualib/vanilla/crash-site",
         },
         fonts = "__RitnLib__/prototypes/fonts",
+        gui_styles = "__RitnLib__/prototypes/gui-style",
+        -- gui,                         -- DEPRECATED
+        -- inventory,                   -- DEPRECATED
+        -- item,                        -- DEPRECATED
+        -- log,                         -- DEPRECATED
+        -- styles,                      -- DEPRECATED
+        -- ore,                         -- DEPRECATED
+        -- recipe,                      -- DEPRECATED
+        -- entity,                      -- DEPRECATED
+        -- technology,                  -- DEPRECATED
         
 
         class = {

@@ -49,6 +49,10 @@ local RitnGuiElement = class.newclass(function(base, ui_name, element_type, elem
         textfield = true,
         ["text-box"] = true,
     }
+    base.button_valid = {
+        button = true,
+        ["sprite-button"] = true,
+    }
     base.sprite_valid = {
         sprite = true,
         ["sprite-button"] = true,
@@ -260,6 +264,22 @@ function RitnGuiElement:progress(value)
 
     return self
 end
+
+
+function RitnGuiElement:mouseButtonFilter(value)
+    log(self.gui_name .. ' > RitnGuiElement:mouseButtonFilter()')
+    local valueDefault = {'left'}
+    if value ~= nil then 
+        if type(value) ~= "table" then return self end
+        valueDefault = value
+    end
+
+    if self.button_valid[self.type] then
+        self.gui_element.mouse_button_filter = valueDefault
+    end
+
+    return self
+end 
 
 ----------------------------------------------------------------
 return RitnGuiElement

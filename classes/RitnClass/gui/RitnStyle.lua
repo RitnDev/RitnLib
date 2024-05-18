@@ -342,6 +342,60 @@ function RitnStyle:font(font)
     return self
 end
 
+-- set top_margin
+function RitnStyle:margin(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self:topMargin(value)
+    self:bottomMargin(value)
+    self:leftMargin(value)
+    self:rightMargin(value)
+    
+    return self
+end
+
+-- set top_margin
+function RitnStyle:topMargin(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self.style.top_margin = value
+    
+    return self
+end
+
+-- set bottom_margin
+function RitnStyle:bottomMargin(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self.style.bottom_margin = value
+    
+    return self
+end
+
+-- set left_margin
+function RitnStyle:leftMargin(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self.style.left_margin = value
+    
+    return self
+end
+
+-- set right_margin
+function RitnStyle:rightMargin(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self.style.right_margin = value
+    
+    return self
+end
+
+
 -- set padding
 function RitnStyle:padding(value)
     if value == nil then return self end 
