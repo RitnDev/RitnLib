@@ -6,6 +6,9 @@ local color = require("__RitnLib__.core.constants").color
 
 
 local RitnStyle = class.newclass(function(base, LuaGuiElement)
+    if LuaGuiElement == nil then return end
+    if LuaGuiElement.object_name ~= "LuaGuiElement" then return end
+
     -- base
     base.object_name = "RitnStyle"
     base.style = LuaGuiElement.style
@@ -132,7 +135,9 @@ function RitnStyle:spriteButton(size)
 
     self.style.padding = 0
     self.style.minimal_width = width
-    self.style.maximal_width = height
+    self.style.maximal_width = width
+    self.style.minimal_height = height
+    self.style.maximal_height = height
 
     return self
 end

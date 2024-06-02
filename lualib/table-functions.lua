@@ -8,7 +8,15 @@ local function length(table)
     if table == nil then return size end
     for _ in pairs(table) do size = size + 1 end
     return size
-  end
+end
+
+-- tableau est plein ?
+local function isEmpty(table)
+    local size = length(table)
+    local isEmpty = false
+    if size <= 0 then isEmpty = true end
+    return isEmpty
+end
   
   
 -- tableau est plein ?
@@ -84,6 +92,8 @@ local flib = {
         sort = table.sort,
         unpack = table.unpack,
         busy = busy,
+        isEmpty = isEmpty,
+        empty = isEmpty,
         length = length,
         indexOf = indexOf,
         index = index,

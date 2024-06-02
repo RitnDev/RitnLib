@@ -139,8 +139,16 @@ local strings = {
     ["tilde-decorator"] = " ~ ",
     tilde3 = "~~~",
     special = {
+        ["right-arrow"] = "→",
+        ["right-arrow-decorator"] = " → ",
+        ["left-arrow"] = "←",
+        ["left-arrow-decorator"] = " ← ",
         ["two-way-arrow"] = "↔",
         ["two-way-arrow-decorator"] = " ↔ ",
+    },
+    puce = {
+        triangular = "‣",
+        ["triangular-decorator"] = " ‣ ",
     }
 }
 

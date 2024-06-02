@@ -19,6 +19,41 @@ end)
 
 
 --ADD NEW SPRITE
+function RitnProtoSprite:createUtility(priority, flags) 
+    if self.prototype == nil then return self end 
+
+    -- default values
+    local defaultPriority = "medium"
+    local defaultFlags = {"icon"}
+
+    -- priority present
+    if priority ~= nil then 
+        if type(priority) == "string" then 
+            defaultPriority = priority
+        end
+    end
+    
+    --flags present
+    if flags ~= nil then 
+        if type(flags) == "table" then
+            defaultFlags = flags
+        end
+    end
+
+
+    data.raw["utility-sprites"]["default"][self.name] = {
+        filename = self.prototype.filename,
+        priority = defaultPriority,
+        width = self.prototype.width,
+        height = self.prototype.height,
+        flags = defaultFlags
+    }
+
+    return self
+end
+
+
+--ADD NEW SPRITE
 function RitnProtoSprite:extend(name, file_name, size)
     if name == nil then return end
     if file_name == nil then return end
