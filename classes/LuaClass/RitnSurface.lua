@@ -44,9 +44,9 @@ end
 
 
 function RitnLibSurface:getEntity(position, unit_number, name, entityType) 
-    log('> '.. self.object_name .. ':getEntity()')
+    log('> '.. self.object_name .. ':getEntity(unit_number: '.. tostring(unit_number) ..', name: '.. tostring(name) ..', entityType: '.. tostring(entityType) .. ')')
     if not table.isPosition(position) then log("not position or nil") return nil end
-    if type(unit_number) == "nil" then log("not unit_number or nil") return nil end
+    if type(unit_number) == "nil" then log("unit_number is't an number, is: " .. type(unit_number)) return nil end
 
     -- enregistrement des valeurs de recherche, par défaut seulement la position
     local search = {
@@ -56,19 +56,19 @@ function RitnLibSurface:getEntity(position, unit_number, name, entityType)
     -- si le nom de l'entité est renseigné, on l'ajoute au critère de recherche
     if type(name) == "string" then search.name = name end
     -- si le type est renseigné et exite, on l'ajoute au critère de recherche
-    local vEntityType = string.isNotEmptyString(entityType)
-    if vEntityType ~= nil then 
+    local vEntityType = string.defaultValue(entityType)
+    if vEntityType ~= string.TOKEN_EMPTY_STRING then 
         if table.indexOf(entity_types, vEntityType) > 0 then 
             search.type = vEntityType 
         else
-            log("not unit_number or nil")
+            log("not entityType available")
         end
     end
 
     -- on lance la recherche -> retourne un tableau d'entité
     local tabEntities = self.surface.find_entities_filtered(search)
- 
-    local LuaEntity = table.index(tabEntities, "unit_number", id)
+    -- On récupère l'entité avec son unit_number dans la liste
+    local LuaEntity = table.index(tabEntities, "unit_number", unit_number)
     
     if type(LuaEntity) ~= "nil" then 
         return LuaEntity
