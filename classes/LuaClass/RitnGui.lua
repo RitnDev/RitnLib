@@ -1,36 +1,29 @@
--- RitnGui
+-- RitnLibGui
 ----------------------------------------------------------------
-local class = require(ritnlib.defines.class.core)
 local modGui = require("mod-gui")
 ----------------------------------------------------------------
-local RitnPlayer = require(ritnlib.defines.class.luaClass.player)
-local RitnEvent = require(ritnlib.defines.class.luaClass.event)
-----------------------------------------------------------------
-
 
 
 ----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
-local RitnGui = class.newclass(RitnPlayer, function(base, event, mod_name, main_gui)
-    local LuaPlayer = RitnEvent(event).player
+RitnLibGui = ritnlib.classFactory.newclass(RitnLibPlayer, function(self, event, mod_name, main_gui)
+    local LuaPlayer = RitnLibEvent(event).player
     if mod_name == nil then log('not mod_name !') return end
-    if LuaPlayer == nil then log('not LuaPlayer !') return end
-    if LuaPlayer.valid == false then log('not LuaPlayer valid !') return end
-    if LuaPlayer.is_player() == false then log('not LuaPlayer !') return end
-    if LuaPlayer.object_name ~= "LuaPlayer" then log('not LuaPlayer !') return end
-    RitnPlayer.init(base, LuaPlayer)
-    base.object_name = "RitnGui"
-    base.mod_name = mod_name
-    base.event = event
+
+    RitnLibPlayer.init(self, LuaPlayer)
+    
+    self.object_name = "RitnLibGui"
+    self.mod_name = mod_name
+    self.event = event
     --------------------------------------------------
-    base.element = RitnEvent(event).element
-    base.gui_action = {}
-    base.content = {}
-    base.gui_name = ""
-    base.main_gui = main_gui
+    self.element = RitnLibEvent(event).element
+    self.gui_action = {}
+    self.content = {}
+    self.gui_name = ""
+    self.main_gui = main_gui
     ----
-    base.gui = {
+    self.gui = {
         --screen = LuaPlayer.gui.screen,
         --center = LuaPlayer.gui.center,
         --top = modGui.get_button_flow(LuaPlayer),
@@ -38,14 +31,14 @@ local RitnGui = class.newclass(RitnPlayer, function(base, event, mod_name, main_
         --goal = LuaPlayer.gui.goal,
     }
     ----
-    base.pattern = "([^-]*)-?([^-]*)-?([^-]*)"  
+    self.pattern = "([^-]*)-?([^-]*)-?([^-]*)"  
     --------------------------------------------------
 end)
 
 ----------------------------------------------------------------
 
 
-function RitnGui:setMainGui(main_gui) 
+function RitnLibGui:setMainGui(main_gui) 
     if type(main_gui) ~= "string" then return self end
     self.main_gui = main_gui
     return self
@@ -54,7 +47,7 @@ end
 
 
 -- renvoie l'element souhaitez selon son nom
-function RitnGui:getElement(element_type, element_name)
+function RitnLibGui:getElement(element_type, element_name)
     local prefix = self.gui_name .. "-"
     local LuaGui = self.gui[1]
     local element = {}
@@ -76,7 +69,7 @@ end
 
 
 
-function RitnGui:actionGui(action, ...)
+function RitnLibGui:actionGui(action, ...)
     if self.gui_action[self.gui_name] == nil then return self end 
     if self.gui_action[self.gui_name][action] == nil then return self end 
     log('> '.. self.object_name ..':actionGui('.. action..')')
@@ -90,7 +83,7 @@ end
 
 
 -- Fonction : on_gui_click
-function RitnGui:on_gui_click(...)
+function RitnLibGui:on_gui_click(...)
     if not self.element.valid then log('element invalid !') return end
     if self.main_gui == nil then log('not main_gui !') return end
     if self.main_gui == "" then log('not main_gui !') return end
@@ -123,5 +116,40 @@ end
 
 
 
+-- Fonction : on_gui_selection_state_changed
+function RitnLibGui:on_gui_selection_state_changed(...)
+    if not self.element.valid then log('element invalid !') return end
+    if self.main_gui == nil then log('not main_gui !') return end
+    if self.main_gui == "" then log('not main_gui !') return end
+    if self.gui[1] == nil then --[[ log('not gui !') ]] return end
+    
+
+    local LuaGui = self.gui[1][self.gui_name .. "-" .. self.main_gui]
+    local list = {
+      ui, element, name, action
+    }
+  
+    -- getGui
+    if LuaGui == nil then return end
+    if LuaGui.name ~= self.gui_name .. "-" .. self.main_gui then return end
+    if self.element == nil then return end
+    if self.element.valid == false then return end
+
+    -- récupération des informations lors du clique
+    list.ui, list.element, list.name = string.match(self.element.name, self.pattern)
+    list.action = list.element .. "-" .. list.name .. "-selection_state_changed" 
+
+    if list.element ~= "listbox" then log('element invalid !') return end
+    if list.element ~= "dropdown" then log('element invalid !') return end
+
+    -- Actions
+    if list.ui == self.gui_name then
+        self:actionGui(list.action, ...)
+    end
+
+end
+
+
+
 ------------------------------------------------------------
-return RitnGui
+--return RitnLibGui

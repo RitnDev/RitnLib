@@ -4,50 +4,50 @@ local class = require("__RitnLib__.core.class")
 ----------------------------------------------------------------
 
 
-local RitnIngredient = class.newclass(function(base, ingredient)
+local RitnIngredient = class.newclass(function(self, ingredient)
     if type(ingredient) ~= "table" and type(ingredient) ~= "string" then return end
-    -- prototype base
-    base.object_name = "RitnIngredient"
-    base.ingredient = ingredient
-    base.name = ingredient.name or ingredient[1]
+    -- prototype self
+    self.object_name = "RitnIngredient"
+    self.ingredient = ingredient
+    self.name = ingredient.name or ingredient[1]
     
     if type(ingredient) == "string" then 
-        base.name = ingredient
+        self.name = ingredient
     end
 
-    log("RitnIngredient.name = " .. base.name)
+    log("RitnIngredient.name = " .. self.name)
 
-    base.type = ingredient.type
-    base.amount = ingredient.amount or ingredient[2]
-    base.amount_min = ingredient.amount_min
-    base.amount_max = ingredient.amount_max
-    base.probability = ingredient.probability
+    self.type = ingredient.type
+    self.amount = ingredient.amount or ingredient[2]
+    self.amount_min = ingredient.amount_min
+    self.amount_max = ingredient.amount_max
+    self.probability = ingredient.probability
     -- get basic type
-    if not base.type then
+    if not self.type then
         local item_type = "item"
-        if data.raw.fluid[base.name] then item_type = "fluid" end
-        base.type = item_type
+        if data.raw.fluid[self.name] then item_type = "fluid" end
+        self.type = item_type
     end
     -- get amount if not integer value
-    if base.type == "item" then
-        if base.amount then
-            if base.amount > 0 and base.amount < 1 then
-                base.amount = 1
+    if self.type == "item" then
+        if self.amount then
+            if self.amount > 0 and self.amount < 1 then
+                self.amount = 1
             else
-                base.amount = math.floor(base.amount)
+                self.amount = math.floor(self.amount)
             end
         end
     end
     --------------------------------------------------
-    base.item = {
-        name = base.name,
-        type = base.type,
-        amount = base.amount,
-        amount_min = base.amount_min,
-        amount_max = base.amount_max,
-        probability = base.probability
+    self.item = {
+        name = self.name,
+        type = self.type,
+        amount = self.amount,
+        amount_min = self.amount_min,
+        amount_max = self.amount_max,
+        probability = self.probability
     }
-    base.addit = true
+    self.addit = true
     --------------------------------------------------
 end)
 

@@ -1,13 +1,10 @@
--- RitnGuiElement
+-- RitnLibGuiElement
 ----------------------------------------------------------------
-local class = require("__RitnLib__.core.class")
+-- CLASSES DEFINES
 ----------------------------------------------------------------
-local pattern = "([^-]*)-?([^-]*)-?([^-]*)"
-
-
-local RitnGuiElement = class.newclass(function(base, ui_name, element_type, element_name)
-    -- GuiElement base
-    base.object_name = "RitnGuiElement"
+RitnLibGuiElement = ritnlib.classFactory.newclass(function(self, ui_name, element_type, element_name)
+    -- GuiElement self
+    self.object_name = "RitnLibGuiElement"
 
     local elementType = element_type
     if element_type == "sprite-button" then elementType = "button" end
@@ -20,85 +17,85 @@ local RitnGuiElement = class.newclass(function(base, ui_name, element_type, elem
     if element_type == "scroll-pane" then elementType = "pane" end
     if element_type == "tabbed-pane" then elementType = "tabbed" end
     
-    base.gui_name = ui_name .. "-" .. elementType .. "-" .. element_name
-    base.pattern = pattern
+    self.gui_name = ui_name .. "-" .. elementType .. "-" .. element_name
+    self.pattern = "([^-]*)-?([^-]*)-?([^-]*)"
     ----
-    base.name = element_name
-    base.type = element_type
-    base.ui = ui_name
-    base.action = element_type .. "-" .. element_name
+    self.name = element_name
+    self.type = element_type
+    self.ui = ui_name
+    self.action = element_type .. "-" .. element_name
     ----
-    base.hsp = "never"
-    base.hsp_valid = {
+    self.hsp = "never"
+    self.hsp_valid = {
         auto = true,
         never = true,
         always = true, 
         ["auto-and-reserve-space"] = true,
         ["dont-show-but-allow-scrolling"] = true,
     }
-    base.string_valid = {
+    self.string_valid = {
         string = true,
         table = true,
     }
-    base.orientation_valid = {
+    self.orientation_valid = {
         frame = true,
         flow = true,
         line = true,
     }
-    base.text_valid = {
+    self.text_valid = {
         textfield = true,
         ["text-box"] = true,
     }
-    base.button_valid = {
+    self.button_valid = {
         button = true,
         ["sprite-button"] = true,
     }
-    base.sprite_valid = {
+    self.sprite_valid = {
         sprite = true,
         ["sprite-button"] = true,
     }
-    base.check_valid = {
+    self.check_valid = {
         checkbox = true,
         radiobutton = true,
     }
     ----
-    base.gui_element = {
-        type = base.type,
-        name = base.gui_name,
+    self.gui_element = {
+        type = self.type,
+        name = self.gui_name,
         visible = true,
     }
 
     if element_type == "scroll-pane" then 
-        base.gui_element.horizontal_scroll_policy = base.hsp 
+        self.gui_element.horizontal_scroll_policy = self.hsp 
     end
     --------------------------------------------------
 end)
 
 
 
-function RitnGuiElement:add(parent)
-    log(self.gui_name .. ' > RitnGuiElement:add('.. parent.name ..')')
+function RitnLibGuiElement:add(parent)
+    log(self.gui_name .. ' > RitnLibGuiElement:add('.. parent.name ..')')
     if parent == nil then return end
     return parent.add(self.gui_element)
 end
 
-function RitnGuiElement:get()
-    log(self.gui_name .. ' > RitnGuiElement:getGuiElement()')
+function RitnLibGuiElement:get()
+    log(self.gui_name .. ' > RitnLibGuiElement:getGuiElement()')
     return self.gui_element
 end
 
 
 --frame or flow or line
-function RitnGuiElement:horizontal()
-    log(self.gui_name .. ' > RitnGuiElement:horizontal()')
+function RitnLibGuiElement:horizontal()
+    log(self.gui_name .. ' > RitnLibGuiElement:horizontal()')
     if self.orientation_valid[self.type] then
         self.gui_element.direction = "horizontal"
     end
     return self
 end
 
-function RitnGuiElement:vertical()
-    log(self.gui_name .. ' > RitnGuiElement:vertical()')
+function RitnLibGuiElement:vertical()
+    log(self.gui_name .. ' > RitnLibGuiElement:vertical()')
     if self.orientation_valid[self.type] then 
         self.gui_element.direction = "vertical"
     end
@@ -108,8 +105,8 @@ end
 
 
 --> auto_center = true (frame)
-function RitnGuiElement:autoCenter()
-    log(self.gui_name .. ' > RitnGuiElement:autoCenter()')
+function RitnLibGuiElement:autoCenter()
+    log(self.gui_name .. ' > RitnLibGuiElement:autoCenter()')
     if self.type == "frame" then 
         self.gui_element.auto_center = true
     end
@@ -117,8 +114,8 @@ function RitnGuiElement:autoCenter()
 end
 
 
-function RitnGuiElement:visible(visible)
-    log(self.gui_name .. ' > RitnGuiElement:visible()')
+function RitnLibGuiElement:visible(visible)
+    log(self.gui_name .. ' > RitnLibGuiElement:visible()')
     if type(visible) ~= "boolean" then return self end 
 
     self.gui_element.visible = visible
@@ -126,8 +123,8 @@ function RitnGuiElement:visible(visible)
     return self
 end
 
-function RitnGuiElement:enabled(enabled)
-    log(self.gui_name .. ' > RitnGuiElement:enabled()')
+function RitnLibGuiElement:enabled(enabled)
+    log(self.gui_name .. ' > RitnLibGuiElement:enabled()')
     if type(enabled) ~= "boolean" then return self end 
 
     self.gui_element.enabled = enabled
@@ -135,8 +132,8 @@ function RitnGuiElement:enabled(enabled)
     return self
 end
 
-function RitnGuiElement:caption(caption)
-    log(self.gui_name .. ' > RitnGuiElement:caption()')
+function RitnLibGuiElement:caption(caption)
+    log(self.gui_name .. ' > RitnLibGuiElement:caption()')
     if self.string_valid[type(caption)] then 
         self.gui_element.caption = caption
     end 
@@ -144,8 +141,8 @@ function RitnGuiElement:caption(caption)
     return self
 end
 
-function RitnGuiElement:tooltip(tooltip)
-    log(self.gui_name .. ' > RitnGuiElement:tooltip()')
+function RitnLibGuiElement:tooltip(tooltip)
+    log(self.gui_name .. ' > RitnLibGuiElement:tooltip()')
     if not self.string_valid[type(tooltip)] then return self end  
 
     self.gui_element.tooltip = tooltip
@@ -153,8 +150,8 @@ function RitnGuiElement:tooltip(tooltip)
     return self
 end
 
-function RitnGuiElement:index(index)
-    log(self.gui_name .. ' > RitnGuiElement:index()')
+function RitnLibGuiElement:index(index)
+    log(self.gui_name .. ' > RitnLibGuiElement:index()')
     if type(index) ~= "number" then return self end 
 
     self.gui_element.index = index
@@ -162,8 +159,8 @@ function RitnGuiElement:index(index)
     return self
 end
 
-function RitnGuiElement:text(text)
-    log(self.gui_name .. ' > RitnGuiElement:text()')
+function RitnLibGuiElement:text(text)
+    log(self.gui_name .. ' > RitnLibGuiElement:text()')
     if type(tooltip) ~= "string" then return self end 
 
     if self.text_valid[self.type] then
@@ -173,8 +170,8 @@ function RitnGuiElement:text(text)
     return self
 end
 
-function RitnGuiElement:style(style)
-    log(self.gui_name .. ' > RitnGuiElement:style()')
+function RitnLibGuiElement:style(style)
+    log(self.gui_name .. ' > RitnLibGuiElement:style()')
     if type(style) ~= "string" then return self end 
 
     self.gui_element.style = style
@@ -183,8 +180,8 @@ function RitnGuiElement:style(style)
 end
 
 
-function RitnGuiElement:spritePath(sprite)
-    log(self.gui_name .. ' > RitnGuiElement:spritePath()')
+function RitnLibGuiElement:spritePath(sprite)
+    log(self.gui_name .. ' > RitnLibGuiElement:spritePath()')
     if type(sprite) ~= "string" then return self end 
 
     if self.sprite_valid[self.type] then
@@ -195,8 +192,8 @@ function RitnGuiElement:spritePath(sprite)
 end
 
 
-function RitnGuiElement:horizontalScrollPolicy(hsp)
-    log(self.gui_name .. ' > RitnGuiElement:horizontalScrollPolicy()')
+function RitnLibGuiElement:horizontalScrollPolicy(hsp)
+    log(self.gui_name .. ' > RitnLibGuiElement:horizontalScrollPolicy()')
     if type(hsp) ~= "string" then return self end 
 
     if self.hsp_valid[hsp] then
@@ -208,8 +205,8 @@ function RitnGuiElement:horizontalScrollPolicy(hsp)
     return self
 end
 
-function RitnGuiElement:verticalScrollPolicy(vsp)
-    log(self.gui_name .. ' > RitnGuiElement:verticalScrollPolicy()')
+function RitnLibGuiElement:verticalScrollPolicy(vsp)
+    log(self.gui_name .. ' > RitnLibGuiElement:verticalScrollPolicy()')
     if type(vsp) ~= "string" then return self end 
 
     if self.hsp_valid[vsp] then
@@ -222,8 +219,8 @@ function RitnGuiElement:verticalScrollPolicy(vsp)
 end
 
 
-function RitnGuiElement:resizeSprite(resize)
-    log(self.gui_name .. ' > RitnGuiElement:resizeSprite()')
+function RitnLibGuiElement:resizeSprite(resize)
+    log(self.gui_name .. ' > RitnLibGuiElement:resizeSprite()')
     if type(resize) ~= "boolean" then return self end 
 
     if self.type == "sprite" then
@@ -233,8 +230,8 @@ function RitnGuiElement:resizeSprite(resize)
     return self
 end
 
-function RitnGuiElement:checked(check)
-    log(self.gui_name .. ' > RitnGuiElement:checked()')
+function RitnLibGuiElement:checked(check)
+    log(self.gui_name .. ' > RitnLibGuiElement:checked()')
     local state = true
     if check ~= nil then 
         if type(check) ~= "boolean" then return self end
@@ -249,8 +246,8 @@ function RitnGuiElement:checked(check)
 end
 
 
-function RitnGuiElement:progress(value)
-    log(self.gui_name .. ' > RitnGuiElement:progress()')
+function RitnLibGuiElement:progress(value)
+    log(self.gui_name .. ' > RitnLibGuiElement:progress()')
     local valueDefault = 0
     if value ~= nil then 
         if type(value) ~= "number" then return self end
@@ -266,8 +263,8 @@ function RitnGuiElement:progress(value)
 end
 
 
-function RitnGuiElement:mouseButtonFilter(value)
-    log(self.gui_name .. ' > RitnGuiElement:mouseButtonFilter()')
+function RitnLibGuiElement:mouseButtonFilter(value)
+    log(self.gui_name .. ' > RitnLibGuiElement:mouseButtonFilter()')
     local valueDefault = {'left'}
     if value ~= nil then 
         if type(value) ~= "table" then return self end
@@ -282,4 +279,4 @@ function RitnGuiElement:mouseButtonFilter(value)
 end 
 
 ----------------------------------------------------------------
-return RitnGuiElement
+--return RitnLibGuiElement

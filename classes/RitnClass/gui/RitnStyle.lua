@@ -1,40 +1,38 @@
--- RitnStyle
+-- RitnLibStyle
 ----------------------------------------------------------------
-local class = require("__RitnLib__.core.class")
 local color = require("__RitnLib__.core.constants").color
 ----------------------------------------------------------------
 
 
-local RitnStyle = class.newclass(function(base, LuaGuiElement)
+RitnLibStyle = ritnlib.classFactory.newclass(function(self, LuaGuiElement)
     if LuaGuiElement == nil then return end
     if LuaGuiElement.object_name ~= "LuaGuiElement" then return end
 
-    -- base
-    base.object_name = "RitnStyle"
-    base.style = LuaGuiElement.style
+    self.object_name = "RitnLibStyle"
+    self.style = LuaGuiElement.style
     ----
-    base.stretch = true
-    base.visible = false
-    base.center = "center"
+    self.stretch = true
+    self.visible = false
+    self.center = "center"
     ----
-    base.color = color
+    self.color = color
     ----
-    base.alignH = base.center 
-    base.alignV = base.center
+    self.alignH = self.center 
+    self.alignV = self.center
     --------------------------------------------------
 end)
 
 
 
 -- Preset : Label
-function RitnStyle:label()
+function RitnLibStyle:label()
     self.style.minimal_height = 25
     return self
 end
 
 
 -- Preset : scrollpane
-function RitnStyle:scrollpane()
+function RitnLibStyle:scrollpane()
     self.style.minimal_height = 220
     self.style.horizontally_stretchable = self.stretch
     return self
@@ -42,7 +40,7 @@ end
 
 
 -- Preset : listbox
-function RitnStyle:listbox()
+function RitnLibStyle:listbox()
     self.style.minimal_height = 220
     self.style.maximal_height = 220
     self.style.horizontally_stretchable = self.stretch
@@ -51,7 +49,7 @@ end
 
 
 -- Preset : small button
-function RitnStyle:smallButton()
+function RitnLibStyle:smallButton()
     
     self.style.height = 30
     self.style.horizontally_stretchable = self.stretch
@@ -62,7 +60,7 @@ function RitnStyle:smallButton()
 end
 
 -- Preset : normal button
-function RitnStyle:normalButton()
+function RitnLibStyle:normalButton()
 
     self.style.horizontally_stretchable = self.stretch
     self.style.minimal_height = 45
@@ -72,7 +70,7 @@ function RitnStyle:normalButton()
 end
 
 -- Preset : normal button
-function RitnStyle:menuButton()
+function RitnLibStyle:menuButton()
     self:normalButton()
     self.style.minimal_width = 220
     self.style.font_color = self.color.darkgrey
@@ -83,7 +81,7 @@ function RitnStyle:menuButton()
 end
 
 
-function RitnStyle:fontColor(color, hovered, clicked)
+function RitnLibStyle:fontColor(color, hovered, clicked)
     local defaultColor = self.color.white
     local optHovered = false
     local optClicked = false
@@ -119,7 +117,7 @@ end
 
 
 -- Preset : normal button
-function RitnStyle:spriteButton(size)
+function RitnLibStyle:spriteButton(size)
 
     local default_size = 32
     if type(size) == "number" then 
@@ -143,7 +141,7 @@ function RitnStyle:spriteButton(size)
 end
 
 -- Preset : button close
-function RitnStyle:closeButton()
+function RitnLibStyle:closeButton()
 
     self:smallButton()
     self.style.width = 100
@@ -152,7 +150,7 @@ function RitnStyle:closeButton()
 end
 
 -- Preset : standard frame
-function RitnStyle:frame()
+function RitnLibStyle:frame()
 
     self.style.left_padding = 4
     self.style.right_padding = 4
@@ -164,7 +162,7 @@ function RitnStyle:frame()
 end
 
 -- Preset : strait Frame
-function RitnStyle:straitFrame()
+function RitnLibStyle:straitFrame()
     self:standardFrame() 
     self.style.minimal_width = 220
     self.style.maximal_height = 310
@@ -173,8 +171,8 @@ function RitnStyle:straitFrame()
 end
 
 
-function RitnStyle:visible(visible)
-    log(self.gui_name .. ' > RitnStyle:visible()')
+function RitnLibStyle:visible(visible)
+    log(self.gui_name .. ' > RitnLibStyle:visible()')
     if type(visible) ~= "boolean" then return self end 
 
     self.style.visible = visible
@@ -184,14 +182,14 @@ end
 
 
 -- no padding -> padding = 0
-function RitnStyle:noPadding()
+function RitnLibStyle:noPadding()
     self.style.padding = 0
     
     return self
 end
 
 -- all stretchable
-function RitnStyle:stretchable()
+function RitnLibStyle:stretchable()
 
     self:horizontalStretch()
     self:verticalStretch()
@@ -200,7 +198,7 @@ function RitnStyle:stretchable()
 end
 
 -- horizontally stretchable
-function RitnStyle:horizontalStretch(value)
+function RitnLibStyle:horizontalStretch(value)
     if value ~= nil then
         if type(value) == "boolean" then 
             self.stretch = value
@@ -214,7 +212,7 @@ function RitnStyle:horizontalStretch(value)
 end
 
 -- vertically stretchable
-function RitnStyle:verticalStretch(value)
+function RitnLibStyle:verticalStretch(value)
     if value ~= nil then
         if type(value) == "boolean" then 
             self.stretch = value
@@ -229,7 +227,7 @@ end
 
 
 -- horizontally stretchable
-function RitnStyle:horizontalSpacing(value)
+function RitnLibStyle:horizontalSpacing(value)
     if value == nil then return self end
     if type(value) ~= "number" then return self end
 
@@ -239,7 +237,7 @@ function RitnStyle:horizontalSpacing(value)
 end
 
 -- vertically stretchable
-function RitnStyle:verticalSpacing(value)
+function RitnLibStyle:verticalSpacing(value)
     if value == nil then return self end
     if type(value) ~= "number" then return self end
 
@@ -248,7 +246,7 @@ function RitnStyle:verticalSpacing(value)
     return self
 end
 
-function RitnStyle:spacing(horizontal, vertical)
+function RitnLibStyle:spacing(horizontal, vertical)
     self:horizontalSpacing(horizontal)
     self:verticalSpacing(vertical)
     return self
@@ -256,7 +254,7 @@ end
 
 
 -- alignment (default center)
-function RitnStyle:align(valueH, valueV)
+function RitnLibStyle:align(valueH, valueV)
     if valueH ~= nil then self.alignH = valueH end
     if valueV ~= nil then self.alignV = valueV end
 
@@ -270,7 +268,7 @@ end
 --------------------------------
 
 -- set value width & height
-function RitnStyle:size(width, height)
+function RitnLibStyle:size(width, height)
     self:width(width)
     self:height(height)
     
@@ -278,7 +276,7 @@ function RitnStyle:size(width, height)
 end
 
 -- set value width
-function RitnStyle:width(width)
+function RitnLibStyle:width(width)
     if width == nil then return self end 
     if type(width) ~= 'number' then return self end 
     
@@ -287,7 +285,7 @@ function RitnStyle:width(width)
     return self
 end
 
-function RitnStyle:height(height)
+function RitnLibStyle:height(height)
     if height == nil then return self end 
     if type(height) ~= 'number' then return self end 
     
@@ -298,7 +296,7 @@ end
 
 
 -- set value max height
-function RitnStyle:maxHeight(value)
+function RitnLibStyle:maxHeight(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -308,7 +306,7 @@ function RitnStyle:maxHeight(value)
 end
 
 -- set value max width
-function RitnStyle:maxWidth(value)
+function RitnLibStyle:maxWidth(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -318,7 +316,7 @@ function RitnStyle:maxWidth(value)
 end
 
 -- set value max height
-function RitnStyle:minHeight(value)
+function RitnLibStyle:minHeight(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -328,7 +326,7 @@ function RitnStyle:minHeight(value)
 end
 
 -- set value max width
-function RitnStyle:minWidth(value)
+function RitnLibStyle:minWidth(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -338,7 +336,7 @@ function RitnStyle:minWidth(value)
 end
 
 -- set font
-function RitnStyle:font(font)
+function RitnLibStyle:font(font)
     if font == nil then return self end 
     if type(font) ~= 'string' then return self end 
     
@@ -348,7 +346,7 @@ function RitnStyle:font(font)
 end
 
 -- set top_margin
-function RitnStyle:margin(value)
+function RitnLibStyle:margin(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -361,7 +359,7 @@ function RitnStyle:margin(value)
 end
 
 -- set top_margin
-function RitnStyle:topMargin(value)
+function RitnLibStyle:topMargin(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -371,7 +369,7 @@ function RitnStyle:topMargin(value)
 end
 
 -- set bottom_margin
-function RitnStyle:bottomMargin(value)
+function RitnLibStyle:bottomMargin(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -381,7 +379,7 @@ function RitnStyle:bottomMargin(value)
 end
 
 -- set left_margin
-function RitnStyle:leftMargin(value)
+function RitnLibStyle:leftMargin(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -391,7 +389,7 @@ function RitnStyle:leftMargin(value)
 end
 
 -- set right_margin
-function RitnStyle:rightMargin(value)
+function RitnLibStyle:rightMargin(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -402,7 +400,7 @@ end
 
 
 -- set padding
-function RitnStyle:padding(value)
+function RitnLibStyle:padding(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -416,7 +414,7 @@ end
 
 
 -- set top_padding
-function RitnStyle:topPadding(value)
+function RitnLibStyle:topPadding(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -426,7 +424,7 @@ function RitnStyle:topPadding(value)
 end
 
 -- set top_padding
-function RitnStyle:bottomPadding(value)
+function RitnLibStyle:bottomPadding(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -436,7 +434,7 @@ function RitnStyle:bottomPadding(value)
 end
 
 -- set top_padding
-function RitnStyle:leftPadding(value)
+function RitnLibStyle:leftPadding(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -446,7 +444,7 @@ function RitnStyle:leftPadding(value)
 end
 
 -- set top_padding
-function RitnStyle:rightPadding(value)
+function RitnLibStyle:rightPadding(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
     
@@ -457,4 +455,4 @@ end
 
 
 ----------------------------------------------------------------
-return RitnStyle
+--return RitnLibStyle

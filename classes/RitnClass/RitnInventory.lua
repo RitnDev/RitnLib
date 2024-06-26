@@ -1,15 +1,9 @@
--- RitnInventory
-----------------------------------------------------------------
-local class = require("__RitnLib__.core.class")
-----------------------------------------------------------------
-
-
-
+-- RitnLibInventory
 ----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
-local RitnInventory = class.newclass(function(base, LuaPlayer, inventoryGlobal)
-    base.object_name = "RitnInventory"
+RitnLibInventory = ritnlib.classFactory.newclass(function(self, LuaPlayer, inventoryGlobal)
+    self.object_name = "RitnLibInventory"
     if LuaPlayer == nil then return end
     if LuaPlayer.valid == false then return end
     if LuaPlayer.is_player() == false then return end
@@ -17,19 +11,19 @@ local RitnInventory = class.newclass(function(base, LuaPlayer, inventoryGlobal)
     if LuaPlayer.character == nil then return end
     if inventoryGlobal == nil then log('inventoryGlobal is nil') return end
     --------------------------------------------------
-    base.data = inventoryGlobal
-    base.player = LuaPlayer
-    base.name = LuaPlayer.name
+    self.data = inventoryGlobal
+    self.player = LuaPlayer
+    self.name = LuaPlayer.name
     ---
-    base.INVENTORY_SIZE_MAX = 65535
-    base.inventory_size = base.INVENTORY_SIZE_MAX
+    self.INVENTORY_SIZE_MAX = 65535
+    self.inventory_size = self.INVENTORY_SIZE_MAX
     --------------------------------------------------
 end)
 ----------------------------------------------------------------
 
 
 -- init data inventory
-function RitnInventory:init()
+function RitnLibInventory:init()
     if self.data[self.name] ~= nil then return self end
     log('> '..self.object_name..':init() -> '..self.name)
 
@@ -56,7 +50,7 @@ end
 ----------------------------------------------------------------
 
 -- SaveInventory
-function RitnInventory:saveInventory(define)
+function RitnLibInventory:saveInventory(define)
     if self.data[self.name] == nil then self:init() end
 
     local inventory = self.player.get_inventory(define)
@@ -73,7 +67,7 @@ function RitnInventory:saveInventory(define)
 end
   
 --LoadInventory
-function RitnInventory:loadInventory(define)
+function RitnLibInventory:loadInventory(define)
     if self.data[self.name] == nil then return self end
 
     local inventory1 = self.player.get_inventory(define)
@@ -91,7 +85,7 @@ function RitnInventory:loadInventory(define)
 end
 
 --insertInventory
-function RitnInventory:insertInventory(define)
+function RitnLibInventory:insertInventory(define)
     if self.data[self.name] == nil then return self end
     log('> '..self.object_name..':insertInventory(define) : -> define = '..define)
 
@@ -113,7 +107,7 @@ end
   
 ----------------------------------------------------------------
 -- SAVE ALL INVENTORY
-function RitnInventory:save_all_inventory()
+function RitnLibInventory:save_all_inventory()
     self:saveInventory(defines.inventory.character_main)
     self:saveInventory(defines.inventory.character_guns)
     self:saveInventory(defines.inventory.character_ammo)
@@ -124,7 +118,7 @@ function RitnInventory:save_all_inventory()
 end
   
 -- LOAD ALL INVENTORY
-function RitnInventory:load_all_inventory()
+function RitnLibInventory:load_all_inventory()
     self:loadInventory(defines.inventory.character_armor) -- /!\ priority armor
     self:loadInventory(defines.inventory.character_main)
     self:loadInventory(defines.inventory.character_guns)
@@ -135,7 +129,7 @@ function RitnInventory:load_all_inventory()
 end
 
 -- INSERT ALL INVENTORY
-function RitnInventory:insert_all_inventory()
+function RitnLibInventory:insert_all_inventory()
     self:insertInventory(defines.inventory.character_armor) -- /!\ priority armor
     self:insertInventory(defines.inventory.character_main)
     self:insertInventory(defines.inventory.character_guns)
@@ -149,7 +143,7 @@ end
 ----------------------------------------------------------------
 
 -- Save Logistic
-function RitnInventory:saveLogistic()
+function RitnLibInventory:saveLogistic()
     if self.data[self.name] == nil then self:init() end
 
     -- Demande logistique
@@ -180,7 +174,7 @@ end
   
 
 -- Load Logistic
-function RitnInventory:loadLogistic()
+function RitnLibInventory:loadLogistic()
     if self.data[self.name] == nil then return self end
 
     local slot_count = 0
@@ -209,7 +203,7 @@ end
 ----------------------------------------------------------------
 
 -- Save Cursor
-function RitnInventory:saveCursor()
+function RitnLibInventory:saveCursor()
     if self.data[self.name] == nil then self:init() end
 
     local stack = self.player.cursor_stack
@@ -221,7 +215,7 @@ function RitnInventory:saveCursor()
 end
   
 -- Load Cursor
-function RitnInventory:loadCursor()
+function RitnLibInventory:loadCursor()
     if self.data[self.name] == nil then return self end
 
     local stack = self.data[self.name]["cursor"][1]
@@ -236,7 +230,7 @@ end
 ----------------------------------------------------------------
 
 --- MASTER SAVE
-function RitnInventory:save(cursor)
+function RitnLibInventory:save(cursor)
     if self.data[self.name] == nil then self:init() end
     local option = false 
     if cursor ~= nil then option = cursor end
@@ -249,7 +243,7 @@ function RitnInventory:save(cursor)
 end
 
 --- MASTER LOAD
-function RitnInventory:load(cursor)
+function RitnLibInventory:load(cursor)
     if self.data[self.name] == nil then return self end
     local option = false 
     if cursor ~= nil then option = cursor end
@@ -262,7 +256,7 @@ function RitnInventory:load(cursor)
 end
 
 -- MASTER INSERT
-function RitnInventory:insert()
+function RitnLibInventory:insert()
     if self.data[self.name] == nil then return self end
     log('> '..self.object_name..':insert() -> '..self.name)
 
@@ -272,4 +266,4 @@ function RitnInventory:insert()
 end
 
 ----------------------------------------------------------------
-return RitnInventory
+--return RitnLibInventory

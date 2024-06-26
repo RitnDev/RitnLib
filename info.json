@@ -1,9 +1,11 @@
 {
   "name": "RitnLib",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "title": "RitnLib",
   "author": "Ritn",
   "description": "Function library for Ritn Mod.",
   "factorio_version": "1.1",
-  "dependencies": ["base >= 1.1"]
+  "dependencies": [
+    "base >= 1.1"
+  ]
 }

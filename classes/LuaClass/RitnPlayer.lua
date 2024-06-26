@@ -1,8 +1,7 @@
--- RitnPlayer
+-- RitnLibPlayer
 ----------------------------------------------------------------
-local class = require("__RitnLib__.core.class")
-local RitnForce = require(ritnlib.defines.class.luaClass.force)
-local RitnSurface = require(ritnlib.defines.class.luaClass.surface)
+
+
 ----------------------------------------------------------------
 --- FUNCTIONS
 ----------------------------------------------------------------
@@ -18,32 +17,32 @@ end
 ----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
-local RitnPlayer = class.newclass(function(base, LuaPlayer)
-    base.object_name = "RitnPlayer"
-    if LuaPlayer == nil then return end
-    if LuaPlayer.valid == false then return end
-    if LuaPlayer.is_player() == false then return end
-    if LuaPlayer.object_name ~= "LuaPlayer" then return end
+RitnLibPlayer = ritnlib.classFactory.newclass(function(self, LuaPlayer)
+    self.object_name = "RitnLibPlayer"
+    if LuaPlayer == nil then log('not LuaPlayer !') return end
+    if LuaPlayer.valid == false then log('not LuaPlayer valid !') return end
+    if LuaPlayer.is_player() == false then log('not LuaPlayer !') return end
+    if LuaPlayer.object_name ~= "LuaPlayer" then log('not LuaPlayer !') return end
     --------------------------------------------------
-    base.player = LuaPlayer
-    base.index = LuaPlayer.index
-    base.surface = LuaPlayer.surface
-    base.force = LuaPlayer.force
-    base.controller_type = LuaPlayer.controller_type
-    base.controller_name = getControllerName(LuaPlayer)
-    base.character = LuaPlayer.character
-    base.admin = LuaPlayer.admin
-    base.driving = LuaPlayer.driving
-    base.vehicle = LuaPlayer.vehicle
+    self.player = LuaPlayer
+    self.index = LuaPlayer.index
+    self.surface = LuaPlayer.surface
+    self.force = LuaPlayer.force
+    self.controller_type = LuaPlayer.controller_type
+    self.controller_name = getControllerName(LuaPlayer)
+    self.character = LuaPlayer.character
+    self.admin = LuaPlayer.admin
+    self.driving = LuaPlayer.driving
+    self.vehicle = LuaPlayer.vehicle
     ----
-    base.name = LuaPlayer.name
-    base.connected = LuaPlayer.connected
+    self.name = LuaPlayer.name
+    self.connected = LuaPlayer.connected
     --------------------------------------------------
 end)
 
 ----------------------------------------------------------------
 
-function RitnPlayer:print(text)
+function RitnLibPlayer:print(text)
     if type(text) == "table" then 
         self.player.print(serpent.block(text))
         return self
@@ -62,20 +61,20 @@ end
 
 
 
-function RitnPlayer:getForce()
-    return RitnForce(self.force)
+function RitnLibPlayer:getForce()
+    return RitnLibForce(self.force)
 end
 
 
 
-function RitnPlayer:getSurface()
-    return RitnSurface(self.surface)
+function RitnLibPlayer:getSurface()
+    return RitnLibSurface(self.surface)
 end 
 
 
 
 -- Cancel All Crafting
-function RitnPlayer:cancel_all_crafting()
+function RitnLibPlayer:cancel_all_crafting()
     pcall(function()
         while self.player.crafting_queue_size > 0 do
             self.player.cancel_crafting({
@@ -90,4 +89,4 @@ end
 
 
 
-return RitnPlayer
+--return RitnLibPlayer

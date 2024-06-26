@@ -1,11 +1,12 @@
 ritnlib = {
     defines = {
         gvv = "__gvv__.gvv",
-        event = "__RitnLib__/core/eventListener",        
+        event = "__RitnLib__.core.eventListener",        
         constants = "__RitnLib__.core.constants",
 
         other = "__RitnLib__/lualib/other-functions",
         table = "__RitnLib__/lualib/table-functions",
+        string = "__RitnLib__/lualib/string-functions",
         json = "__RitnLib__/lualib/json-functions",
         vanilla = {
             util = "__RitnLib__/lualib/vanilla/util",
@@ -23,6 +24,9 @@ ritnlib = {
         -- entity,                      -- DEPRECATED
         -- technology,                  -- DEPRECATED
         
+        -- setup-classes
+        setup = "__RitnLib__.core.setup-classes",
+
 
         class = {
             core = "__RitnLib__.core.class",
@@ -57,6 +61,7 @@ ritnlib = {
                 ingredient = "__RitnLib__/classes/RitnClass/RitnIngredient",
                 inventory = "__RitnLib__/classes/RitnClass/RitnInventory",
                 setting = "__RitnLib__/classes/RitnClass/RitnSetting",
+                informatron = "__RitnLib__/classes/RitnClass/RitnInformatron", -- beta
             },
             gui = {
                 element = "__RitnLib__/classes/RitnClass/gui/RitnGuiElement",
@@ -82,3 +87,6 @@ ritnlib = {
         },
     }
 }
+
+
+ritnlib.classFactory = require(ritnlib.defines.class.core)

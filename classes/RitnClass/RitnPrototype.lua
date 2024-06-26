@@ -5,12 +5,12 @@ local entity_types = require("__RitnLib__.lualib.vanilla.types_entity")
 local item_types = require("__RitnLib__.lualib.vanilla.types_item")
 ----------------------------------------------------------------
 
-local RitnPrototype = class.newclass(function(base, prototype_name, prototype_type)
-    -- prototype base
-    base.object_name = "RitnProtoBase"
-    base.name = prototype_name
-    base.type = prototype_type
-    base.prototype = nil
+local RitnPrototype = class.newclass(function(self, prototype_name, prototype_type)
+    -- prototype self
+    self.object_name = "RitnProtoBase"
+    self.name = prototype_name
+    self.type = prototype_type
+    self.prototype = nil
     --------------------------------------------------
 end)
 

@@ -130,6 +130,16 @@ local color = {
     green = {r = 0.529, g = 0.847, b = 0.545, a=1},
 }
 
+local enemy = {
+    size = {
+        small = "small",
+        medium = "medium",
+        big = "big",
+        behemoth = "behemoth",
+    }
+}
+
+
 local strings = {
     empty = "", 
     space = " ",
@@ -157,5 +167,6 @@ constants.listTint = listTint
 constants.tint = tint
 constants.color = color
 constants.strings = strings
+constants.enemy = enemy
 ------------------------------
 return constants

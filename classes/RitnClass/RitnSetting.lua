@@ -1,63 +1,63 @@
--- RitnSetting
+-- RitnLibSetting
 ----------------------------------------------------------------
 local class = require("__RitnLib__.core.class")
+----------------------------------------------------------------
 local json = require('__RitnLib__.lualib.json-functions')
 ----------------------------------------------------------------
-
-
+-- CLASSE DEFINES
 ----------------------------------------------------------------
-local RitnSetting = class.newclass(function(base, name)
-    base.object_name = "RitnSetting"
+local RitnLibSetting = class.newclass(function(self, name)
+    self.object_name = "RitnLibSetting"
     -----------------------------------------
-    base.name = "insert-setting-name-please"
+    self.name = "insert-setting-name-please"
     if name ~= nil then
         if type(name) == "string" then 
-            base.name = name
+            self.name = name
         end
     end
     -----
-    base.dataType = 'bool'
+    self.dataType = 'bool'
     -----
-    base.typeForSetting = 'bool-setting'
-    base.defaultValue = false
+    self.typeForSetting = 'bool-setting'
+    self.defaultValue = false
     -----
-    base.data_setting = {
-        type = base.dataType,
+    self.data_setting = {
+        type = self.dataType,
         name = name,
-        default_value = base.defaultValue,
+        default_value = self.defaultValue,
         setting_type = "startup",
     }
     --------------------------------------------------
 end)
 ------------------ CONSTANTES -------------------
-RitnSetting.TYPE = {
+RitnLibSetting.TYPE = {
     bool = "bool",
     int = "int",
     double = "double",
     string = "string",
     color = "color",
 }
-RitnSetting.VALUE = {
+RitnLibSetting.VALUE = {
     bool = false,
     int = 0,
     double = 0.0,
     string = "",
     color = {},
 }
-RitnSetting.SETTING_TYPE = {
+RitnLibSetting.SETTING_TYPE = {
     startup = "startup",
     runtime = "runtime-global",
     player = "runtime-per-user",
 }
-RitnSetting.SETTING_SUFFIX = "-setting"
+RitnLibSetting.SETTING_SUFFIX = "-setting"
 --------------------------------------------------
 
-function RitnSetting:getType()
+function RitnLibSetting:getType()
     self.dataType = self.TYPE[self.dataType]
     return self.TYPE[self.dataType] .. self.SETTING_SUFFIX
 end
 
-function RitnSetting:setType()
+function RitnLibSetting:setType()
     self.typeForSetting = self:getType()
     ----
     self.data_setting.type = self.typeForSetting
@@ -68,7 +68,7 @@ end
 
 --------------------------------------------------
 
-function RitnSetting:getDefaultValue()
+function RitnLibSetting:getDefaultValue()
     log('> '..self.object_name..':getDefaultValue() -> dataType = '.. self.dataType)
     log('> '..self.object_name..':getDefaultValue() -> self.TYPE[self.dataType] = '.. self.TYPE[self.dataType])
     ---------------------------------------
@@ -77,31 +77,31 @@ end
 
 --------------------------------------------------
 
-function RitnSetting:setTypeBoolean()
+function RitnLibSetting:setTypeBoolean()
     self.dataType = self.TYPE.BOOL
     ---------------------------------------
     return self:setType()
 end
 
-function RitnSetting:setTypeInteger()
+function RitnLibSetting:setTypeInteger()
     self.dataType = self.TYPE.INTEGER
     ---------------------------------------
     return self:setType()
 end
 
-function RitnSetting:setTypeDouble()
+function RitnLibSetting:setTypeDouble()
     self.dataType = self.TYPE.DOUBLE
     ---------------------------------------
     return self:setType()
 end
 
-function RitnSetting:setTypeString()
+function RitnLibSetting:setTypeString()
     self.dataType = self.TYPE.STRING
     ---------------------------------------
     return self:setType()
 end
 
-function RitnSetting:setTypeColor()
+function RitnLibSetting:setTypeColor()
     self.dataType = self.TYPE.COLOR
     ---------------------------------------
     return self:setType()
@@ -109,19 +109,19 @@ end
 
 --------------------------------------------------
 
-function RitnSetting:setSettingStartup()
+function RitnLibSetting:setSettingStartup()
     self.data_setting.setting_type = self.SETTING_TYPE.startup
     ---------------------------------------
     return self
 end
 
-function RitnSetting:setSettingRuntime()
+function RitnLibSetting:setSettingRuntime()
     self.data_setting.setting_type = self.SETTING_TYPE.runtime
     ---------------------------------------
     return self
 end
 
-function RitnSetting:setSettingPlayer()
+function RitnLibSetting:setSettingPlayer()
     self.data_setting.setting_type = self.SETTING_TYPE.player
     ---------------------------------------
     return self
@@ -129,7 +129,7 @@ end
 
 --------------------------------------------------
 
-function RitnSetting:setDefaultValueBool(value)
+function RitnLibSetting:setDefaultValueBool(value)
     log('> '..self.object_name..':setDefaultValueBool() -> value = ' .. tostring(value))
     if self.dataType ~= self.TYPE.bool then return self end
     if type(value) ~= "boolean" then return self end 
@@ -141,7 +141,7 @@ end
 
 --------------------------------------------------
 -- Setter du champ 'order' du settings
-function RitnSetting:setOrder(order)
+function RitnLibSetting:setOrder(order)
     if order == nil then return self end 
     if type(order) ~= "string" then return self end 
 
@@ -155,7 +155,7 @@ end
 
 --------------------------------------------------
 -- création du nouveau setting
-function RitnSetting:new()
+function RitnLibSetting:new()
     self:setType()
     self.data_setting.default_value = self.defaultValue
     ---------------------------------------
@@ -167,4 +167,4 @@ end
 
 
 ----------------------------------------------------------------
-return RitnSetting
+return RitnLibSetting

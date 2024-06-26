@@ -1,10 +1,7 @@
--- RitnEvent
+-- RitnLibEvent
 ----------------------------------------------------------------
-local class = require("__RitnLib__.core.class")
-local RitnPlayer = require(ritnlib.defines.class.luaClass.player)
-local RitnForce = require(ritnlib.defines.class.luaClass.force)
-local RitnSurface = require(ritnlib.defines.class.luaClass.surface)
-local RitnTechnology = require(ritnlib.defines.class.luaClass.tech)
+
+
 ----------------------------------------------------------------
 --- FUNCTIONS
 ----------------------------------------------------------------
@@ -138,71 +135,73 @@ local function getPosition(event, name)
     end
 end
 
-
+local string = require(ritnlib.defines.string)
 ----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
-local RitnEvent = class.newclass(function(base, event, mod_name)
+RitnLibEvent = ritnlib.classFactory.newclass(function(self, event, mod_name)
     local modName = "RitnLib"
     if event == nil then return end
     if mod_name ~= nil then modName = mod_name end
-    base.object_name = "RitnEvent"
+    self.object_name = "RitnLibEvent"
     ---------------------------------
-    base.mod_name = modName
-    base.event = event
-    base.name = getEventName(event)                 -- defines
-    base.index = event.name                         -- index
+    self.mod_name = modName
+    self.event = event
+    self.name = string.defaultValue(getEventName(event), "on_tick") -- defines
+    self.index = event.name                         -- index
     ---------------------------------
-    base.player = getPlayer(event)                  -- (LuaPlayer)
-    base.surface = getSurface(event)                -- (LuaSurface)
-    base.force = getForce(event)                    -- (LuaForce)
-    base.recipe = getRecipe(event)                  -- (LuaRecipe)
-    base.technology = getTech(event)                -- (LuaTechnology)
-    base.entity = getEntity(event)                  -- (LuaEntity)
-    base.robot = getRobot(event)                    -- (LuaEntity)
-    base.rocket = getRocket(event)                  -- (LuaEntity)
-    base.inventory = getInventory(event)            -- (LuaInventory)
-    base.cause = event.cause                        -- (LuaEntity)?
+    self.player = getPlayer(event)                  -- (LuaPlayer)
+    self.surface = getSurface(event)                -- (LuaSurface)
+    self.force = getForce(event)                    -- (LuaForce)
+    self.recipe = getRecipe(event)                  -- (LuaRecipe)
+    self.technology = getTech(event)                -- (LuaTechnology)
+    self.entity = getEntity(event)                  -- (LuaEntity)
+    self.robot = getRobot(event)                    -- (LuaEntity)
+    self.rocket = getRocket(event)                  -- (LuaEntity)
+    self.inventory = getInventory(event)            -- (LuaInventory)
+    self.cause = event.cause                        -- (LuaEntity)?
     ----
-    base.reason = event.reason                      -- defines.disconnect_reason
-    base.queued_count = event.queued_count          -- (number)
-    base.gui_type = getGuiType(event.gui_type)
-    base.source = event.source                      -- (LuaForce) -> on_forces_merging(event)
-    base.source_name = event.source_name            -- (String) -> on_forces_merged(event)
-    base.area = event.area                          -- (area :: BoundingBox)
-    base.element = event.element                    -- (LuaGuiElement)
-    base.setting_name = event.setting               -- (string)
-    base.setting_type = event.setting_type          -- (string)
-    base.position = getPosition(event, base.name)   -- (MapPosition)
+    self.reason = event.reason                      -- defines.disconnect_reason
+    self.queued_count = event.queued_count          -- (number)
+    self.gui_type = getGuiType(event.gui_type)
+    self.source = event.source                      -- (LuaForce) -> on_forces_merging(event)
+    self.source_name = event.source_name            -- (String) -> on_forces_merged(event)
+    self.area = event.area                          -- (area :: BoundingBox)
+    self.element = event.element                    -- (LuaGuiElement)
+    self.setting_name = event.setting               -- (string)
+    self.setting_type = event.setting_type          -- (string)
+    self.position = getPosition(event, self.name)   -- (MapPosition)
     --------------------------------------------------
+    log(string.defaultValue(self.object_name, "toto"))
+    log(string.defaultValue(self.name, "tutu"))
 end)
 ----------------------------------------------------------------
 
 
-function RitnEvent:getSurface()
-    return RitnSurface(self.surface)
+function RitnLibEvent:getSurface()
+    return RitnLibSurface(self.surface)
 end
 
 
 
-function RitnEvent:getPlayer()
-    return RitnPlayer(self.player)
+function RitnLibEvent:getPlayer()
+    return RitnLibPlayer(self.player)
 end
 
 
 
-function RitnEvent:getForce()
-    return RitnForce(self.force)
+function RitnLibEvent:getForce()
+    return RitnLibForce(self.force)
 end
 
 
 
-function RitnEvent:getTechnology()
-    return RitnTechnology(self.technology)
+function RitnLibEvent:getTechnology()
+    return RitnLibTechnology(self.technology)
 end
 
 
-function RitnEvent:getReason()
+function RitnLibEvent:getReason()
     if self.reason == defines.disconnect_reason.quit then
         return "quit"
     elseif self.reason == defines.disconnect_reason.dropped then
@@ -230,12 +229,12 @@ end
 
 
 -- DiscoScience remote call setIngredient
-function RitnEvent.setIngredientColor(ingredient, color)
+function RitnLibEvent.setIngredientColor(ingredient, color)
     if type(ingredient) == "string" and type(color) == "table" then
-        log("RitnEvent | setIngredientColor() : ingredient = " .. ingredient)
+        log("RitnLibEvent | setIngredientColor() : ingredient = " .. ingredient)
 
         if remote.interfaces["DiscoScience"] and remote.interfaces["DiscoScience"]["setIngredientColor"] then
-            log("RitnEvent | remote call -> DiscoScience - setIngredientColor")
+            log("RitnLibEvent | remote call -> DiscoScience - setIngredientColor")
             remote.call("DiscoScience", "setIngredientColor", ingredient, color)
         end
     end
@@ -243,4 +242,4 @@ end
 
 
 ---------------------------------
-return RitnEvent
+--return RitnLibEvent

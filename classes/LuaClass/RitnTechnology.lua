@@ -1,11 +1,5 @@
--- RitnTechnology
+-- RitnLibTechnology
 ----------------------------------------------------------------
-local class = require("__RitnLib__.core.class")
-----------------------------------------------------------------
---- FUNCTIONS
-----------------------------------------------------------------
-
-
 
 
 
@@ -13,18 +7,18 @@ local class = require("__RitnLib__.core.class")
 ----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
-local RitnTechnology = class.newclass(function(base, LuaTechnology)
-    base.object_name = "RitnTechnology"
+RitnLibTechnology = ritnlib.classFactory.newclass(function(self, LuaTechnology)
+    self.object_name = "RitnLibTechnology"
     if LuaTechnology == nil then return end
     if LuaTechnology.valid == false then return end
     if LuaTechnology.object_name ~= "LuaTechnology" then return end
     --------------------------------------------------
-    base.technology = LuaTechnology
+    self.technology = LuaTechnology
     ----
-    base.name = LuaTechnology.name
-    base.force = LuaTechnology.force
+    self.name = LuaTechnology.name
+    self.force = LuaTechnology.force
     ----
-    base.entity_type = "assembling-machine"
+    self.entity_type = "assembling-machine"
     --------------------------------------------------
 end)
 
@@ -38,7 +32,7 @@ end)
 -- @param setRecipe string - recipe name to replace
 -- @optional entityType string - Entity type (default = "assembling-machine")
 ------
-function RitnTechnology:updateRecipe(techFinished, disableTabRecipes, setRecipe, entityType)
+function RitnLibTechnology:updateRecipe(techFinished, disableTabRecipes, setRecipe, entityType)
     if self.name ~= techFinished then return self end
     if entityType ~= nil then self.entity_type = entityType end
 
@@ -69,4 +63,4 @@ end
 
 
 ----------------------------------------------------------------
-return RitnTechnology
+--return RitnLibTechnology
