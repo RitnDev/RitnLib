@@ -1,8 +1,8 @@
 if not ritnlib then require("__RitnLib__/defines") end
 -----------------------------------------------------------------------------------------------------------------
 local Informatron = {
-    menu = require("__RitnLib__/luaLib/informatron/menu"),
-    pages = require("__RitnLib__/luaLib/informatron/pages"),
+    menu = require("__RitnLib__/lualib/informatron/menu"),
+    pages = require("__RitnLib__/lualib/informatron/pages"),
 }
 
 
