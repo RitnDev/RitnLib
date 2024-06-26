@@ -1,5 +1,6 @@
 # Documentation Ritnlib
 
-Documentation francophone : [Doc RitnLib FR](https://github.com/RitnDev/RitnLib/blob/main/docs/DOC_FR.md)
+[Wiki](https://github.com/RitnDev/RitnLib/wiki/RitnLib)
 
-English documentation : [Doc RitnLib EN](https://github.com/RitnDev/RitnLib/blob/main/docs/DOC_EN.md)
+English not supported ! (WIP)
+
