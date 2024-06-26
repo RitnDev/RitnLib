@@ -171,9 +171,7 @@ RitnLibEvent = ritnlib.classFactory.newclass(function(self, event, mod_name)
     self.setting_name = event.setting               -- (string)
     self.setting_type = event.setting_type          -- (string)
     self.position = getPosition(event, self.name)   -- (MapPosition)
-    --------------------------------------------------
-    log(string.defaultValue(self.object_name, "toto"))
-    log(string.defaultValue(self.name, "tutu"))
+    ----
 end)
 ----------------------------------------------------------------
 
