@@ -1,17 +1,16 @@
 -- RitnLibTechnology
 ----------------------------------------------------------------
-
-
+local util = require(ritnlib.defines.other)
 
 
 ----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
 RitnLibTechnology = ritnlib.classFactory.newclass(function(self, LuaTechnology)
-    self.object_name = "RitnLibTechnology"
-    if LuaTechnology == nil then return end
+    if util.type(LuaTechnology) ~= "LuaTechnology" then log('not LuaTechnology !') return end
     if LuaTechnology.valid == false then return end
-    if LuaTechnology.object_name ~= "LuaTechnology" then return end
+    ----
+    self.object_name = "RitnLibTechnology"
     --------------------------------------------------
     self.technology = LuaTechnology
     ----

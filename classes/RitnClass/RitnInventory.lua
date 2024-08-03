@@ -264,6 +264,3 @@ function RitnLibInventory:insert()
 
     return self
 end
-
-----------------------------------------------------------------
---return RitnLibInventory

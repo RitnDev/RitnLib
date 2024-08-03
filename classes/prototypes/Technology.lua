@@ -72,9 +72,9 @@ end
 function RitnProtoTech:disable(delete_prerequisites) 
     if self.prototype == nil then return self end
     self.prototype.enabled = false
-	self.prototype.hidden= true
+	self.prototype.hidden = true
 
-	if delete_prerequisites ~= nil then 
+	if type(delete_prerequisites) == 'boolean' then 
         self.delete_prerequisite = delete_prerequisites 
     end
 

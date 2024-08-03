@@ -1,5 +1,7 @@
 --Others Functions :
 --------------------------
+local types = require("__RitnLib__.core.constants").types
+--------------------------
 
 -- print() pour Ritn uniquement
 local function ritnPrint(txt)
@@ -35,17 +37,7 @@ local function table_to_json(table)
 end
 
 
-
--- if then else -> façon ternaire
-local function ifElse(Condition, Then, Else)
-    if Condition then 
-        return Then 
-    else 
-        return Else 
-    end
-end
-
--- if then else -> façon ternaire
+-- Fonction try catch avec log
 local function tryCatch(funcTry, funcCatch)
     if type(funcTry) == 'function' then 
         local result, errorMsg = pcall(funcTry)
@@ -53,13 +45,50 @@ local function tryCatch(funcTry, funcCatch)
             log('[ERROR] > '..errorMsg)
             if type(funcCatch) == 'function' then 
                 funcCatch()
-            else
-                log("[ERROR] > tryCatch(f1, f2) -> [f2] is'nt function (catch)")
             end
         end
     else
         log("[ERROR] > tryCatch(f1, f2) -> [f1] is'nt function (try)")
     end
+end
+
+-- if then else -> façon ternaire
+local function ifElse(Condition, Then, Else)
+  if Condition then 
+      if type(Then) == "function" then 
+        return tryCatch(Then())
+      else
+        return Then 
+      end
+  else 
+      if type(Else) == "function" then 
+        return tryCatch(Else())
+      else
+        return Else 
+      end
+  end
+end
+
+
+-- return type or object_name
+local function data_type(value)
+  local data_type
+
+  local result = pcall(function() 
+    data_type = value.object_name
+  end)
+  if result then return data_type end
+
+  return type(value)
+end
+
+
+-- Retourne vrai si la valeur est une chaine de caractère
+local function isType(value, pType)
+  -- vérification que pType fait partie de la liste des types accepté
+  if types[pType] == nil then return false end
+
+  return (data_type(value) == pType)
 end
 
 
@@ -441,8 +470,10 @@ local ritnlib = {}
 ritnlib = {
     ritnPrint = ritnPrint,
     ritnLog = ritnLog,
+    type = data_type,
     ifElse = ifElse,
     tryCatch = tryCatch,
+    isType = isType,
     str_start = str_start,
     split = split,
     getn = getn,

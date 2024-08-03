@@ -4,7 +4,6 @@ local rLib = require("__RitnLib__/lualib/other-functions")
 
 -- Retourne vrai si la valeur est une chaine de caractère
 local function isString(value) 
-    if value == nil then return false end 
     return (type(value) == "string")
 end
 

@@ -1,14 +1,15 @@
 -- RitnLibForce
 ----------------------------------------------------------------
 local table = require(ritnlib.defines.table)
+local util = require(ritnlib.defines.other)
 ----------------------------------------------------------------
 
 ----------------------------------------------------------------
 RitnLibForce = ritnlib.classFactory.newclass(function(self, LuaForce)
-    self.object_name = "RitnLibForce"
-    if LuaForce == nil then return end
+    if util.type(LuaForce) ~= "LuaForce" then log('not LuaForce !') return end
     if LuaForce.valid == false then return end
-    if LuaForce.object_name ~= "LuaForce" then return end
+    ---
+    self.object_name = "RitnLibForce"
     --------------------------------------------------
     self.force = LuaForce
     self.name = LuaForce.name

@@ -41,10 +41,14 @@ end
 
 
 --DISABLE RECIPE
-function RitnProtoRecipe:setEnabled(value) 
-	if value == nil then return self end
-    if type(value) ~= 'boolean' then return self end
+function RitnProtoRecipe:setEnabled(pValue) 
     if self.prototype == nil then return self end
+
+    local value = true
+    if type(pValue) == 'boolean' then 
+        value = pValue
+    end
+    
     
     if self.prototype.enabled ~= nil then
         self.prototype.enabled = value

@@ -128,7 +128,23 @@ local color = {
     titlecolor = {r=1,g=0.901961,b=0.752941,a=1},
     orange = {r = 0.98, g = 0.66, b = 0.22},
     green = {r = 0.529, g = 0.847, b = 0.545, a=1},
+    aqua = {r=0, g=1, b=1, a=1},
+    deepskyblue = {r = 0.217, g = 0.715, b = 0.874, a = 1},
+    mediumpurple = {r = 0.576, g = 0.439, b = 0.859, a = 1},
+    plum = {r = 0.867, g = 0.627, b = 0.867, a = 1},
+    plumblue = {r = 0.733, g = 0.627, b = 0.867, a = 1},
 }
+
+
+local types = {
+    boolean = "boolean",
+    string = "string",
+    number = "number",
+    table = "table",
+    func = "function",
+    ["nil"] = "nil",
+}
+
 
 local enemy = {
     size = {
@@ -166,7 +182,9 @@ local strings = {
 constants.listTint = listTint
 constants.tint = tint
 constants.color = color
+constants.colors = color
 constants.strings = strings
 constants.enemy = enemy
+constants.types = types
 ------------------------------
 return constants

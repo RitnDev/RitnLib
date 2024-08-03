@@ -38,6 +38,12 @@ end)
 ----------------------------------------------------------------
 
 
+-- @return object: RitnEvent
+function RitnLibGui:getEvent()
+    return RitnLibEvent(self.event)
+end
+
+
 function RitnLibGui:setMainGui(main_gui) 
     if type(main_gui) ~= "string" then return self end
     self.main_gui = main_gui
@@ -65,6 +71,39 @@ function RitnLibGui:getElement(element_type, element_name)
     end
 
     return LuaGui
+end
+
+
+-- renvoie l'element souhaitez selon son nom
+function RitnLibGui:getListSelectedItem(element_type, element_name)
+    log('> '..self.object_name..':getListSelectedItem('.. tostring(element_type) .. ', ' .. tostring(element_name) ..')')
+    if type(element_type) ~= 'string' then 
+        log('element_type is not a string')
+        return 
+    end
+    if type(element_name) ~= 'string' then 
+        log('element_name is not a string')
+        return 
+    end
+
+    local list = self:getElement(element_type, element_name)
+    
+    -- verifications
+    if list == nil then log('getElement is nil') return end 
+    if list.valid == false then log('list is not valid') return end 
+    if list.type ~= 'list-box' and list.type ~= 'drop-down' then 
+        log('list is not list-box or drop-down => ' .. tostring(list.type))
+        return 
+    end
+
+    local selected_index = list.selected_index
+
+    -- On vérifie qu'il y a bien un élément sélectionné
+    if selected_index == nil then return nil end 
+    if selected_index == 0 then return nil end 
+    log('selected_index == ' .. tostring(selected_index))
+        
+    return list.get_item(selected_index)
 end
 
 

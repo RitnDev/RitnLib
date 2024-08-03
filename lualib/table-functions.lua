@@ -68,7 +68,7 @@ local function indexOf(pTable, pValue)
 
     return rIndex
 end
-  
+
 
 --renvoie la valeur de l'index selon la valeur d'une key
 local function index(pTable, key, value)
@@ -102,6 +102,14 @@ local function getIndex(pTable, pPosition)
     return nil
 end
 
+
+-- Supprime de la table le premier element égale à la valeur trouvé dans la table
+local function removeByValue(pTable, value)
+    local index = indexOf(pTable, value)
+    if index > 0 then 
+        table.remove(pTable, index)
+    end
+end
 
 -- Retourne une valeur au hasard de mon tableau
 local function getRandom(pTable)
@@ -150,6 +158,7 @@ local flib = {
         pack = table.pack,
         pairs_concat = table.pairs_concat,
         remove = table.remove,
+        removeByValue = removeByValue,
         sort = table.sort,
         unpack = table.unpack,
         getRandom = getRandom,

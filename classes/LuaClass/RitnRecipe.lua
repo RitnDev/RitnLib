@@ -1,21 +1,16 @@
 -- RitnLibRecipe
 ----------------------------------------------------------------
-
-
-----------------------------------------------------------------
---- FUNCTIONS
-----------------------------------------------------------------
-
+local util = require(ritnlib.defines.other)
 
 
 ----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
 RitnLibRecipe = ritnlib.classFactory.newclass(function(self, LuaRecipe)
-    self.object_name = "RitnLibRecipe"
-    if LuaRecipe == nil then return end
+    if util.type(LuaRecipe) ~= "LuaRecipe" then log('not LuaRecipe !') return end
     if LuaRecipe.valid == false then return end
-    if LuaRecipe.object_name ~= "LuaRecipe" then return end
+    ----
+    self.object_name = "RitnLibRecipe"
     --------------------------------------------------
     self.recipe = LuaRecipe
     self.prototype = LuaRecipe.prototype

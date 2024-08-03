@@ -8,6 +8,7 @@ require(ritnlib.defines.class.luaClass.tech)                    -- RitnLibTechno
 require(ritnlib.defines.class.luaClass.force)                   -- RitnLibForce
 require(ritnlib.defines.class.luaClass.surface)                 -- RitnLibSurface
 require(ritnlib.defines.class.luaClass.player)                  -- RitnLibPlayer
+require(ritnlib.defines.class.luaClass.entity)                  -- RitnLibEntity
 require(ritnlib.defines.class.luaClass.event)                   -- RitnLibEvent
 require(ritnlib.defines.class.luaClass.gui)                     -- RitnLibGui               extends: RitnLibPlayer
 -- specifics

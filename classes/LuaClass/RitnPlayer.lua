@@ -1,6 +1,6 @@
 -- RitnLibPlayer
 ----------------------------------------------------------------
-
+local util = require(ritnlib.defines.other)
 
 ----------------------------------------------------------------
 --- FUNCTIONS
@@ -18,11 +18,12 @@ end
 --- CLASSE DEFINES
 ----------------------------------------------------------------
 RitnLibPlayer = ritnlib.classFactory.newclass(function(self, LuaPlayer)
-    self.object_name = "RitnLibPlayer"
-    if LuaPlayer == nil then log('not LuaPlayer !') return end
+    -- check input params
+    if util.type(LuaPlayer) ~= "LuaPlayer" then log('not LuaPlayer !') return end
     if LuaPlayer.valid == false then log('not LuaPlayer valid !') return end
     if LuaPlayer.is_player() == false then log('not LuaPlayer !') return end
-    if LuaPlayer.object_name ~= "LuaPlayer" then log('not LuaPlayer !') return end
+    ----
+    self.object_name = "RitnLibPlayer"
     --------------------------------------------------
     self.player = LuaPlayer
     self.index = LuaPlayer.index
@@ -86,7 +87,7 @@ function RitnLibPlayer:cancel_all_crafting()
 end
 
 
-
-
-
---return RitnLibPlayer
+-- Player on Nauvis surface
+function RitnLibPlayer:onNauvis() 
+    return self.surface.name == 'nauvis'
+end
