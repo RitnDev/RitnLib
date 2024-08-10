@@ -1,13 +1,16 @@
 -- RitnLibInventory
 ----------------------------------------------------------------
+local util = require(ritnlib.defines.other)
+----------------------------------------------------------------
 --- CLASSE DEFINES
 ----------------------------------------------------------------
 RitnLibInventory = ritnlib.classFactory.newclass(function(self, LuaPlayer, inventoryGlobal)
     self.object_name = "RitnLibInventory"
-    if LuaPlayer == nil then return end
-    if LuaPlayer.valid == false then return end
-    if LuaPlayer.is_player() == false then return end
-    if LuaPlayer.object_name ~= "LuaPlayer" then return end
+    -- check input params
+    if util.type(LuaPlayer) ~= "LuaPlayer" then log('not LuaPlayer !') return end
+    if LuaPlayer.valid == false then log('not LuaPlayer valid !') return end
+    if LuaPlayer.is_player() == false then log('not LuaPlayer !') return end
+    --
     if LuaPlayer.character == nil then return end
     if inventoryGlobal == nil then log('inventoryGlobal is nil') return end
     --------------------------------------------------
@@ -104,6 +107,13 @@ function RitnLibInventory:insertInventory(define)
 
     return self
 end
+
+
+--deleteInventory
+function RitnLibInventory:deleteInventory(define)
+    self.player.get_inventory(define).clear()
+    return self
+end
   
 ----------------------------------------------------------------
 -- SAVE ALL INVENTORY
@@ -136,6 +146,16 @@ function RitnLibInventory:insert_all_inventory()
     self:insertInventory(defines.inventory.character_ammo)
 
     return self
+end
+
+
+-- DELETE ALL INVENTORY
+function RitnLibInventory:delete_all_inventory()
+    self:deleteInventory(defines.inventory.character_main)
+    self:deleteInventory(defines.inventory.character_guns)
+    self:deleteInventory(defines.inventory.character_ammo)
+    self:deleteInventory(defines.inventory.character_armor)
+    self:deleteInventory(defines.inventory.character_trash)
 end
 
 ----------------------------------------------------------------
@@ -227,6 +247,16 @@ function RitnLibInventory:loadCursor()
 end
 
 
+-- Delete Cursor
+function RitnLibInventory:deleteCursor()
+    local stack = self.player.cursor_stack
+    if stack.valid then
+        self.player.cursor_stack.clear()
+    end
+
+    return self
+end
+
 ----------------------------------------------------------------
 
 --- MASTER SAVE
@@ -261,6 +291,17 @@ function RitnLibInventory:insert()
     log('> '..self.object_name..':insert() -> '..self.name)
 
     self:insert_all_inventory()--:insertLogistic()
+
+    return self
+end
+
+
+-- MASTER DELETE
+function RitnLibInventory:delete()
+    log('> '..self.object_name..':delete() -> '..self.name)
+
+    self:delete_all_inventory()
+    self:deleteCursor()
 
     return self
 end

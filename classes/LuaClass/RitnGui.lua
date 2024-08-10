@@ -123,7 +123,7 @@ end
 
 -- Fonction : on_gui_click
 function RitnLibGui:on_gui_click(...)
-    if not self.element.valid then log('element invalid !') return end
+    if not self.element.valid then return end
     if self.main_gui == nil then log('not main_gui !') return end
     if self.main_gui == "" then log('not main_gui !') return end
     if self.gui[1] == nil then --[[ log('not gui !') ]] return end

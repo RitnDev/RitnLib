@@ -18,7 +18,7 @@ module.settings = {}
 module.settings.debug_mode = (settings.global["EL_debug-mode"] and settings.global["EL_debug-mode"].value) or false
 module.settings.log_mode = (settings.global["EL_logs-mode"] and not settings.global["EL_logs-mode"].value) or true
 module.settings.is_set_events_filters = true
-module.version = "0.9.5"
+module.version = "0.9.2"
 
 local function new_log(message)
 	if module.settings.log_mode then return end
