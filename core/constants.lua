@@ -143,6 +143,8 @@ local types = {
     table = "table",
     func = "function",
     ["nil"] = "nil",
+    --userdata = "userdata",  
+    --thread = "thread",
 }
 
 

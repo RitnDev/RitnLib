@@ -72,23 +72,23 @@ end
 
 -- return type or object_name
 local function data_type(value)
-  local data_type
+	local data_type
 
-  local result = pcall(function() 
-    data_type = value.object_name
-  end)
-  if result then return data_type end
+	local result = pcall(function() 
+		data_type = value.object_name
+	end)
+	if result then return data_type end
 
-  return type(value)
+	return type(value)
 end
 
 
 -- Retourne vrai si la valeur est une chaine de caractère
 local function isType(value, pType)
-  -- vérification que pType fait partie de la liste des types accepté
-  if types[pType] == nil then return false end
+	-- vérification que pType fait partie de la liste des types accepté
+	if types[pType] == nil then return false end
 
-  return (data_type(value) == pType)
+	return (data_type(value) == pType)
 end
 
 
@@ -101,15 +101,15 @@ end
 -- Retourne tableau 
 local function split(inputstr, sep)
     if sep == nil then
-      sep = "%s"
+		sep = "%s"
     end
     local t={}
     for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-      table.insert(t, str)
+		table.insert(t, str)
     end
     return t
 end
-  
+
 --récupère le nombre d'entité / items
 local function getn(tab)
     if tab ~= nil then
@@ -137,7 +137,7 @@ local function give_item_list(LuaPlayer, items)
         give_item(LuaPlayer, item)
     end
 end
-  
+
 -- Transforme un nombre de sec en timer foramt 00:00:00
 local function build_clock_string(time)
     local seconds = time

@@ -103,6 +103,20 @@ local function getIndex(pTable, pPosition)
 end
 
 
+-- Vérifie que la clé existe dans la table
+local function containsKey(pTable, key)
+    local result = false
+    for index,_ in pairs(pTable) do 
+        if index == key then 
+            result = true
+            break
+        end
+    end
+    return result
+end
+
+
+
 -- Supprime de la table le premier element égale à la valeur trouvé dans la table
 local function removeByValue(pTable, value)
     local index = indexOf(pTable, value)
@@ -110,6 +124,8 @@ local function removeByValue(pTable, value)
         table.remove(pTable, index)
     end
 end
+
+
 
 -- Retourne une valeur au hasard de mon tableau
 local function getRandom(pTable)
@@ -172,6 +188,7 @@ local flib = {
         getIndex = getIndex,
         isTable = isTable,
         isPosition = isPosition,
+        containsKey = containsKey,
     }
 }
 return flib.table

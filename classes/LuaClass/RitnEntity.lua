@@ -36,14 +36,13 @@ end
 RitnLibEntity = ritnlib.classFactory.newclass(function(self, LuaEntity)
     -- check input params
     if util.type(LuaEntity) ~= "LuaEntity" then 
-        log('LuaEntity parameter is not type LuaEntity -> ( type = ' .. util.type(LuaEntity) .. ')')
+        --log('LuaEntity parameter is not type LuaEntity -> ( type = ' .. util.type(LuaEntity) .. ')')
         return 
     end
     if LuaEntity.valid == false then log('not LuaEntity valid !') return end
     ----
     self.object_name = "RitnLibEntity"
     --------------------------------------------------
-    log('> '..self.object_name..'() -> init ok !')
     self.entity = LuaEntity
     ----
     self.name = LuaEntity.name
