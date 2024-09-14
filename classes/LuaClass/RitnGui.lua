@@ -31,6 +31,11 @@ RitnLibGui = ritnlib.classFactory.newclass(RitnLibPlayer, function(self, event, 
         --goal = LuaPlayer.gui.goal,
     }
     ----
+    self.list_valid = {
+        ["listbox"] = true,
+        ["dropdown"] = true,
+    }
+    ----
     self.pattern = "([^-]*)-?([^-]*)-?([^-]*)"  
     --------------------------------------------------
 end)
@@ -131,9 +136,9 @@ function RitnLibGui:on_gui_click(...)
 
     local LuaGui = self.gui[1][self.gui_name .. "-" .. self.main_gui]
     local click = {
-      ui, element, name, action
+        ui, element, name, action
     }
-  
+
     -- getGui
     if LuaGui == nil then return end
     --log('> ('..self.mod_name..') -> '.. self.object_name ..':on_gui_click('.. self.gui_name ..", " .. self.main_gui ..')')
@@ -165,9 +170,9 @@ function RitnLibGui:on_gui_selection_state_changed(...)
 
     local LuaGui = self.gui[1][self.gui_name .. "-" .. self.main_gui]
     local list = {
-      ui, element, name, action
+        ui, element, name, action
     }
-  
+
     -- getGui
     if LuaGui == nil then return end
     if LuaGui.name ~= self.gui_name .. "-" .. self.main_gui then return end
@@ -178,8 +183,12 @@ function RitnLibGui:on_gui_selection_state_changed(...)
     list.ui, list.element, list.name = string.match(self.element.name, self.pattern)
     list.action = list.element .. "-" .. list.name .. "-selection_state_changed" 
 
-    if list.element ~= "listbox" then log('element invalid !') return end
-    if list.element ~= "dropdown" then log('element invalid !') return end
+
+    if self.list_valid[list.element] then 
+    else
+        log('element invalid !') 
+        return
+    end
 
     -- Actions
     if list.ui == self.gui_name then
