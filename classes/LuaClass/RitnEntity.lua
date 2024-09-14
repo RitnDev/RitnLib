@@ -190,3 +190,30 @@ function RitnLibEntity:setPassenger(LuaPlayer)
         end
     end 
 end
+
+
+function RitnLibEntity:setMinable(value) 
+    local default = true
+    if util.type(value) == 'boolean' then
+        default = value
+    end
+
+    self.entity.minable = default
+end
+
+
+function RitnLibEntity:setDestructible(value) 
+    local default = true
+    if util.type(value) == 'boolean' then
+        default = value
+    end
+
+    self.entity.destructible = default
+end
+
+
+function RitnLibEntity:destroy() 
+    self:setMinable() 
+    self:setDestructible() 
+    self.entity.destroy()
+end

@@ -5,9 +5,9 @@ local types = require("__RitnLib__.core.constants").types
 
 -- print() pour Ritn uniquement
 local function ritnPrint(txt)
-  if game.players.Ritn.valid then
-      game.players.Ritn.print(txt)
-  end
+    if game.players.Ritn.valid then
+        game.players.Ritn.print(txt)
+    end
 end
 
 
@@ -22,18 +22,18 @@ end
 
 
 local function table_to_json(table)
-  local json = "{"
-  for key, value in pairs(table) do
-      if type(value) == "table" then
-          json = json .. '"' .. key .. '":' .. table_to_json(value) .. ','
-      elseif type(value) == "string" then
-          json = json .. '"' .. key .. '":"' .. value .. '",'
-      else
-          json = json .. '"' .. key .. '":' .. tostring(value) .. ','
-      end
-  end
-  json = json:sub(1, -2) .. "}"
-  return json
+    local json = "{"
+    for key, value in pairs(table) do
+        if type(value) == "table" then
+            json = json .. '"' .. key .. '":' .. table_to_json(value) .. ','
+        elseif type(value) == "string" then
+            json = json .. '"' .. key .. '":"' .. value .. '",'
+        else
+            json = json .. '"' .. key .. '":' .. tostring(value) .. ','
+        end
+    end
+    json = json:sub(1, -2) .. "}"
+    return json
 end
 
 
@@ -54,19 +54,19 @@ end
 
 -- if then else -> façon ternaire
 local function ifElse(Condition, Then, Else)
-  if Condition then 
-      if type(Then) == "function" then 
-        return tryCatch(Then())
-      else
-        return Then 
-      end
-  else 
-      if type(Else) == "function" then 
-        return tryCatch(Else())
-      else
-        return Else 
-      end
-  end
+    if Condition then 
+        if type(Then) == "function" then 
+            return tryCatch(Then())
+        else
+            return Then 
+        end
+    else 
+        if type(Else) == "function" then 
+            return tryCatch(Else())
+        else
+            return Else 
+        end
+    end
 end
 
 
@@ -241,183 +241,174 @@ local function assembler1pipepictures(path)
             }
         }
     }
-  end
+end
 
 local function pipecoverspictures(path)
-    return
-    {
-      north =
-      {
-        layers =
-        {
-          {
-            filename = path .."/pipe-cover-north.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            hr_version =
-            {
-              filename = path .."/hr-pipe-cover-north.png",
-              priority = "extra-high",
-              width = 128,
-              height = 128,
-              scale = 0.5
-            }
-          },
-          {
-            filename = path .."/pipe-cover-north-shadow.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            draw_as_shadow = true,
-            hr_version =
-            {
-              filename = path .."/hr-pipe-cover-north-shadow.png", -- "__base__/graphics/entity/pipe-covers/hr-pipe-cover-north-shadow.png"
-              priority = "extra-high",
-              width = 128,
-              height = 128,
-              scale = 0.5,
-              draw_as_shadow = true
-            }
-          }
-        }
-      },
-      east =
-      {
-        layers =
-        {
-          {
-            filename = path .."/pipe-cover-east.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            hr_version =
-            {
-              filename = path .."/hr-pipe-cover-east.png",
-              priority = "extra-high",
-              width = 128,
-              height = 128,
-              scale = 0.5
-            }
-          },
-          {
-            filename = path .."/pipe-cover-east-shadow.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            draw_as_shadow = true,
-            hr_version =
-            {
-              filename = path .."/hr-pipe-cover-east-shadow.png",
-              priority = "extra-high",
-              width = 128,
-              height = 128,
-              scale = 0.5,
-              draw_as_shadow = true
-            }
-          }
-        }
-      },
-      south =
-      {
-        layers =
-        {
-          {
-            filename = path .."/pipe-cover-south.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            hr_version =
-            {
-              filename = path .."/hr-pipe-cover-south.png",
-              priority = "extra-high",
-              width = 128,
-              height = 128,
-              scale = 0.5
-            }
-          },
-          {
-            filename = path .."/pipe-cover-south-shadow.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            draw_as_shadow = true,
-            hr_version =
-            {
-              filename = path .."/hr-pipe-cover-south-shadow.png",
-              priority = "extra-high",
-              width = 128,
-              height = 128,
-              scale = 0.5,
-              draw_as_shadow = true
-            }
-          }
-        }
-      },
-      west =
-      {
-        layers =
-        {
-          {
-            filename = path .."/pipe-cover-west.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            hr_version =
-            {
-              filename = path .."/hr-pipe-cover-west.png",
-              priority = "extra-high",
-              width = 128,
-              height = 128,
-              scale = 0.5
-            }
-          },
-          {
-            filename = path .."/pipe-cover-west-shadow.png",
-            priority = "extra-high",
-            width = 64,
-            height = 64,
-            draw_as_shadow = true,
-            hr_version =
-            {
-              filename = path .."/hr-pipe-cover-west-shadow.png",
-              priority = "extra-high",
-              width = 128,
-              height = 128,
-              scale = 0.5,
-              draw_as_shadow = true
-            }
-          }
-        }
-      }
-    }
-  end
+    return {
+		north = {
+			layers = {
+				{
+					filename = path .."/pipe-cover-north.png",
+					priority = "extra-high",
+					width = 64,
+					height = 64,
+					hr_version =
+					{
+						filename = path .."/hr-pipe-cover-north.png",
+						priority = "extra-high",
+						width = 128,
+						height = 128,
+						scale = 0.5
+					}
+				},
+				{
+					filename = path .."/pipe-cover-north-shadow.png",
+					priority = "extra-high",
+					width = 64,
+					height = 64,
+					draw_as_shadow = true,
+					hr_version =
+					{
+						filename = path .."/hr-pipe-cover-north-shadow.png", -- "__base__/graphics/entity/pipe-covers/hr-pipe-cover-north-shadow.png"
+						priority = "extra-high",
+						width = 128,
+						height = 128,
+						scale = 0.5,
+						draw_as_shadow = true
+					}
+				}
+			}
+		},
+		east = {
+			layers = {
+				{
+					filename = path .."/pipe-cover-east.png",
+					priority = "extra-high",
+					width = 64,
+					height = 64,
+					hr_version =
+					{
+						filename = path .."/hr-pipe-cover-east.png",
+						priority = "extra-high",
+						width = 128,
+						height = 128,
+						scale = 0.5
+					}
+				},
+				{
+					filename = path .."/pipe-cover-east-shadow.png",
+					priority = "extra-high",
+					width = 64,
+					height = 64,
+					draw_as_shadow = true,
+					hr_version =
+					{
+						filename = path .."/hr-pipe-cover-east-shadow.png",
+						priority = "extra-high",
+						width = 128,
+						height = 128,
+						scale = 0.5,
+						draw_as_shadow = true
+					}
+				}
+			}
+		},
+		south = {
+			layers = {
+				{
+					filename = path .."/pipe-cover-south.png",
+					priority = "extra-high",
+					width = 64,
+					height = 64,
+					hr_version =
+					{
+						filename = path .."/hr-pipe-cover-south.png",
+						priority = "extra-high",
+						width = 128,
+						height = 128,
+						scale = 0.5
+					}
+				},
+				{
+					filename = path .."/pipe-cover-south-shadow.png",
+					priority = "extra-high",
+					width = 64,
+					height = 64,
+					draw_as_shadow = true,
+					hr_version =
+					{
+						filename = path .."/hr-pipe-cover-south-shadow.png",
+						priority = "extra-high",
+						width = 128,
+						height = 128,
+						scale = 0.5,
+						draw_as_shadow = true
+					}
+				}
+			}
+		},
+		west = {
+			layers = {
+			{
+				filename = path .."/pipe-cover-west.png",
+				priority = "extra-high",
+				width = 64,
+				height = 64,
+				hr_version =
+				{
+					filename = path .."/hr-pipe-cover-west.png",
+					priority = "extra-high",
+					width = 128,
+					height = 128,
+					scale = 0.5
+				}
+			},
+			{
+				filename = path .."/pipe-cover-west-shadow.png",
+				priority = "extra-high",
+				width = 64,
+				height = 64,
+				draw_as_shadow = true,
+				hr_version =
+				{
+					filename = path .."/hr-pipe-cover-west-shadow.png",
+					priority = "extra-high",
+					width = 128,
+					height = 128,
+					scale = 0.5,
+					draw_as_shadow = true
+				}
+			}
+			}
+		}
+		}
+end
 
-  
+
 local function addFluidBoxes(entity)
-  if entity == nil then return end
+	if entity == nil then return end
 
-  return {
-    {
-        production_type = "input",
-        pipe_picture = assembler1pipepictures(entity .. "pipe_connections"),
-        pipe_covers = pipecoverspictures(entity .. "pipe-covers"),
-        base_area = 10,
-        base_level = -1,
-        pipe_connections = {{type="input", position = {0,-2}}},
-        secondary_draw_orders = { north = -1 }
-    },
-    {
-        production_type = "output",
-        pipe_picture = assembler1pipepictures(entity .. "pipe_connections"),
-        pipe_covers = pipecoverspictures(entity .. "pipe-covers"),
-        base_area = 10,
-        base_level = 1,
-        pipe_connections = {{type="output", position={0, 2}}},
-        secondary_draw_orders = {north = -1}
-    },
-    off_when_no_fluid_recipe = true
-  }
+	return {
+		{
+			production_type = "input",
+			pipe_picture = assembler1pipepictures(entity .. "pipe_connections"),
+			pipe_covers = pipecoverspictures(entity .. "pipe-covers"),
+			base_area = 10,
+			base_level = -1,
+			pipe_connections = {{type="input", position = {0,-2}}},
+			secondary_draw_orders = { north = -1 }
+		},
+		{
+			production_type = "output",
+			pipe_picture = assembler1pipepictures(entity .. "pipe_connections"),
+			pipe_covers = pipecoverspictures(entity .. "pipe-covers"),
+			base_area = 10,
+			base_level = 1,
+			pipe_connections = {{type="output", position={0, 2}}},
+			secondary_draw_orders = {north = -1}
+		},
+		off_when_no_fluid_recipe = true
+	}
 end
 
 
@@ -448,9 +439,9 @@ local function callRemoteFreeplay(function_call, value)
         
     elseif function_call == "no_finish" then 
 
-      local default = true
-      if value == false then default = false end 
-      pcall(function() remote.call("silo_script", "set_no_victory", default) end)
+		local default = true
+		if value == false then default = false end 
+		pcall(function() remote.call("silo_script", "set_no_victory", default) end)
 
     elseif function_call == "all" then
 
@@ -468,28 +459,28 @@ end
 -- Chargement des fonctions
 local ritnlib = {}
 ritnlib = {
-    ritnPrint = ritnPrint,
-    ritnLog = ritnLog,
-    type = data_type,
-    ifElse = ifElse,
-    tryCatch = tryCatch,
-    isType = isType,
-    str_start = str_start,
-    split = split,
-    getn = getn,
-    give_item = give_item,
-    give_item_list = give_item_list,
-    build_clock_string = build_clock_string,
-    assembler1pipepictures = assembler1pipepictures,
-    pipecoverspictures = pipecoverspictures,
-    spairs = spairs,
-    uuid = uuid,
-    clearOutput = clearOutput,
-    writeToOutput = writeToOutput,
-    writeToProductionStats = writeToProductionStats,
-    addFluidBoxes = addFluidBoxes,
-    callRemoteFreeplay = callRemoteFreeplay,
-    table_to_json = table_to_json,
+	ritnPrint = ritnPrint,
+	ritnLog = ritnLog,
+	type = data_type,
+	ifElse = ifElse,
+	tryCatch = tryCatch,
+	isType = isType,
+	str_start = str_start,
+	split = split,
+	getn = getn,
+	give_item = give_item,
+	give_item_list = give_item_list,
+	build_clock_string = build_clock_string,
+	assembler1pipepictures = assembler1pipepictures,
+	pipecoverspictures = pipecoverspictures,
+	spairs = spairs,
+	uuid = uuid,
+	clearOutput = clearOutput,
+	writeToOutput = writeToOutput,
+	writeToProductionStats = writeToProductionStats,
+	addFluidBoxes = addFluidBoxes,
+	callRemoteFreeplay = callRemoteFreeplay,
+	table_to_json = table_to_json,
 }
 
 return ritnlib

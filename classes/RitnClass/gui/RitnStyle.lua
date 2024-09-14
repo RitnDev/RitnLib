@@ -359,6 +359,28 @@ function RitnLibStyle:margin(value)
 end
 
 -- set top_margin
+function RitnLibStyle:horizontalMargin(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+
+    self:leftMargin(value)
+    self:rightMargin(value)
+    
+    return self
+end
+
+-- set top_margin
+function RitnLibStyle:verticalMargin(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self:topMargin(value)
+    self:bottomMargin(value)
+    
+    return self
+end
+
+-- set top_margin
 function RitnLibStyle:topMargin(value)
     if value == nil then return self end 
     if type(value) ~= 'number' then return self end 
@@ -406,6 +428,28 @@ function RitnLibStyle:padding(value)
     
     self:topPadding(value)
     self:bottomPadding(value)
+    self:leftPadding(value)
+    self:rightPadding(value)
+    
+    return self
+end
+
+
+function RitnLibStyle:verticalPadding(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+    
+    self:topPadding(value)
+    self:bottomPadding(value)
+    
+    return self
+end
+
+
+function RitnLibStyle:horizontalPadding(value)
+    if value == nil then return self end 
+    if type(value) ~= 'number' then return self end 
+
     self:leftPadding(value)
     self:rightPadding(value)
     

@@ -1,8 +1,7 @@
 ritnlib = {
     defines = {
         gvv = "__gvv__.gvv",
-        event = "__RitnLib__.core.eventListener",
-        event_old = "__RitnLib__.core.eventListenerOld",    
+        event = "__RitnLib__.core.eventListener",  
         constants = "__RitnLib__.core.constants",
 
         other = "__RitnLib__/lualib/other-functions",
@@ -70,7 +69,6 @@ ritnlib = {
                 element = "__RitnLib__/classes/RitnClass/gui/RitnGuiElement",
                 style = "__RitnLib__/classes/RitnClass/gui/RitnStyle",
             },
-             
         },
 
 

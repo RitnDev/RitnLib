@@ -38,7 +38,7 @@ end
 local function isNotEmpty(pTable)
     return not isEmpty(pTable)
 end
-  
+
 
 -- tableau est plein ?
 local function busy(pTable)
