@@ -225,13 +225,13 @@ script.on_load(function()
 	end
 	after_register_events()
 end)
-script.on_init = function(func)
+script.on_init(function(func)
 	table.insert(lost_on_init_events, func)
-end
+end)
 
-script.on_load = function(func)
+script.on_load(function(func)
 	table.insert(lost_on_load_events, func)
-end
+end)
 
 -- This is raw method (for dynamic events)
 module.update_event = function(lib, event_id)
