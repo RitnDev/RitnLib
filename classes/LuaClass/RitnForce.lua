@@ -15,7 +15,7 @@ RitnLibForce = ritnlib.classFactory.newclass(function(self, LuaForce)
     self.name = LuaForce.name
     self.index = LuaForce.index
     -----
-    self.stats = {
+    --[[ self.stats = {
         production = {
             item = {
                 input = LuaForce.item_production_statistics.input_counts,
@@ -36,7 +36,7 @@ RitnLibForce = ritnlib.classFactory.newclass(function(self, LuaForce)
                 output= LuaForce.entity_build_count_statistics.output_counts,
             },
         }
-    }
+    } ]]
     self.items_launched = LuaForce.items_launched
     self.rockets_launched = LuaForce.rockets_launched
     ---- CONSTANTES ----
@@ -78,7 +78,7 @@ end
 -- @param name = item name : "water"
 -- @param output (boolean) : select output_counts, by default = false -> input_counts
 function RitnLibForce:getStatsProductionFluid(name, output) 
-   return self:getStatsProduction(name, "fluid", output)
+    return self:getStatsProduction(name, "fluid", output)
 end
 
 

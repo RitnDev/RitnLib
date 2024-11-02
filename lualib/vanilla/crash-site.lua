@@ -154,7 +154,7 @@ lib.create_crash_site = function(surface, position, ship_items, part_items)
   }
   util.insert_safe(main_ship, ship_items)
   local box = main_ship.bounding_box
-  for k, entity in pairs (surface.find_entities_filtered{area = box, force = "neutral", collision_mask = "player-layer"}) do
+  for k, entity in pairs (surface.find_entities_filtered{area = box, force = "neutral", collision_mask = "player"}) do
     if entity.valid then
       if entity.type == "tree" then
         entity.die()

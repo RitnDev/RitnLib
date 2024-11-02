@@ -68,7 +68,7 @@ function RitnLibInventory:saveInventory(define)
 
     return self
 end
-  
+
 --LoadInventory
 function RitnLibInventory:loadInventory(define)
     if self.data[self.name] == nil then return self end
@@ -76,12 +76,12 @@ function RitnLibInventory:loadInventory(define)
     local inventory1 = self.player.get_inventory(define)
     local inventory = self.data[self.name][define]
     if inventory1 ~= nil then
-      for i=1, #inventory1 do 
-        local stack = inventory[i]
-        if stack.valid then
-          inventory1[i].swap_stack(stack)
+        for i=1, #inventory1 do 
+            local stack = inventory[i]
+            if stack.valid then
+                inventory1[i].swap_stack(stack)
+            end
         end
-      end
     end
     
     return self
@@ -114,7 +114,7 @@ function RitnLibInventory:deleteInventory(define)
     self.player.get_inventory(define).clear()
     return self
 end
-  
+
 ----------------------------------------------------------------
 -- SAVE ALL INVENTORY
 function RitnLibInventory:save_all_inventory()
@@ -126,7 +126,7 @@ function RitnLibInventory:save_all_inventory()
 
     return self
 end
-  
+
 -- LOAD ALL INVENTORY
 function RitnLibInventory:load_all_inventory()
     self:loadInventory(defines.inventory.character_armor) -- /!\ priority armor
@@ -191,7 +191,7 @@ function RitnLibInventory:saveLogistic()
 
     return self
 end
-  
+
 
 -- Load Logistic
 function RitnLibInventory:loadLogistic()
@@ -233,7 +233,7 @@ function RitnLibInventory:saveCursor()
 
     return self
 end
-  
+
 -- Load Cursor
 function RitnLibInventory:loadCursor()
     if self.data[self.name] == nil then return self end
@@ -266,7 +266,7 @@ function RitnLibInventory:save(cursor)
     if cursor ~= nil then option = cursor end
     log('> '..self.object_name..':save('.. tostring(option) ..') -> '..self.name)
 
-    self:save_all_inventory():saveLogistic()
+    self:save_all_inventory()--:saveLogistic()
     if option then self:saveCursor() end
 
     return self
@@ -279,7 +279,7 @@ function RitnLibInventory:load(cursor)
     if cursor ~= nil then option = cursor end
     log('> '..self.object_name..':load('.. tostring(option) ..') -> '..self.name)
 
-    self:load_all_inventory():loadLogistic()
+    self:load_all_inventory()--:loadLogistic()
     if option then self:saveCursor() end
 
     return self
