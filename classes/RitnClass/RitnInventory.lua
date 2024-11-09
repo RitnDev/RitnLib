@@ -166,8 +166,15 @@ end
 function RitnLibInventory:saveLogistic()
     if self.data[self.name] == nil then self:init() end
 
+    --[[  
+    local LuaLogisticPoint = self.player.get_requester_point()
+    if LuaLogisticPoint ~= nil then 
+        local sections_count = LuaLogisticPoint.sections_count
+    end 
+    ]]
     -- Demande logistique
-    local slot_count = self.player.character.request_slot_count
+    --local slot_count = self.player.character.request_slot_count
+    --[[ 
     self.data[self.name]["logistic_param"] = {
         {
             name="slot_count", 
@@ -187,7 +194,8 @@ function RitnLibInventory:saveLogistic()
         end
     else 
         self.data[self.name]["logistic_inv"] = nil
-    end
+    end 
+    ]]
 
     return self
 end
@@ -197,6 +205,7 @@ end
 function RitnLibInventory:loadLogistic()
     if self.data[self.name] == nil then return self end
 
+    --[[ 
     local slot_count = 0
     if self.data[self.name]["logistic_param"] ~= nil then
         self.player.character_personal_logistic_requests_enabled = self.data[self.name]["logistic_param"][2].value
@@ -212,7 +221,8 @@ function RitnLibInventory:loadLogistic()
                 local result = self.player.set_personal_logistic_slot(slot_index, value)
             end
         end
-    end
+    end 
+    ]]
 
     return self
 end
@@ -266,7 +276,7 @@ function RitnLibInventory:save(cursor)
     if cursor ~= nil then option = cursor end
     log('> '..self.object_name..':save('.. tostring(option) ..') -> '..self.name)
 
-    self:save_all_inventory()--:saveLogistic()
+    self:save_all_inventory():saveLogistic()
     if option then self:saveCursor() end
 
     return self
@@ -279,7 +289,7 @@ function RitnLibInventory:load(cursor)
     if cursor ~= nil then option = cursor end
     log('> '..self.object_name..':load('.. tostring(option) ..') -> '..self.name)
 
-    self:load_all_inventory()--:loadLogistic()
+    self:load_all_inventory():loadLogistic()
     if option then self:saveCursor() end
 
     return self

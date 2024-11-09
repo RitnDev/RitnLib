@@ -2,47 +2,48 @@ local util = require("util")
 
 local main_ship_name = "crash-site-spaceship"
 
-local ship_parts =
-{
+local default_ship_parts = function()
+  return
   {
-    name = "crash-site-spaceship-wreck-big-1",
-    angle_deviation = 0.1,
-    max_distance = 25,
-    min_separation = 6,
-    fire_count = 1
-  },
-  {
-    name = "crash-site-spaceship-wreck-big-2",
-    angle_deviation = 0.1,
-    max_distance = 25,
-    min_separation = 6,
-    explosion_count = 3,
-    fire_count = 1
-  },
-  {
-    name = "crash-site-spaceship-wreck-medium",
-    variations = 3,
-    angle_deviation = 0.05,
-    max_distance = 30,
-    min_separation = 3,
-    explosion_count = 1,
-    fire_count = 1
-  },
-  {
-    name = "crash-site-spaceship-wreck-small",
-    variations = 6,
-    angle_deviation = 0.05,
-    min_separation = 3,
-    fire_count = 1
-  },
-  {
-    name = "crash-site-fire-smoke",
-    angle_deviation = 0.08,
-    repeat_count = 0,
-    scale_lifetime = true
+    {
+      name = "crash-site-spaceship-wreck-big-1",
+      angle_deviation = 0.1,
+      max_distance = 25,
+      min_separation = 2,
+      fire_count = 1
+    },
+    {
+      name = "crash-site-spaceship-wreck-big-2",
+      angle_deviation = 0.1,
+      max_distance = 25,
+      min_separation = 2,
+      explosion_count = 3,
+      fire_count = 1
+    },
+    {
+      name = "crash-site-spaceship-wreck-medium",
+      variations = 3,
+      angle_deviation = 0.05,
+      max_distance = 30,
+      min_separation = 1,
+      explosion_count = 1,
+      fire_count = 1
+    },
+    {
+      name = "crash-site-spaceship-wreck-small",
+      variations = 6,
+      angle_deviation = 0.05,
+      min_separation = 1,
+      fire_count = 1
+    },
+    {
+      name = "crash-site-fire-smoke",
+      angle_deviation = 0.08,
+      repeat_count = 0,
+      scale_lifetime = true
+    }
   }
-}
-
+end
 
 local rotate = function(offset, angle)
   local x = offset[1]
@@ -105,7 +106,7 @@ end
 
 local insert_items_randomly = function(entities, items)
 
-  local item_prototypes = game.item_prototypes
+  local item_prototypes = prototypes.item
   for name, count in pairs (items) do
     if not item_prototypes[name] then
       items[name] = nil
@@ -143,13 +144,12 @@ local main_ship_explosion_count = 10
 
 local lib = {}
 
-lib.create_crash_site = function(surface, position, ship_items, part_items)
-
+lib.create_crash_site = function(surface, position, ship_items, part_items, ship_parts)
   local main_ship = surface.create_entity
   {
     name = main_ship_name,
     position = position,
-    force = surface.name,
+    force = "player",
     create_build_effect_smoke = false
   }
   util.insert_safe(main_ship, ship_items)
@@ -192,11 +192,10 @@ lib.create_crash_site = function(surface, position, ship_items, part_items)
 
   local wreck_parts = {}
 
-  for k, part in pairs (ship_parts) do
+  for k, part in pairs(ship_parts or default_ship_parts()) do
     for k = 1, (part.variations or 1) do
       local name = get_name(part, k)
       for i = 1, part.repeat_count or 1 do
-
         local part_position
         local count = 0
         local offset
@@ -205,18 +204,22 @@ lib.create_crash_site = function(surface, position, ship_items, part_items)
           local x = (position[1] or position.x) + offset[1]
           local y = (position[2] or position.y) + offset[2]
           part_position = {x, y}
-          if surface.can_place_entity
+
+          local can_place = surface.can_place_entity
           {
             name = name,
             position = part_position,
-            force = surface.name,
+            force = "player",
             build_check_type = defines.build_check_type.manual_ghost,
             forced = true
-          } then
-            if not part.min_separation and surface.count_entities_filtered{position = part_position, radius = part.min_separation, limit = 1, type = "container"} == 0 then
+          }
+
+          if can_place then
+            if not part.min_separation or surface.count_entities_filtered{position = part_position, radius = part.min_separation, limit = 1, type = "tree", invert = true} == 0 then
               break
             end
           end
+
           count = count + 1
           if count > 20 then
             part_position = surface.find_non_colliding_position(name, part_position, 50, 4)
@@ -229,7 +232,7 @@ lib.create_crash_site = function(surface, position, ship_items, part_items)
           {
             name = name,
             position = part_position,
-            force = "neutral",
+            force = part.force or "neutral",
             create_build_effect_smoke = false
           }
 
@@ -278,9 +281,7 @@ lib.create_crash_site = function(surface, position, ship_items, part_items)
             entity.time_to_live = get_lifetime(offset)
             entity.time_to_next_effect = random(60)
           end
-
         end
-
       end
     end
   end
@@ -289,5 +290,56 @@ lib.create_crash_site = function(surface, position, ship_items, part_items)
 
 end
 
+local set_label_size = function(player)
+
+  local label = player.gui.screen.skip_cutscene_label
+  if not label then return end
+
+  label.style.horizontal_align = "center"
+  local resolution = player.display_resolution
+  label.style.width = resolution.width / player.display_scale
+  label.location = {0, (resolution.height) - ((20 + 8) * player.display_scale)}
+
+end
+
+lib.create_cutscene = function(player, goal_position)
+  local offset = rotate({60, 0}, (entry_angle - 0.25) * math.pi * 2)
+  local start_position = {goal_position[1] + offset[1], goal_position[2] + offset[2]}
+  player.set_controller
+  {
+    type = defines.controllers.cutscene,
+    waypoints =
+    {
+      {
+        position = goal_position,
+        transition_time = 450,
+        zoom = 2,
+        time_to_wait = 150
+      },
+      {
+        target = player.character,
+        transition_time = 150,
+        zoom = 1.5,
+        time_to_wait = 0
+      }
+    },
+    start_position = start_position,
+    start_zoom = 2
+  }
+
+  local label = player.gui.screen.add{type = "label", caption = {"skip-cutscene"}, name = "skip_cutscene_label"}
+  set_label_size(player)
+end
+
+lib.is_crash_site_cutscene = function(event)
+  return event.player_index == 1 and event.waypoint_index == 2
+end
+
+lib.on_player_display_refresh = function(event)
+  local player = game.get_player(event.player_index)
+  set_label_size(player)
+end
+
+lib.default_ship_parts = default_ship_parts
 
 return lib

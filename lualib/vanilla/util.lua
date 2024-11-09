@@ -244,7 +244,7 @@ end
 
 util.insert_safe = function(entity, item_dict)
   if not (entity and entity.valid and item_dict) then return end
-  local items = game.item_prototypes
+  local items = prototypes.item
   local insert = entity.insert
   for name, count in pairs (item_dict) do
     if items[name] then
@@ -257,7 +257,7 @@ end
 
 util.remove_safe = function(entity, item_dict)
   if not (entity and entity.valid and item_dict) then return end
-  local items = game.item_prototypes
+  local items = prototypes.item
   local remove = entity.remove_item
   for name, count in pairs (item_dict) do
     if items[name] then
@@ -311,7 +311,7 @@ local is_walkable = function(mask)
 end
 
 util.get_walkable_tile = function()
-  for name, tile in pairs (game.tile_prototypes) do
+  for name, tile in pairs (prototypes.tile) do
     if is_walkable(tile.collision_mask) and not tile.items_to_place_this then
       return name
     end
@@ -664,6 +664,53 @@ util.list_to_map = function(list)
     map[value] = true
   end
   return map
+end
+
+util.normalize_recipe_product = function(raw_product)
+  local product = util.copy(raw_product)
+
+  if product.amount then
+    product.amount_min = product.amount
+    product.amount_max = product.amount
+    product.amount = nil
+  end
+
+  return product
+end
+
+util.normalize_recipe_products = function(recipe)
+  if not recipe.results then
+    error("Recipe has no results: ".. recipe.name)
+  end
+  local products = {}
+
+  for _,raw_product in pairs(recipe.results) do
+    table.insert(products, util.normalize_recipe_product(raw_product))
+  end
+
+  return products
+end
+
+-- Returns the normalized main product or nil if the recipe defintion is invalid or there is no main product
+util.get_recipe_main_product = function(recipe, normalized_products)
+  if not normalized_products then
+    normalized_products = util.normalize_recipe_products(recipe)
+  end
+
+  local main_product_index = 0
+  local main_product = recipe.main_product
+  if main_product and main_product ~= "" then
+    for k,product in pairs(normalized_products) do
+      if product.name == main_product then
+        main_product_index = k
+        break
+      end
+    end
+  elseif main_product == nil and table_size(normalized_products) == 1 then
+    main_product_index = 1
+  end
+
+  return normalized_products[main_product_index]
 end
 
 return util
