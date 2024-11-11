@@ -39,6 +39,12 @@ local function equals(value1, value2)
     return value1 == value2
 end
 
+local function startsWith(str, value)
+    if isString(str) == false then return false end
+    if isString(value) == false then return false end
+    return string.find(str, value) == 1
+end
+
 -----------------------------------------------------
 local flib = {
     string = {
@@ -69,7 +75,8 @@ local flib = {
         isNotNil = isNotNil,                    -- Retourne true si la chaine n'est pas égale à nil
         isNil = isNil,                          -- Retourne true si la chaine est égale à nil
         isEmptyString = isEmptyString,          -- Retourne true si la chaine est vide ou nil
-        equals = equals                         -- Retourne true si les 2 chaines sont égales
+        equals = equals,                         -- Retourne true si les 2 chaines sont égales
+        startsWith = startsWith,                 -- Retourne true si le début de la chaine commence par la valeur
     }
 }
 return flib.string

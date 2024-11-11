@@ -116,6 +116,15 @@ function RitnLibForce:getStatsCountBuild(name, output)
     return self:getStatsCount(name, "build", output) 
 end
 
+----------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------
+
+function RitnLibForce:setHiddenSurface(surfaceIdentification, value)
+    if type(value) == "boolean" then 
+        self.force.set_surface_hidden(surfaceIdentification, value)
+    end
+    return self
+end
 
 -- Récupération d'une recette par son nom
 -- @return RitnRecipe
@@ -165,6 +174,3 @@ function RitnLibForce:getChartTag(tag_number, surface_name, position)
 
     return tag
 end
-
-----------------------------------------------------------------
---return RitnLibForce

@@ -93,6 +93,7 @@ end
 
 
 --La chaîne de caractère 'str' commence par 'start'
+--@deprecated use string-functions
 local function str_start(str, start)
     return str:sub(1, #start) == start
 end
