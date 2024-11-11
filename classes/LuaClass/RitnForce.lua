@@ -120,9 +120,11 @@ end
 ----------------------------------------------------------------------------------------
 
 function RitnLibForce:setHiddenSurface(surfaceIdentification, value)
+    local default = true
     if type(value) == "boolean" then 
-        self.force.set_surface_hidden(surfaceIdentification, value)
+        default = value
     end
+    self.force.set_surface_hidden(surfaceIdentification, default)
     return self
 end
 
