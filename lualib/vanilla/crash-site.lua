@@ -1,4 +1,5 @@
 local util = require("util")
+local ritnUtil = require(ritnlib.defines.other)
 
 local main_ship_name = "crash-site-spaceship"
 
@@ -144,12 +145,23 @@ local main_ship_explosion_count = 10
 
 local lib = {}
 
-lib.create_crash_site = function(surface, position, ship_items, part_items, ship_parts)
+lib.create_crash_site = function(ritn_data_player_or_surface, position, ship_items, part_items, ship_parts)
+  local surface
+  local force = "player"
+  if (ritnUtil.type(ritn_data_player_or_surface) == "LuaSurface") then 
+    surface = ritn_data_player_or_surface
+  elseif (ritnUtil.type(ritn_data_player_or_surface) == "RitnDataPlayer") then
+    surface = game.surfaces[ritn_data_player_or_surface.origine]
+    force = ritn_data_player_or_surface.origine
+  else 
+    return
+  end  
+
   local main_ship = surface.create_entity
   {
     name = main_ship_name,
     position = position,
-    force = "player",
+    force = force,
     create_build_effect_smoke = false
   }
   util.insert_safe(main_ship, ship_items)
