@@ -68,8 +68,6 @@ function RitnLibSurface:getEntity(position, unit_number, name, entityType)
     local tabEntities = self.surface.find_entities_filtered(search)
 
     -- On récupère l'entité avec son unit_number dans la liste
-    local LuaEntity = nil
-
     if table.length(tabEntities) > 0 then 
         log("> LuaEntity found: ".. tostring(table.length(tabEntities)))
 
@@ -79,12 +77,12 @@ function RitnLibSurface:getEntity(position, unit_number, name, entityType)
             LuaEntity = tabEntities[index]
         else
             -- au cas où on retourne le premier de la liste
-            LuaEntity = tabEntities[1]
+            LuaEntity = tabEntities[1] or self.surface.find_entity(name, position)
         end
     else 
         log("> LuaEntity not find !")
     end
- 
+
     return LuaEntity
 end
 
