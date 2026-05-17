@@ -6,9 +6,11 @@ local util = require(ritnlib.defines.other)
 
 ----------------------------------------------------------------
 RitnLibForce = ritnlib.classFactory.newclass(function(self, LuaForce)
+    self.isPresent = false
     if util.type(LuaForce) ~= "LuaForce" then log('not LuaForce !') return end
     if LuaForce.valid == false then return end
     ---
+    self.isPresent = true
     self.object_name = "RitnLibForce"
     --------------------------------------------------
     self.force = LuaForce

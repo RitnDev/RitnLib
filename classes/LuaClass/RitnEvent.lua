@@ -140,8 +140,10 @@ local string = require(ritnlib.defines.string)
 --- CLASSE DEFINES
 ----------------------------------------------------------------
 RitnLibEvent = ritnlib.classFactory.newclass(function(self, event, mod_name)
+    self.isPresent = false
     local modName = "RitnLib"
     if event == nil then return end
+    self.isPresent = true
     if mod_name ~= nil then modName = mod_name end
     self.object_name = "RitnLibEvent"
     ---------------------------------

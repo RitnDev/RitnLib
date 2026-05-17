@@ -7,8 +7,10 @@ local util = require(ritnlib.defines.other)
 --- CLASSE DEFINES
 ----------------------------------------------------------------
 RitnLibRecipe = ritnlib.classFactory.newclass(function(self, LuaRecipe)
+    self.isPresent = false
     if util.type(LuaRecipe) ~= "LuaRecipe" then log('not LuaRecipe !') return end
     if LuaRecipe.valid == false then return end
+    self.isPresent = true
     ----
     self.object_name = "RitnLibRecipe"
     --------------------------------------------------

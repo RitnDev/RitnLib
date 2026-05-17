@@ -7,9 +7,11 @@ local util = require(ritnlib.defines.other)
 --- CLASSE DEFINES
 ----------------------------------------------------------------
 RitnLibTechnology = ritnlib.classFactory.newclass(function(self, LuaTechnology)
+    self.isPresent = false
     if util.type(LuaTechnology) ~= "LuaTechnology" then log('not LuaTechnology !') return end
     if LuaTechnology.valid == false then return end
     ----
+    self.isPresent = true
     self.object_name = "RitnLibTechnology"
     --------------------------------------------------
     self.technology = LuaTechnology

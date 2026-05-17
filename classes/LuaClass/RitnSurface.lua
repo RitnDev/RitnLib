@@ -10,9 +10,11 @@ local entity_types = require("__RitnLib__.lualib.vanilla.types_entity")
 
 ----------------------------------------------------------------
 RitnLibSurface = ritnlib.classFactory.newclass(function(self, LuaSurface)
+    self.isPresent = false
     if util.type(LuaSurface) ~= "LuaSurface" then log('not LuaSurface !') return end
     if LuaSurface.valid == false then return end
     ----
+    self.isPresent = true
     self.object_name = "RitnLibSurface"
     --------------------------------------------------
     self.surface = LuaSurface

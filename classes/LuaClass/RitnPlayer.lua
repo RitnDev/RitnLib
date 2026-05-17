@@ -19,10 +19,12 @@ end
 ----------------------------------------------------------------
 RitnLibPlayer = ritnlib.classFactory.newclass(function(self, LuaPlayer)
     -- check input params
+    self.isPresent = false
     if util.type(LuaPlayer) ~= "LuaPlayer" then log('not LuaPlayer !') return end
     if LuaPlayer.valid == false then log('not LuaPlayer valid !') return end
     if LuaPlayer.is_player() == false then log('not LuaPlayer !') return end
     ----
+    self.isPresent = true
     self.object_name = "RitnLibPlayer"
     --------------------------------------------------
     self.player = LuaPlayer
