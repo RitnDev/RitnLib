@@ -151,7 +151,7 @@ lib.create_crash_site = function(ritn_data_player_or_surface, position, ship_ite
   if (ritnUtil.type(ritn_data_player_or_surface) == "LuaSurface") then 
     surface = ritn_data_player_or_surface
   elseif (ritnUtil.type(ritn_data_player_or_surface) == "RitnDataPlayer") then
-    surface = game.surfaces[ritn_data_player_or_surface.origine]
+    surface = game.get_surface(ritn_data_player_or_surface.origine)
     force = ritn_data_player_or_surface.origine
   else 
     return

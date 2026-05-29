@@ -26,7 +26,7 @@ end
 
 local function getPlayer(event)
     if event.player_index then 
-        return game.players[event.player_index]
+        return game.get_player(event.player_index)
     end
     return nil
 end
@@ -34,7 +34,7 @@ end
 
 local function getSurface(event)
     if event.surface_index then 
-        return game.surfaces[event.surface_index]
+        return game.get_surface(event.surface_index)
     end
     if event.surface then 
         return event.surface
