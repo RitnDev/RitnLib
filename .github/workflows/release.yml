@@ -1,4 +1,4 @@
-name: Release
+name: Release Factorio Mod
 
 on:
   push:
@@ -13,12 +13,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Create source archive
+      - name: Set version
+        run: echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+
+      - name: Verify version matches info.json
         run: |
-          VERSION=${GITHUB_REF_NAME}
+          INFO_VERSION=$(jq -r '.version' info.json)
+
+          if [ "$INFO_VERSION" != "$VERSION" ]; then
+            echo "❌ Version mismatch: tag != info.json"
+            exit 1
+          fi
+
+      - name: Build Factorio zip
+        run: |
           REPO_NAME=${GITHUB_REPOSITORY#*/}
 
           git archive \
@@ -30,4 +41,31 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ env.VERSION }}
+          name: RitnLib ${{ env.VERSION }}
           files: "*.zip"
+
+      - name: Upload to Factorio Mod Portal (init + upload)
+        run: |
+          FILE=RitnLib_${VERSION}.zip
+
+          echo "Init upload..."
+
+          RESPONSE=$(curl -s -X POST \
+            -H "Authorization: Bearer ${{ secrets.FACTORIO_API_KEY }}" \
+            -d "mod=RitnLib" \
+            https://mods.factorio.com/api/v2/mods/releases/init_upload)
+
+          UPLOAD_URL=$(echo $RESPONSE | jq -r '.upload_url')
+
+          if [ "$UPLOAD_URL" == "null" ] || [ -z "$UPLOAD_URL" ]; then
+            echo "❌ Failed to init upload"
+            echo "$RESPONSE"
+            exit 1
+          fi
+
+          echo "Uploading file..."
+
+          curl -f -X POST \
+            -F "file=@${FILE}" \
+            "$UPLOAD_URL"
