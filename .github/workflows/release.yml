@@ -16,8 +16,10 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Set version
-        run: echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+      - name: Set variables
+        run: |
+          echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_ENV
+          echo "MOD_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
       - name: Verify version matches info.json
         run: |
@@ -30,30 +32,26 @@ jobs:
 
       - name: Build Factorio zip
         run: |
-          REPO_NAME=${GITHUB_REPOSITORY#*/}
-
           git archive \
             --format=zip \
-            --prefix=${REPO_NAME}/ \
-            -o ${REPO_NAME}_${VERSION}.zip \
+            --prefix=${MOD_NAME}/ \
+            -o ${MOD_NAME}_${VERSION}.zip \
             ${VERSION}
 
-      - name: Create GitHub Release
+      - name: GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.VERSION }}
-          name: RitnLib ${{ env.VERSION }}
+          name: ${{ env.MOD_NAME }} ${{ env.VERSION }}
           files: "*.zip"
 
-      - name: Upload to Factorio Mod Portal (init + upload)
+      - name: Upload to Factorio Mod Portal
         run: |
-          FILE=RitnLib_${VERSION}.zip
-
-          echo "Init upload..."
+          FILE=${MOD_NAME}_${VERSION}.zip
 
           RESPONSE=$(curl -s -X POST \
             -H "Authorization: Bearer ${{ secrets.FACTORIO_API_KEY }}" \
-            -d "mod=RitnLib" \
+            -d "mod=${MOD_NAME}" \
             https://mods.factorio.com/api/v2/mods/releases/init_upload)
 
           UPLOAD_URL=$(echo $RESPONSE | jq -r '.upload_url')
@@ -63,8 +61,6 @@ jobs:
             echo "$RESPONSE"
             exit 1
           fi
-
-          echo "Uploading file..."
 
           curl -f -X POST \
             -F "file=@${FILE}" \
