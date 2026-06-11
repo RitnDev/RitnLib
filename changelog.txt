@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.9.8
+Date: 2026-06-09
+  Changes:
+    - Updated release workflow (GitHub Actions: tag-driven publish to Factorio Mod Portal).
+---------------------------------------------------------------------------------------------------
+Version: 0.9.7
+  Changes:
+    - Renamed player/surface getters to get_player() and get_surface() on RitnLibEvent.
+---------------------------------------------------------------------------------------------------
+Version: 0.9.6
+  Features:
+    - Added self.isPresent property on all wrapper classes (e.g. RitnSurface, RitnPlayer, RitnForce, RitnEntity, RitnRecipe, RitnTechnology). Lets consumers test wrapper validity without nil-checking every field.
