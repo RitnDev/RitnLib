@@ -124,5 +124,3 @@ Tutoriels orientés tâche :
 ## Pour les mainteneurs
 
 - 🏗 [Architecture interne](../architecture.md) (FR uniquement)
-- 🤝 [CONTRIBUTING](../../CONTRIBUTING.md) (EN uniquement)
-- 📜 [CHANGELOG](../../CHANGELOG.md)

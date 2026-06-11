@@ -124,5 +124,3 @@ Task-oriented tutorials:
 ## For maintainers
 
 - 🏗 [Internal architecture](../architecture.md) (FR only)
-- 🤝 [CONTRIBUTING](../../CONTRIBUTING.md) (EN only)
-- 📜 [CHANGELOG](../../CHANGELOG.md)
