@@ -3,6 +3,36 @@
 	Modified by ZwerOxotnik
 ]]
 
+---**EN**
+---
+---Description: Event-handler aggregator (fork of Factorio's `event_handler.lua`, modified by ZwerOxotnik). Lets several "libs" register their event handlers through one shared dispatcher: each lib exposes optional `events`, `on_nth_tick`, `on_init`, `on_load`, `on_configuration_changed`, `add_remote_interface`, `add_commands` members, and the aggregator wires everything to `script.*` (merging multiple handlers per event into a loop when needed).
+---
+---If the [`zk-lib`](https://mods.factorio.com/mod/zk-lib) mod is active, this file delegates entirely to its optimised `event_handler_vZO` and returns that instead.
+---
+---⚠ Requiring this file has side effects: it immediately registers `script.on_init` / `script.on_load` / `script.on_configuration_changed`. A mod can only have **one** handler per `script.*` slot — don't mix this aggregator with direct `script.on_init(...)` calls in the same mod.
+---
+---⚠ Not loaded by RitnLib's own `control.lua` — provided as an opt-in for consumer mods. Note that `ritnlib.defines.event` points to the vanilla `__core__/lualib/event_handler`, not to this file.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Agrégateur d'event-handlers (fork du `event_handler.lua` de Factorio, modifié par ZwerOxotnik). Permet à plusieurs "libs" d'enregistrer leurs handlers via un dispatcher partagé : chaque lib expose les membres optionnels `events`, `on_nth_tick`, `on_init`, `on_load`, `on_configuration_changed`, `add_remote_interface`, `add_commands`, et l'agrégateur câble le tout sur `script.*` (en fusionnant les handlers multiples par event dans une boucle si besoin).
+---
+---Si le mod [`zk-lib`](https://mods.factorio.com/mod/zk-lib) est actif, ce fichier délègue entièrement à son `event_handler_vZO` optimisé et le retourne à la place.
+---
+---⚠ Le require de ce fichier a des effets de bord : il enregistre immédiatement `script.on_init` / `script.on_load` / `script.on_configuration_changed`. Un mod ne peut avoir qu'**un** handler par slot `script.*` — ne pas mélanger cet agrégateur avec des appels `script.on_init(...)` directs dans le même mod.
+---
+---⚠ Non chargé par le `control.lua` de RitnLib — fourni en opt-in pour les mods consommateurs. À noter : `ritnlib.defines.event` pointe vers le `__core__/lualib/event_handler` vanilla, pas vers ce fichier.
+---@class RitnLibEventLib
+---@field events? table<defines.events|string|integer, fun(event: EventData)>   Handlers indexed by event id
+---@field on_nth_tick? table<integer, fun(event: NthTickEventData)>             Handlers indexed by tick interval
+---@field on_init? fun()
+---@field on_load? fun()
+---@field on_configuration_changed? fun(data: ConfigurationChangedData)
+---@field add_remote_interface? fun()
+---@field add_commands? fun()
+
 -- Priorise l'event-listener de ZwerOxotnik si son mod est activé
 if script.active_mods["zk-lib"] then
 	-- Same as Factorio "event_handler", but slightly better performance
@@ -12,7 +42,7 @@ if script.active_mods["zk-lib"] then
 	end
 end
 
----@type table<string, table>
+---@type RitnLibEventLib[]
 local libraries = {}
 
 
@@ -21,6 +51,15 @@ local script = script -- some mod devs overwrite it
 
 local setup_ran = false
 
+---**EN**
+---
+---Description: Runs each lib's `add_remote_interface` and `add_commands` once (guarded by `setup_ran` because `on_init` and `on_load` can both fire in special cases).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Exécute `add_remote_interface` et `add_commands` de chaque lib une seule fois (gardé par `setup_ran` car `on_init` et `on_load` peuvent tous deux se déclencher dans certains cas).
 local register_remote_interfaces = function()
 	--Sometimes, in special cases, on_init and on_load can be run at the same time. Only register events once in this case.
 	if setup_ran then return end
@@ -37,6 +76,15 @@ local register_remote_interfaces = function()
 	end
 end
 
+---**EN**
+---
+---Description: Collects every lib's `events` and `on_nth_tick` tables, then registers them on `script.on_event` / `script.on_nth_tick`. When a single lib handles an event, its handler is registered directly; when several libs handle the same event, a wrapper loops over all of them.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Collecte les tables `events` et `on_nth_tick` de chaque lib, puis les enregistre sur `script.on_event` / `script.on_nth_tick`. Quand une seule lib gère un event, son handler est enregistré directement ; quand plusieurs libs gèrent le même event, un wrapper boucle sur toutes.
 local register_events = function()
 	local all_events = {}
 	local on_nth_tick = {}
@@ -127,6 +175,19 @@ script.on_configuration_changed(function(data)
 end)
 
 
+---**EN**
+---
+---Description: The aggregator's public API — returned by the require. Register your libs with `add_lib` / `add_libraries` **before** `on_init`/`on_load` fire (i.e. at the top level of `control.lua`).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: L'API publique de l'agrégateur — retournée par le require. Enregistrer ses libs via `add_lib` / `add_libraries` **avant** que `on_init`/`on_load` ne se déclenchent (donc au top level de `control.lua`).
+---@class RitnLibEventHandler
+---@field build 1
+---@field add_lib fun(lib: RitnLibEventLib)             Registers one lib (errors when registering the same lib twice)
+---@field add_libraries fun(libs: RitnLibEventLib[])    Registers several libs at once
 local handler = {build = 1}
 
 handler.add_lib = function(lib)

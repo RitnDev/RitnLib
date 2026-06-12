@@ -1,0 +1,28 @@
+{
+    "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+    "runtime.version": "Lua 5.2",
+    "workspace.library": [
+        "./types"
+    ],
+    "workspace.checkThirdParty": false,
+    "diagnostics.globals": [
+        "ritnlib",
+        "RitnLibEvent",
+        "RitnLibPlayer",
+        "RitnLibSurface",
+        "RitnLibForce",
+        "RitnLibEntity",
+        "RitnLibRecipe",
+        "RitnLibTechnology",
+        "RitnLibGui",
+        "RitnLibInformatron",
+        "RitnLibInventory",
+        "RitnLibGuiElement",
+        "RitnLibStyle",
+        "serpent",
+        "table_size"
+    ],
+    "diagnostics.disable": [
+        "lowercase-global"
+    ]
+}

@@ -9,8 +9,8 @@ For functions :
 
 
 --[[
-  name =  
-  sprite_path = 
+  name =
+  sprite_path =
   line_length =
   shadow =
   repeat_count =
@@ -32,23 +32,82 @@ For functions :
   sequence =
 ]]
 
+---**EN**
+---
+---Description: Returns the standard collision box for a 3x3 entity: `{{-1.25,-1.25},{1.25,1.25}}`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retourne la collision box standard d'une entité 3x3 : `{{-1.25,-1.25},{1.25,1.25}}`.
+---@return number[][]
 local function standard_3x3_collision()
   return { {-1.25,-1.25}, {1.25,1.25} }
 end
 
+---**EN**
+---
+---Description: Returns the standard selection box for a 3x3 entity: `{{-1.5,-1.5},{1.5,1.5}}`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retourne la selection box standard d'une entité 3x3 : `{{-1.5,-1.5},{1.5,1.5}}`.
+---@return number[][]
 local function standard_3x3_selection()
   return { {-1.5,-1.5}, {1.5,1.5} }
 end
 
+---**EN**
+---
+---Description: Computes the centering shift (in tiles, /64 px) for a sprite of size `w`×`h` positioned at `(x,y)` inside a spritesheet of total size `tw`×`th`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Calcule le shift de centrage (en tiles, /64 px) pour un sprite de taille `w`×`h` positionné à `(x,y)` dans une spritesheet de taille totale `tw`×`th`.
+---@param x number
+---@param y number
+---@param tw number   Total spritesheet width
+---@param th number   Total spritesheet height
+---@param w number    Sprite width
+---@param h number    Sprite height
+---@return number[]
 local function shift_calc(x,y,tw,th,w,h)
 	return {((tw/2) - (x + (w/2)))/64, ((th/2) - (y + (h/2)))/64}
 end
 
+---**EN**
+---
+---Description: Component-wise subtraction of two `{x, y}` shifts.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Soustraction composante par composante de deux shifts `{x, y}`.
+---@param shift1 number[]
+---@param shift2 number[]
+---@return number[]
 local function offset(shift1, shift2)
 	return ({shift1[1]-shift2[1], shift1[2]-shift2[2]})
 end
 
-local function get_sprite_def(data) 
+---**EN**
+---
+---Description: Builds a Factorio sprite/animation definition table from a flat `data` descriptor (see field list in the header comment). Special handling: `shadow` accepts `true`/`"shadow"`/`"light"`/`"glow"`; a negative `frame_count` is converted to `variation_count`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Construit une table de définition sprite/animation Factorio depuis un descripteur plat `data` (voir liste des champs dans le commentaire d'entête). Gestion spéciale : `shadow` accepte `true`/`"shadow"`/`"light"`/`"glow"` ; un `frame_count` négatif est converti en `variation_count`.
+---@param data table  Flat sprite descriptor (`name`, `sprite_path`, `width`, `height`, `shift`, `frame_count`, `shadow`, …)
+---@return table      Factorio sprite definition
+local function get_sprite_def(data)
 	local variation_count = nil
   local shadow = data.shadow
 	if data.frame_count and data.frame_count < 0 then
@@ -84,12 +143,34 @@ local function get_sprite_def(data)
 end
 
 
-local function get_layer(data) 
+---**EN**
+---
+---Description: Like `get_sprite_def`, but first recentres `data.shift` by subtracting the spritesheet-centering offset computed by `shift_calc` (requires `data.x/y/tw/th/width/height`). Main entry point for building layered entity animations.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Comme `get_sprite_def`, mais recentre d'abord `data.shift` en soustrayant l'offset de centrage spritesheet calculé par `shift_calc` (nécessite `data.x/y/tw/th/width/height`). Point d'entrée principal pour construire des animations d'entités en layers.
+---@param data table  Flat sprite descriptor (with `tw`/`th` total sheet dims when `shift` is set)
+---@return table      Factorio sprite definition
+local function get_layer(data)
   local shift = data.shift
 	if shift then data.shift = offset(data.shift, shift_calc(data.x, data.y, data.tw, data.th, data.width, data.height)) end
 	return get_sprite_def(data)
 end
 
+---**EN**
+---
+---Description: HSV→RGBA conversion with fixed saturation 0.75 and value 1. `h` is the hue in `[0, 1]`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Conversion HSV→RGBA avec saturation fixe 0.75 et value 1. `h` est la teinte dans `[0, 1]`.
+---@param h number  Hue in [0, 1]
+---@return Color
 local function rgba(h)
 	  local a, v, s = 1, 1, 0.75
     local r, g, b
@@ -109,6 +190,16 @@ local function rgba(h)
     return { r = r, g = g, b = b, a = a }
 end
 
+---**EN**
+---
+---Description: Returns a standard `status_colors` table for crafting-machine prototypes — blue-ish idle, red disabled/low_power, orange-ish full_output/insufficient_input, green working, transparent no_power.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retourne une table `status_colors` standard pour les prototypes de machines de craft — idle bleuté, disabled/low_power rouge, full_output/insufficient_input orangé, working vert, no_power transparent.
+---@return table
 local function standard_status_colours()
   return {
       no_power = {0,0,0,0}, -- transparent
@@ -122,6 +213,16 @@ local function standard_status_colours()
   }
 end
 
+---**EN**
+---
+---Description: Returns a standard status-light descriptor (`intensity = 0.5`, `size = 3`, slight downward shift) for crafting-machine prototypes.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retourne un descripteur de status-light standard (`intensity = 0.5`, `size = 3`, léger shift vers le bas) pour les prototypes de machines de craft.
+---@return table
 local function standard_status_light()
   return {
       intensity = 0.5,
@@ -131,6 +232,22 @@ local function standard_status_light()
 end
 
 -------------------------------------------------------------
+
+---**EN**
+---
+---Description: RitnLib entity-graphics data-stage helpers — collision/selection boxes, sprite layer builder, status colours/light presets.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Helpers data-stage graphismes d'entités de RitnLib — collision/selection boxes, builder de layers de sprites, presets de couleurs/lumière de statut.
+---@class RitnLibEntityFunctions
+---@field standard_3x3_collision fun(): number[][]
+---@field standard_3x3_selection fun(): number[][]
+---@field standard_status_light fun(): table
+---@field standard_status_colours fun(): table
+---@field get_layer fun(data: table): table
 local flib = {}
 flib.standard_3x3_collision = standard_3x3_collision
 flib.standard_3x3_selection = standard_3x3_selection

@@ -1,3 +1,24 @@
+---**EN**
+---
+---Description: RitnLib shared constants — exposed via `require(ritnlib.defines.constants)`. Colour tints for science-pack recolouring, named UI colours, string markers/decorators, enemy size names, and the basic-Lua-types whitelist used by `other-functions.isType`.
+---
+---Note: the six science-pack tint keys (`automation`, `logistic`, `chemical`, `utility`, `production`, `military`) duplicate the six colour keys (`red`, `green`, `blue`, `yellow`, `purple`, `black`) with identical values. `color` and `colors` reference the **same** table.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Constantes partagées de RitnLib — exposées via `require(ritnlib.defines.constants)`. Tints colorimétriques pour recolorer les packs de science, couleurs UI nommées, marqueurs/décorateurs de chaînes, noms de tailles d'ennemis, et la whitelist de types Lua de base utilisée par `other-functions.isType`.
+---
+---Note : les six clés de tint science-pack (`automation`, `logistic`, `chemical`, `utility`, `production`, `military`) dupliquent les six clés couleur (`red`, `green`, `blue`, `yellow`, `purple`, `black`) avec des valeurs identiques. `color` et `colors` référencent la **même** table.
+---@class RitnLibConstants
+---@field listTint string[]                             Ordered tint keys (red, green, blue, yellow, purple, black + the 6 science aliases)
+---@field tint table<string, {primary: Color, secondary: Color, tertiary: Color, quaternary: Color}>  Tint palettes by key
+---@field color table<string, Color>                    Named UI colours (white, black, darkgrey, orange, deepskyblue, plum, …)
+---@field colors table<string, Color>                   Alias — same table as `color`
+---@field strings table                                 String markers (`empty`, `space`, `hyphen`, arrows, bullet points, decorators)
+---@field enemy { size: { small: "small", medium: "medium", big: "big", behemoth: "behemoth" } }
+---@field types table<string, string>                   Basic Lua types whitelist (boolean, string, number, table, function, nil)
 local constants = {}
 
 

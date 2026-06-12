@@ -1,7 +1,101 @@
+---@class RitnLibDefinesVanilla
+---@field util string
+---@field crash_site string
+
+---@class RitnLibDefinesClassPrototypeUtility
+---@field constants string
+
+---@class RitnLibDefinesClassPrototype
+---@field tech string
+---@field technology string
+---@field ore string
+---@field entity string
+---@field item string
+---@field recipe string
+---@field group string
+---@field subgroup string
+---@field category string
+---@field fuelCategory string
+---@field style string
+---@field sprite string
+---@field customInput string
+---@field utility RitnLibDefinesClassPrototypeUtility
+
+---@class RitnLibDefinesClassLuaClass
+---@field event string
+---@field player string
+---@field entity string
+---@field force string
+---@field surface string
+---@field recipe string
+---@field tech string
+---@field gui string
+
+---@class RitnLibDefinesClassRitnClass
+---@field prototype string
+---@field ingredient string
+---@field inventory string
+---@field setting string
+---@field informatron string
+
+---@class RitnLibDefinesClassGui
+---@field element string
+---@field style string
+
+---@class RitnLibDefinesClass
+---@field core string
+---@field prototype RitnLibDefinesClassPrototype
+---@field luaClass RitnLibDefinesClassLuaClass
+---@field ritnClass RitnLibDefinesClassRitnClass
+---@field gui RitnLibDefinesClassGui
+
+---@class RitnLibDefinesNamesFont
+---@field defaut12 string
+---@field defaut14 string
+---@field defaut16 string
+---@field defaut18 string
+---@field defaut20 string
+---@field bold12 string
+---@field bold14 string
+---@field bold16 string
+---@field bold18 string
+---@field bold20 string
+
+---@class RitnLibDefinesNames
+---@field font RitnLibDefinesNamesFont
+
+---@class RitnLibDefines
+---@field gvv string                                  Path to the gvv debugger entry point (optional dep).
+---@field event string                                Path to the Factorio core event_handler (NOT the local fork).
+---@field constants string                            Path to core/constants.lua (tints, colors, strings, types).
+---@field other string                                Path to lualib/other-functions.lua (custom util.type, ifElse, …).
+---@field table string                                Path to lualib/table-functions.lua.
+---@field string string                               Path to lualib/string-functions.lua.
+---@field json string                                 Path to lualib/json-functions.lua (rxi/json).
+---@field vanilla RitnLibDefinesVanilla               Forks of Factorio vanilla helpers.
+---@field fonts string                                Path to prototypes/fonts.lua — require from your data.lua to register ritn-default-* fonts.
+---@field gui_styles string                           Path to prototypes/gui-style.lua — require from your data.lua to register *-ritngui styles.
+---@field setup string                                Path to core/setup-classes.lua (used internally).
+---@field class RitnLibDefinesClass                   Paths to every RitnLib class file.
+---@field names RitnLibDefinesNames                   Constants for prototype names (fonts, …).
+
+---@class RitnLibGlobal
+---@field defines RitnLibDefines
+---@field classFactory RitnClassFactory
+
+---Path registry and class factory shared by every RitnLib consumer.
+---Required once at the top of any consumer file; subsequent requires are idempotent.
+---
+---Usage:
+--- ```lua
+--- require("__RitnLib__.defines")
+--- local Recipe = require(ritnlib.defines.class.prototype.recipe)
+--- ```
+---@type RitnLibGlobal
 ritnlib = {
     defines = {
         gvv = "__gvv__.gvv",
-        event = "__core__/lualib/event_handler",  
+        event = "__core__/lualib/event_handler",
         constants = "__RitnLib__.core.constants",
 
         other = "__RitnLib__/lualib/other-functions",
@@ -23,7 +117,7 @@ ritnlib = {
         -- recipe,                      -- DEPRECATED
         -- entity,                      -- DEPRECATED
         -- technology,                  -- DEPRECATED
-        
+
         -- setup-classes
         setup = "__RitnLib__.core.setup-classes",
 

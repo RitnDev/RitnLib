@@ -4,6 +4,35 @@ local visible = false
 local center = "center"
 
 -- Declartion du LuaStyle général
+
+---**EN**
+---
+---Description: Legacy runtime style presets — each function mutates a `LuaStyle` passed as argument (`ritn_small_button(element.style)`).
+---
+---⚠ Deprecated — superseded by the fluent [`RitnLibStyle`](../classes/RitnClass/gui/RitnStyle.lua) class (`RitnLibStyle(element):smallButton()`), which covers the same presets and more. Kept for backward compatibility; scheduled for removal.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Presets de style runtime legacy — chaque fonction mute un `LuaStyle` passé en argument (`ritn_small_button(element.style)`).
+---
+---⚠ Déprécié — remplacé par la classe fluent [`RitnLibStyle`](../classes/RitnClass/gui/RitnStyle.lua) (`RitnLibStyle(element):smallButton()`), qui couvre les mêmes presets et plus. Conservé pour compatibilité ; suppression planifiée.
+---@deprecated Use RitnLibStyle instead
+---@class RitnLibLuaStyleFunctions
+---@field ritn_small_button fun(style: LuaStyle)
+---@field ritn_normal_button fun(style: LuaStyle)
+---@field ritn_sprite_button fun(style: LuaStyle)
+---@field ritn_button_close fun(style: LuaStyle)
+---@field ritn_frame_style fun(style: LuaStyle)
+---@field ritn_frame_remote_style fun(style: LuaStyle)
+---@field ritn_flow_no_padding fun(style: LuaStyle)
+---@field ritn_flow_panel_main fun(style: LuaStyle)
+---@field ritn_flow_dialog fun(style: LuaStyle)
+---@field ritn_flow_surfaces fun(style: LuaStyle)
+---@field ritn_scroll_pane fun(style: LuaStyle)
+---@field ritn_remote_listbox fun(style: LuaStyle)
+---@field ritn_label fun(style: LuaStyle)
 local LuaStyle = {}
 
 

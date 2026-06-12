@@ -22,6 +22,19 @@
 -- SOFTWARE.
 --
 
+---**EN**
+---
+---Description: Embedded [rxi/json.lua](https://github.com/rxi/json.lua) v0.1.2 (MIT) — robust JSON encode/decode. Exposed via `require(ritnlib.defines.json)`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: [rxi/json.lua](https://github.com/rxi/json.lua) v0.1.2 (MIT) embarqué — encode/decode JSON robuste. Exposé via `require(ritnlib.defines.json)`.
+---@class RitnLibJson
+---@field _version "0.1.2"
+---@field encode fun(val: any): string             Serialises a Lua value to a JSON string (errors on circular refs, sparse arrays, functions)
+---@field decode fun(str: string): any             Parses a JSON string into Lua values (errors on malformed input)
 local json = { _version = "0.1.2" }
 
 -------------------------------------------------------------------------------
