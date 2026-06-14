@@ -7,6 +7,9 @@ bin/
 out/
 dist/
 
+# claude
+.claude
+
 # luarocks build files
 *.src.rock
 *.zip

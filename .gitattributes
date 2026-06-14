@@ -4,3 +4,4 @@
 .luarc.json export-ignore
 tests export-ignore
 docs export-ignore
+.claude export-ignore
