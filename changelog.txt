@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.9.11
+Date: 14.06.2026
+  Info:
+    - Documentation: added bilingual (EN/FR) class reference map (reference/overview), known-bugs and Factorio 2.0 migration debt pages, and the first ADR (0001 - in-house class factory).
+  Scripting:
+    - LuaLS annotations: corrected false "broken/P0" notes carried over from the audit, verified against the consumer mods (comments only, no behaviour change). RitnLibGui methods are documented as an extension contract; RitnLibForce getStats* reframed as the 1.x statistics API pending the 2.0 migration; dropped the wrong "removed in 2.0" note on LuaForce.items_launched/rockets_launched (still present in 2.0); RitnLibEvent created_entity flagged as a 1.x residue (on_trigger_created_entity).
+---------------------------------------------------------------------------------------------------
 Version: 0.9.10
 Date: 12.06.2026
   Scripting:

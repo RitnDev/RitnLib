@@ -11,9 +11,9 @@ local util = require(ritnlib.defines.other)
 ---
 ---⚠ Temporary wrapper. Do not store in `storage`. Re-instantiate inside each event handler.
 ---
----⚠ **Factorio 2.0 incompatibility**: `LuaForce.items_launched` and `LuaForce.rockets_launched` were removed in 2.0. The constructor will fail to set those fields on a 2.0 install. To be fixed in R2 (replace with `LuaForce.get_item_launched(name)`).
+---ℹ `LuaForce.items_launched` (Read, dictionary item→count) and `LuaForce.rockets_launched` (Read|Write uint) are still available in Factorio 2.0; the constructor reads them directly.
 ---
----⚠ **Broken methods**: every `:getStats*` method below currently crashes because `self.stats` is never initialised (its constructor block is commented out). To be fixed in R1.
+---⚠ **`:getStats*` methods — incomplete, disabled pending the Factorio 2.0 migration**: `self.stats` is built from the 1.x statistics API (`LuaForce.item_production_statistics.input_counts` …), reworked in 2.0, so its constructor block is commented out — these methods would error on a base instance (`self.stats` is nil). The only intended consumer (RitnLeaderboard, which rebuilds `self.stats` in a subclass) is still in development. See migration-2.0.md.
 ---
 ---See: [`temporary-wrappers.md`](../../docs/en/concepts/temporary-wrappers.md)
 ---
@@ -25,17 +25,17 @@ local util = require(ritnlib.defines.other)
 ---
 ---⚠ Wrapper temporaire. Ne pas stocker dans `storage`. À réinstancier dans chaque handler d'événement.
 ---
----⚠ **Incompatibilité Factorio 2.0** : `LuaForce.items_launched` et `LuaForce.rockets_launched` ont été retirés en 2.0. Le constructeur échouera sur ces champs en 2.0. À corriger en R2 (remplacer par `LuaForce.get_item_launched(name)`).
+---ℹ `LuaForce.items_launched` (Read, dictionnaire item→count) et `LuaForce.rockets_launched` (Read|Write uint) sont toujours disponibles en Factorio 2.0 ; le constructeur les lit directement.
 ---
----⚠ **Méthodes cassées** : chaque `:getStats*` ci-dessous plante actuellement car `self.stats` n'est jamais initialisé (le bloc constructeur est commenté). À corriger en R1.
+---⚠ **Méthodes `:getStats*` — incomplètes, désactivées en attendant la migration Factorio 2.0** : `self.stats` est construit depuis l'API statistics 1.x (`LuaForce.item_production_statistics.input_counts` …), retravaillée en 2.0, donc son bloc constructeur est commenté — ces méthodes lèveraient une erreur sur une instance de base (`self.stats` est nil). Le seul consommateur prévu (RitnLeaderboard, qui reconstruit `self.stats` dans une sous-classe) est encore en développement. Cf. migration-2.0.md.
 ---
 ---Voir : [`wrappers-temporaires.md`](../../docs/fr/concepts/wrappers-temporaires.md)
 ---@class RitnLibForce
 ---@field force LuaForce                            Wrapped LuaForce (live reference)
 ---@field name string                               Force name (snapshot, e.g. "player", "enemy")
 ---@field index uint                                Force index (snapshot)
----@field items_launched table<string, uint>?       ⚠ Removed in Factorio 2.0
----@field rockets_launched uint?                    ⚠ Removed in Factorio 2.0
+---@field items_launched table<string, uint>?       Items launched in rockets (Read, dict item→count) — present in 2.0
+---@field rockets_launched uint?                    Rockets launched (Read|Write uint) — present in 2.0
 ---@field FORCE_ENEMY_NAME "enemy"                  Constant
 ---@field FORCE_PLAYER_NAME "player"                Constant
 ---@field FORCE_NEUTRAL_NAME "neutral"              Constant
@@ -91,7 +91,7 @@ end) --[[@as RitnLibForce]]
 ---
 ---Description: Returns the production/consumption count of an item or fluid for this force.
 ---
----⚠ **Broken** — accesses `self.stats` which is not initialised in this version. Will crash.
+---⚠ Requires `self.stats`, built from the 1.x statistics API (disabled for the 2.0 migration — see class note). Relies on a subclass populating `self.stats`; returns 0 for unknown names.
 ---
 ---──────────────────────────────
 ---
@@ -99,7 +99,7 @@ end) --[[@as RitnLibForce]]
 ---
 ---Description: Retourne le compteur de production/consommation d'un item ou fluide pour cette force.
 ---
----⚠ **Cassée** — accède à `self.stats` qui n'est pas initialisé dans cette version. Plantera.
+---⚠ Requiert `self.stats`, construit depuis l'API statistics 1.x (désactivée pour la migration 2.0 — cf. note de classe). Repose sur une sous-classe qui peuple `self.stats` ; retourne 0 pour les noms inconnus.
 ---@param name string                Item or fluid prototype name
 ---@param prodType? "item"|"fluid"   Statistic family (default: "item")
 ---@param output? boolean            `true` for output_counts, `false`/nil for input_counts (default)
@@ -124,13 +124,13 @@ end
 
 ---**EN**
 ---
----Description: Shortcut for `getStatsProduction(name, "item", output)`. ⚠ Broken, see parent method.
+---Description: Shortcut for `getStatsProduction(name, "item", output)`. ⚠ Depends on `self.stats` like its parent (see class note).
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Raccourci pour `getStatsProduction(name, "item", output)`. ⚠ Cassée, cf. méthode parente.
+---Description: Raccourci pour `getStatsProduction(name, "item", output)`. ⚠ Dépend de `self.stats` comme sa méthode parente (cf. note de classe).
 ---@param name string
 ---@param output? boolean
 ---@return integer?
@@ -141,13 +141,13 @@ end
 
 ---**EN**
 ---
----Description: Shortcut for `getStatsProduction(name, "fluid", output)`. ⚠ Broken, see parent method.
+---Description: Shortcut for `getStatsProduction(name, "fluid", output)`. ⚠ Depends on `self.stats` like its parent (see class note).
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Raccourci pour `getStatsProduction(name, "fluid", output)`. ⚠ Cassée, cf. méthode parente.
+---Description: Raccourci pour `getStatsProduction(name, "fluid", output)`. ⚠ Dépend de `self.stats` comme sa méthode parente (cf. note de classe).
 ---@param name string
 ---@param output? boolean
 ---@return integer?
@@ -160,7 +160,7 @@ end
 ---
 ---Description: Returns the kill or build count of a given entity name for this force.
 ---
----⚠ **Broken** — accesses `self.stats` which is not initialised in this version. Will crash.
+---⚠ Requires `self.stats`, built from the 1.x statistics API (disabled for the 2.0 migration — see class note). Relies on a subclass populating `self.stats`; returns 0 for unknown names.
 ---
 ---──────────────────────────────
 ---
@@ -168,7 +168,7 @@ end
 ---
 ---Description: Retourne le nombre de kills ou de constructions d'une entité pour cette force.
 ---
----⚠ **Cassée** — accède à `self.stats` qui n'est pas initialisé dans cette version. Plantera.
+---⚠ Requiert `self.stats`, construit depuis l'API statistics 1.x (désactivée pour la migration 2.0 — cf. note de classe). Repose sur une sous-classe qui peuple `self.stats` ; retourne 0 pour les noms inconnus.
 ---@param name string
 ---@param countType? "kill"|"build"    Statistic family (default: "kill")
 ---@param output? boolean              `true` for output_counts, `false`/nil for input_counts (default)
@@ -192,13 +192,13 @@ end
 
 ---**EN**
 ---
----Description: Shortcut for `getStatsCount(name, "kill", output)`. ⚠ Broken, see parent method.
+---Description: Shortcut for `getStatsCount(name, "kill", output)`. ⚠ Depends on `self.stats` like its parent (see class note).
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Raccourci pour `getStatsCount(name, "kill", output)`. ⚠ Cassée, cf. méthode parente.
+---Description: Raccourci pour `getStatsCount(name, "kill", output)`. ⚠ Dépend de `self.stats` comme sa méthode parente (cf. note de classe).
 ---@param name string
 ---@param output? boolean
 ---@return integer?
@@ -208,13 +208,13 @@ end
 
 ---**EN**
 ---
----Description: Shortcut for `getStatsCount(name, "build", output)`. ⚠ Broken, see parent method.
+---Description: Shortcut for `getStatsCount(name, "build", output)`. ⚠ Depends on `self.stats` like its parent (see class note).
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Raccourci pour `getStatsCount(name, "build", output)`. ⚠ Cassée, cf. méthode parente.
+---Description: Raccourci pour `getStatsCount(name, "build", output)`. ⚠ Dépend de `self.stats` comme sa méthode parente (cf. note de classe).
 ---@param name string
 ---@param output? boolean
 ---@return integer?

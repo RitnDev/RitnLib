@@ -140,7 +140,7 @@ end
 ---
 ---Description: Extracts a `LuaEntity` from an event. Checks `created_entity` first (legacy 1.x), then `vehicle`, then `entity`.
 ---
----⚠ `event.created_entity` was removed in Factorio 2.0 — only the `event.entity` fallback path is active there.
+---⚠ `event.created_entity` no longer exists in Factorio 2.0 (the field is `nil`, so this branch is dead code there). Trigger-created entities now arrive through the `on_trigger_created_entity` event (read via `event.entity`). 1.x residue to migrate — see migration-2.0.md.
 ---
 ---──────────────────────────────
 ---
@@ -148,7 +148,7 @@ end
 ---
 ---Description: Extrait un `LuaEntity` d'un event. Vérifie `created_entity` (legacy 1.x), puis `vehicle`, puis `entity`.
 ---
----⚠ `event.created_entity` a été retiré en Factorio 2.0 — seule la branche `event.entity` est active là-bas.
+---⚠ `event.created_entity` n'existe plus en Factorio 2.0 (le champ est `nil`, donc cette branche est du code mort). Les entités créées par trigger arrivent désormais via l'event `on_trigger_created_entity` (lu via `event.entity`). Reliquat 1.x à migrer — cf. migration-2.0.md.
 ---@param event EventData
 ---@return LuaEntity?
 local function getEntity(event)
@@ -188,7 +188,7 @@ end
 ---
 ---Description: Returns `event.rocket` if present.
 ---
----⚠ The Factorio 1.x `on_rocket_launched` payload's `rocket` field was reworked in 2.0.
+---⚠ `event.rocket` still works in Factorio 2.0 (the `on_rocket_launched` payload also adds `rocket_silo`). Note: since 2.0 the rocket and the cargo pod are separate entities — to detect full launch completion use `on_cargo_pod_finished_ascending` instead.
 ---
 ---──────────────────────────────
 ---
@@ -196,7 +196,7 @@ end
 ---
 ---Description: Retourne `event.rocket` si présent.
 ---
----⚠ Le champ `rocket` du payload `on_rocket_launched` 1.x a été retravaillé en 2.0.
+---⚠ `event.rocket` fonctionne toujours en Factorio 2.0 (le payload `on_rocket_launched` ajoute aussi `rocket_silo`). Note : depuis 2.0, le rocket et le cargo pod sont des entités distinctes — pour détecter la fin complète du lancement, utiliser plutôt `on_cargo_pod_finished_ascending`.
 ---@param event EventData
 ---@return LuaEntity?
 local function getRocket(event)

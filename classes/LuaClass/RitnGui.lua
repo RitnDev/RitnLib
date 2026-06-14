@@ -14,18 +14,19 @@ local modGui = require("mod-gui")
 ---
 ---⚠ Temporary wrapper. Do not store in `storage`. Re-instantiate inside each GUI event handler.
 ---
----⚠ **Known bugs (P0)** (cf. Phase 2 §D.9):
----- `self.gui = {}` is left empty by the constructor, but `:getElement`, `:on_gui_click`, `:on_gui_selection_state_changed` read `self.gui[1]`. To use this class today, you must extend it and override `self.gui` (see `RitnLibInformatron`).
----- `:on_gui_click` accesses `self.element.valid` without first checking `self.element ~= nil`.
----- The `click = { ui, element, name, action }` table-literal uses 4 global references that don't exist; only the subsequent `click.X = …` assignments give the table content.
+---**Extension contract** — `RitnLibGui` is an abstract base, meant to be subclassed with `ritnlib.classFactory.newclass(RitnLibGui, function(self, event) ... end)`. The base constructor leaves four fields empty **on purpose**; each subclass fills them in its own constructor:
+---- `self.gui = { <root LuaGuiElement> }` — e.g. `{ player.gui.center }` or `{ mod_gui.get_button_flow(player) }`. `:getElement`, `:on_gui_click`, `:on_gui_selection_state_changed` walk `self.gui[1]`.
+---- `self.gui_name` — logical slug (e.g. "lobby"), prefix of every element name.
+---- `self.gui_action = { [gui_name] = { [action] = true, ... } }` — the actions this GUI accepts.
+---- `self.content` — element-path lookup used by `:getElement`.
 ---
----⚠ **Implicit contract**: the consumer mod must register a remote interface:
+---The consumer mod must also register the dispatch interface so `:actionGui` can route clicks:
 ---```lua
 ---remote.add_interface("<your-mod>", {
----    gui_action_<gui_name> = function(action, event, ...) ... end
+---    gui_action_<gui_name> = function(action, event, ...) ... end,
 ---})
 ---```
----Otherwise `:actionGui` crashes when called.
+---See `RitnGuiMenuButton` / `RitnLobbyGuiLobby` in the consumer mods for a complete working subclass.
 ---
 ---See: [`temporary-wrappers.md`](../../docs/en/concepts/temporary-wrappers.md), [`gui-pattern.md`](../../docs/en/guides/gui-pattern.md)
 ---
@@ -33,22 +34,23 @@ local modGui = require("mod-gui")
 ---
 ---**FR**
 ---
----Description: Base de handler d'événement GUI. Étend `RitnLibPlayer` (hérite de tous ses fields/méthodes). Construite autour d'un event GUI Factorio, dispatche `on_gui_click` / `on_gui_selection_state_changed` via `remote.call(self.mod_name, "gui_action_"..self.gui_name, ...)`.
+---Description: **Classe de base** de handler d'événement GUI (abstraite — destinée à être étendue). Étend `RitnLibPlayer` (hérite de tous ses fields/méthodes). Construite autour d'un event GUI Factorio, dispatche `on_gui_click` / `on_gui_selection_state_changed` via `remote.call(self.mod_name, "gui_action_"..self.gui_name, ...)`.
 ---
 ---⚠ Wrapper temporaire. Ne pas stocker dans `storage`. À réinstancier dans chaque handler GUI.
 ---
----⚠ **Bugs connus (P0)** (cf. Phase 2 §D.9) :
----- `self.gui = {}` reste vide après le constructeur, mais `:getElement`, `:on_gui_click`, `:on_gui_selection_state_changed` lisent `self.gui[1]`. Pour utiliser cette classe aujourd'hui, il faut l'étendre et override `self.gui` (cf. `RitnLibInformatron`).
----- `:on_gui_click` accède à `self.element.valid` sans vérifier d'abord `self.element ~= nil`.
----- Le table-literal `click = { ui, element, name, action }` utilise 4 références globales inexistantes ; seules les assignations `click.X = …` ensuite donnent le contenu de la table.
+---**Contrat d'extension** — `RitnLibGui` est une base abstraite, destinée à être étendue avec `ritnlib.classFactory.newclass(RitnLibGui, function(self, event) ... end)`. Le constructeur de base laisse quatre champs vides **volontairement** ; chaque sous-classe les remplit dans son propre constructeur :
+---- `self.gui = { <LuaGuiElement racine> }` — ex: `{ player.gui.center }` ou `{ mod_gui.get_button_flow(player) }`. `:getElement`, `:on_gui_click`, `:on_gui_selection_state_changed` parcourent `self.gui[1]`.
+---- `self.gui_name` — slug logique (ex: "lobby"), préfixe de chaque nom d'élément.
+---- `self.gui_action = { [gui_name] = { [action] = true, ... } }` — les actions acceptées par ce GUI.
+---- `self.content` — table de chemins d'éléments utilisée par `:getElement`.
 ---
----⚠ **Contrat implicite** : le mod consommateur doit enregistrer une interface remote :
+---Le mod consommateur doit aussi enregistrer l'interface de dispatch pour que `:actionGui` route les clics :
 ---```lua
 ---remote.add_interface("<ton-mod>", {
----    gui_action_<gui_name> = function(action, event, ...) ... end
+---    gui_action_<gui_name> = function(action, event, ...) ... end,
 ---})
 ---```
----Sinon `:actionGui` plante à l'appel.
+---Voir `RitnGuiMenuButton` / `RitnLobbyGuiLobby` dans les mods consommateurs pour une sous-classe complète fonctionnelle.
 ---
 ---Voir : [`wrappers-temporaires.md`](../../docs/fr/concepts/wrappers-temporaires.md), [`gui-pattern.md`](../../docs/fr/guides/gui-pattern.md)
 ---@class RitnLibGui : RitnLibPlayer
@@ -60,7 +62,7 @@ local modGui = require("mod-gui")
 ---@field content table                          Element-tree lookup cache (`self.content[type][name] = path[]`)
 ---@field gui_name string                        Logical GUI name (e.g. "informatron")
 ---@field main_gui string?                       Root GUI element name suffix
----@field gui table                              ⚠ Empty by default — override in subclasses to provide a root LuaGuiElement at index `[1]`
+---@field gui table                              Filled by each subclass: `self.gui[1]` must be the root LuaGuiElement (extension contract)
 ---@field list_valid table<string, true>         Element types accepted by `:on_gui_selection_state_changed` (listbox, dropdown)
 ---@field pattern string                         Regex for splitting element names into `ui`/`element`/`name` triplet
 ---@operator call(EventData, string, string?): RitnLibGui
@@ -139,7 +141,7 @@ end
 ---
 ---Description: Retrieves a `LuaGuiElement` from the GUI tree by walking `self.content[element_type][element_name]` as a path of suffixes prefixed by `self.gui_name`.
 ---
----⚠ **Broken** — `self.gui[1]` is nil unless a subclass overrides it. Will return nil or crash when iterating.
+---⚠ Relies on the extension contract: the subclass must have set `self.gui[1]` (root element) and `self.content`. Returns nil if the path doesn't resolve.
 ---
 ---──────────────────────────────
 ---
@@ -147,7 +149,7 @@ end
 ---
 ---Description: Récupère un `LuaGuiElement` dans l'arbre GUI en parcourant `self.content[element_type][element_name]` comme un chemin de suffixes préfixés par `self.gui_name`.
 ---
----⚠ **Cassée** — `self.gui[1]` est nil tant qu'une sous-classe ne l'override pas. Retournera nil ou plantera à l'itération.
+---⚠ Repose sur le contrat d'extension : la sous-classe doit avoir défini `self.gui[1]` (élément racine) et `self.content`. Retourne nil si le chemin ne résout pas.
 ---@param element_type string
 ---@param element_name? string
 ---@return LuaGuiElement?
@@ -176,7 +178,7 @@ end
 ---
 ---Description: Returns the currently-selected item of a `list-box` or `drop-down` element identified by `(element_type, element_name)`.
 ---
----⚠ Depends on `:getElement` which is currently broken (see warning above).
+---⚠ Like `:getElement`, relies on the subclass having set `self.gui[1]` / `self.content`.
 ---
 ---──────────────────────────────
 ---
@@ -184,7 +186,7 @@ end
 ---
 ---Description: Retourne l'élément sélectionné d'un `list-box` ou `drop-down` identifié par `(element_type, element_name)`.
 ---
----⚠ Dépend de `:getElement` qui est cassée (cf. warning ci-dessus).
+---⚠ Comme `:getElement`, repose sur le fait que la sous-classe a défini `self.gui[1]` / `self.content`.
 ---@param element_type string
 ---@param element_name string
 ---@return string?  The selected item caption, or nil if no selection / invalid list
@@ -254,7 +256,7 @@ end
 ---
 ---Description: Click handler. Parses `self.element.name` via `self.pattern` into `(ui, element, name)` and dispatches `action = "<element>-<name>"` via `:actionGui`.
 ---
----⚠ **Broken** — `self.gui[1]` is nil by default (early return); `self.element.valid` access without nil-check on `self.element`.
+---⚠ Relies on the extension contract (`self.gui[1]` set by the subclass). Returns early and harmlessly when the GUI isn't the one this handler owns. Designed to be called from the mod's `on_gui_click` event, where `event.element` is always present.
 ---
 ---──────────────────────────────
 ---
@@ -262,7 +264,7 @@ end
 ---
 ---Description: Handler de clic. Parse `self.element.name` via `self.pattern` en `(ui, element, name)` et dispatche `action = "<element>-<name>"` via `:actionGui`.
 ---
----⚠ **Cassé** — `self.gui[1]` est nil par défaut (early return) ; accès à `self.element.valid` sans nil-check sur `self.element`.
+---⚠ Repose sur le contrat d'extension (`self.gui[1]` défini par la sous-classe). Retourne tôt et sans dommage quand le GUI n'est pas celui géré par ce handler. Conçue pour être appelée depuis l'event `on_gui_click` du mod, où `event.element` est toujours présent.
 ---@param ... any
 function RitnLibGui:on_gui_click(...)
     if not self.element.valid then return end
@@ -301,7 +303,7 @@ end
 ---
 ---Description: Selection-state-changed handler for `list-box` / `drop-down`. Parses the element name via `self.pattern` and dispatches `action = "<element>-<name>-selection_state_changed"`.
 ---
----⚠ **Broken** — same `self.gui[1]` nil issue as `:on_gui_click`.
+---⚠ Same extension contract as `:on_gui_click` (`self.gui[1]` set by the subclass; called from the mod's `on_gui_selection_state_changed` event).
 ---
 ---──────────────────────────────
 ---
@@ -309,7 +311,7 @@ end
 ---
 ---Description: Handler de selection-state-changed pour `list-box` / `drop-down`. Parse le nom d'élément via `self.pattern` et dispatche `action = "<element>-<name>-selection_state_changed"`.
 ---
----⚠ **Cassé** — même problème `self.gui[1]` nil que `:on_gui_click`.
+---⚠ Même contrat d'extension que `:on_gui_click` (`self.gui[1]` défini par la sous-classe ; appelée depuis l'event `on_gui_selection_state_changed` du mod).
 ---@param ... any
 function RitnLibGui:on_gui_selection_state_changed(...)
     if not self.element.valid then log('element invalid !') return end
