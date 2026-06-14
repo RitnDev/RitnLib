@@ -60,7 +60,7 @@ Tutoriels orientés tâche :
 | [`RitnProtoEntity`](reference/prototype/RitnProtoEntity.md) | `data.raw[entity-type]` |
 | [`RitnProtoItem`](reference/prototype/RitnProtoItem.md) | `data.raw[item-type]` |
 | [`RitnProtoRecipe`](reference/prototype/RitnProtoRecipe.md) | `data.raw.recipe` |
-| [`RitnProtoTechnology`](reference/prototype/RitnProtoTechnology.md) | `data.raw.technology` |
+| [`RitnProtoTech`](reference/prototype/RitnProtoTech.md) | `data.raw.technology` |
 | [`RitnProtoOre`](reference/prototype/RitnProtoOre.md) | `data.raw.resource` + autoplace |
 | [`RitnProtoSprite`](reference/prototype/RitnProtoSprite.md) | `data.raw.sprite` |
 | [`RitnProtoStyle`](reference/prototype/RitnProtoStyle.md) | `data.raw['gui-style']` |

@@ -10,6 +10,8 @@ lang: fr
 
 Manipulateur **data stage** pour `data.raw["recipe"][<nom>]`. Boîte à outils fluente pour muter une recette : activer/désactiver, masquer/afficher, ajouter/retirer/remplacer des ingrédients, propager le tint des packs de science et le subgroup vers l'item correspondant. Chaque setter réécrit dans `data.raw` (via `:update()`) et renvoie `self` (chaînable).
 
+> **Avertissement — API Factorio 1.x** : cette classe n'a pas été révisée depuis Factorio 2.0 ; elle conserve des constructions de l'API **1.x** (notamment les variantes de difficulté `normal` / `expensive`). Utilisable au data stage, mais **non validée pour 2.0** — voir [Migration Factorio 2.0](../../../migration-2.0.md).
+
 | | |
 |---|---|
 | **Source** | `classes/prototypes/Recipe.lua` |

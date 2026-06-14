@@ -51,6 +51,12 @@ Remplacement 2.0 : l'event **`on_trigger_created_entity`** — déclenché quand
 
 - **Migration** : aplatir au format sprite 2.0 — retirer la clé `hr_version` et conserver la définition haute résolution comme définition de base.
 
+### 1.4 Classes `RitnProto*` (data stage) — non révisées pour 2.0
+
+**L'ensemble** des manipulateurs de prototypes ([`RitnProtoRecipe`](fr/reference/prototype/RitnProtoRecipe.md), [`RitnProtoTech`](fr/reference/prototype/RitnProtoTech.md), et les autres `RitnProto*`) **n'ont pas été retouchés depuis Factorio 2.0** : ils conservent des constructions de l'API 1.x (variantes de difficulté `normal` / `expensive` des recettes, accès directs à `unit.*`, etc.). Ils restent largement utilisables au data stage, mais sont à auditer pour 2.0.
+
+- **Migration** : passer en revue chaque `RitnProto*`, retirer les branches 1.x mortes et valider contre les prototypes 2.0.
+
 ---
 
 ## 2. Opportunités 2.0 — améliorations (non bloquant)
@@ -144,6 +150,12 @@ The `getEntity` extractor checks `event.created_entity` first (a **1.x** field).
 `assembler1pipepictures` (and the similar helper) declare a **1.x** sprite layout via `hr_version`. In 2.0, `hr_version` is **ignored** (all sprites are full-resolution by default).
 
 - **Migration**: flatten to the 2.0 sprite format — remove the `hr_version` key and keep the high-res definition as the base.
+
+### 1.4 `RitnProto*` classes (data stage) — not revised for 2.0
+
+**All** the prototype manipulators ([`RitnProtoRecipe`](en/reference/prototype/RitnProtoRecipe.md), [`RitnProtoTech`](en/reference/prototype/RitnProtoTech.md), and the other `RitnProto*`) **haven't been touched since Factorio 2.0**: they keep 1.x API constructs (recipe `normal` / `expensive` difficulty variants, direct `unit.*` access, etc.). They remain largely usable at data stage, but should be audited for 2.0.
+
+- **Migration**: review each `RitnProto*`, remove dead 1.x branches and validate against 2.0 prototypes.
 
 ---
 

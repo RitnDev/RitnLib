@@ -32,12 +32,6 @@ Genuine code defects (verified in source), but on paths **not exercised** by the
 | `RitnLibStyle:visible()` | `classes/RitnClass/gui/RitnStyle.lua` | The `log` line concatenates `self.gui_name`, never defined on `RitnLibStyle` → exception **if called**. | — |
 | `RitnIngredient` — `getItem()` helper | `classes/RitnClass/RitnIngredient.lua:109` | On the probability branch, reads `ingredient.inputs.probability` (nonexistent sub-table) → "attempt to index a nil value". No usage found in consumer mods — **unconfirmed**. | to verify |
 
-## Known limitation
-
-| Class | File | Detail |
-|---|---|---|
-| `RitnLibSetting` — non-bool types | `classes/RitnClass/RitnSetting.lua` | `setTypeInteger/Double/String/Color` then `:setType()` crash on the `self.TYPE[self.dataType]` chain (UPPERCASE keys vs lowercase value). **Only bool settings work**, via the constructor default path (`:setDefaultValueBool():new()`) — which is exactly what consumers use (`RitnBaseGame/settings.lua`). Other types are never used. |
-
 ## Minor side effect
 
 | Class / method | File | Detail |
@@ -52,6 +46,7 @@ Not counted as production bugs — explicitly work-in-progress.
 | Class / method | File | Detail |
 |---|---|---|
 | `RitnLibInformatron:getElement()` · `:setPageContent()` | `classes/RitnClass/RitnInformatron.lua` | `getElement` reads `self.gui[self.gui_name]` while the constructor stores the root under `[1]`; `setPageContent` returns the undefined global `FLAG_PAGE_DISPLAY` (typo). Class marked `-- beta` in `defines.lua`, exercised by no mod. |
+| `RitnLibSetting` | `classes/RitnClass/RitnSetting.lua` | **Unfinished class** (work in progress). `:getType()` / `:new()` don't produce a valid setting: the `self.TYPE[self.dataType]` chain dereferences with mismatched key casing (UPPERCASE keys vs lowercase value). Don't use as-is — see [RitnLibSetting](../reference/settings/RitnLibSetting.md). |
 
 ## See also
 

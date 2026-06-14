@@ -32,12 +32,6 @@ Vrais défauts de code (vérifiés dans la source), mais sur des chemins **non e
 | `RitnLibStyle:visible()` | `classes/RitnClass/gui/RitnStyle.lua` | La ligne `log` concatène `self.gui_name`, jamais défini sur `RitnLibStyle` → exception **si appelée**. | — |
 | `RitnIngredient` — helper `getItem()` | `classes/RitnClass/RitnIngredient.lua:109` | Sur la branche probability, lit `ingredient.inputs.probability` (sous-table inexistante) → « attempt to index a nil value ». Aucun usage trouvé dans les mods consommateurs — **non confirmé**. | à vérifier |
 
-## Limitation connue
-
-| Classe | Fichier | Détail |
-|---|---|---|
-| `RitnLibSetting` — types non-bool | `classes/RitnClass/RitnSetting.lua` | `setTypeInteger/Double/String/Color` suivis de `:setType()` plantent sur la chaîne `self.TYPE[self.dataType]` (clés MAJUSCULES vs valeur minuscule). **Seuls les settings bool fonctionnent**, via la voie par défaut du constructeur (`:setDefaultValueBool():new()`) — c'est exactement ce qu'utilisent les consommateurs (`RitnBaseGame/settings.lua`). Les autres types ne sont jamais utilisés. |
-
 ## Effet de bord mineur
 
 | Classe / méthode | Fichier | Détail |
@@ -52,6 +46,7 @@ Non comptés comme bugs de production — fonctionnalité explicitement en chant
 | Classe / méthode | Fichier | Détail |
 |---|---|---|
 | `RitnLibInformatron:getElement()` · `:setPageContent()` | `classes/RitnClass/RitnInformatron.lua` | `getElement` lit `self.gui[self.gui_name]` alors que le constructeur stocke la racine en `[1]` ; `setPageContent` retourne le global indéfini `FLAG_PAGE_DISPLAY` (typo). Classe marquée `-- beta` dans `defines.lua`, exercée par aucun mod. |
+| `RitnLibSetting` | `classes/RitnClass/RitnSetting.lua` | **Classe non terminée** (dev en cours). `:getType()` / `:new()` ne produisent pas de setting valide : la chaîne `self.TYPE[self.dataType]` déréférence avec une casse de clé incohérente (clés MAJUSCULES vs valeur minuscule). Ne pas utiliser en l'état — voir [RitnLibSetting](../reference/settings/RitnLibSetting.md). |
 
 ## Voir aussi
 
