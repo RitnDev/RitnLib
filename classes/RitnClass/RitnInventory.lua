@@ -127,7 +127,7 @@ function RitnLibInventory:init()
         [defines.inventory.character_trash] = game.create_inventory(self.inventory_size),
         ["cursor"] = game.create_inventory(1),
         ["logistic_param"] = {
-            { name = "slot_count",                                 value = 0 },
+            { name = "slot_count",                                   value = 0 },
             { name = "character_personal_logistic_requests_enabled", value = false }
         }
     }
@@ -223,7 +223,7 @@ function RitnLibInventory:insertInventory(define)
                 if stack.valid and stack.valid_for_read then
                     self.player.insert { name = stack.name, count = stack.count }
                     log('> self.player.insert(stack) -> stack = {name="' ..
-                    stack.name .. '", count="' .. stack.count .. '"}')
+                        stack.name .. '", count="' .. stack.count .. '"}')
                 end
             end
         end
@@ -427,7 +427,7 @@ function RitnLibInventory:save(cursor)
     if cursor ~= nil then option = cursor end
     log('> ' .. self.object_name .. ':save(' .. tostring(option) .. ') -> ' .. self.name)
 
-    self:save_all_inventory():saveLogistic()
+    self:save_all_inventory()
     if option then self:saveCursor() end
 
     return self
@@ -452,7 +452,7 @@ function RitnLibInventory:load(cursor)
     if cursor ~= nil then option = cursor end
     log('> ' .. self.object_name .. ':load(' .. tostring(option) .. ') -> ' .. self.name)
 
-    self:load_all_inventory():loadLogistic()
+    self:load_all_inventory()
     if option then self:saveCursor() end
 
     return self
