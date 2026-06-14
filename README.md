@@ -99,8 +99,7 @@ Puis ajouter `"RitnLib"` aux `dependencies` du `info.json` de ton propre mod :
 
 ### Documentation
 
-- 📖 [Documentation française](https://github.com/RitnDev/RitnLib/blob/main/docs/fr/index.md) — guides et référence des classes
-- 📖 [English documentation](https://github.com/RitnDev/RitnLib/blob/main/docs/en/index.md)
+- 📖 [Documentation](https://ritndev.github.io/RitnLib/) — guides et référence des classes (FR · EN)
 - 🏗 [Architecture interne](https://github.com/RitnDev/RitnLib/blob/main/docs/architecture.md) (FR, mainteneur)
 - 📜 [Changelog](https://github.com/RitnDev/RitnLib/blob/main/changelog.txt)
 
@@ -204,8 +203,7 @@ Then add `"RitnLib"` to your own mod's `info.json` `dependencies`:
 
 ### Documentation
 
-- 📖 [English documentation](https://github.com/RitnDev/RitnLib/blob/main/docs/en/index.md) — guides and class reference
-- 📖 [Documentation française](https://github.com/RitnDev/RitnLib/blob/main/docs/fr/index.md)
+- 📖 [Documentation](https://ritndev.github.io/RitnLib/) — guides and class reference (EN · FR)
 - 🏗 [Internal architecture](https://github.com/RitnDev/RitnLib/blob/main/docs/architecture.md) (FR, maintainer-facing)
 - 📜 [Changelog](https://github.com/RitnDev/RitnLib/blob/main/changelog.txt)
 

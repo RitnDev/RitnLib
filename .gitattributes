@@ -5,3 +5,5 @@
 tests export-ignore
 docs export-ignore
 .claude export-ignore
+mkdocs.yml export-ignore
+requirements-docs.txt export-ignore

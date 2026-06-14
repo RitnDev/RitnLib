@@ -1,0 +1,137 @@
+site_name: RitnLib
+site_description: Classes & Function library for Ritn's Factorio mods
+site_author: Ritn
+site_url: https://ritndev.github.io/RitnLib/
+repo_url: https://github.com/RitnDev/RitnLib
+repo_name: RitnDev/RitnLib
+docs_dir: docs
+
+theme:
+  name: material
+  language: fr
+  palette:
+    - scheme: default
+      primary: deep orange
+      accent: orange
+      toggle:
+        icon: material/brightness-7
+        name: Mode sombre
+    - scheme: slate
+      primary: deep orange
+      accent: orange
+      toggle:
+        icon: material/brightness-4
+        name: Mode clair
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+plugins:
+  - search:
+      lang: [fr, en]
+  - i18n:
+      docs_structure: suffix
+      languages:
+        - locale: fr
+          default: true
+          name: Français
+          build: true
+        - locale: en
+          name: English
+          build: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Accueil: index.md
+  - Démarrer: getting-started.md
+  - Guides:
+    - Installation: guides/installation.md
+    - Premier prototype: guides/premier-prototype.md
+    - Premier handler runtime: guides/premier-handler.md
+    - Pattern GUI complet: guides/gui-pattern.md
+    - Snapshot d'inventaire: guides/inventory-snapshot.md
+    - Construire un setting: guides/settings-builder.md
+    - Interfaces remote: guides/remote-interfaces.md
+  - Référence:
+    - Vue d'ensemble: reference/overview.md
+    - Registre defines: reference/defines.md
+    - Classes runtime:
+      - RitnLibEvent: reference/runtime/RitnLibEvent.md
+      - RitnLibPlayer: reference/runtime/RitnLibPlayer.md
+      - RitnLibSurface: reference/runtime/RitnLibSurface.md
+      - RitnLibForce: reference/runtime/RitnLibForce.md
+      - RitnLibEntity: reference/runtime/RitnLibEntity.md
+      - RitnLibRecipe: reference/runtime/RitnLibRecipe.md
+      - RitnLibTechnology: reference/runtime/RitnLibTechnology.md
+      - RitnLibInventory: reference/runtime/RitnLibInventory.md
+      - RitnLibGui: reference/runtime/RitnLibGui.md
+      - RitnLibInformatron: reference/runtime/RitnLibInformatron.md
+      - RitnLibGuiElement: reference/runtime/RitnLibGuiElement.md
+      - RitnLibStyle: reference/runtime/RitnLibStyle.md
+    - Classes data:
+      - RitnPrototype: reference/prototype/RitnPrototype.md
+      - RitnIngredient: reference/prototype/RitnIngredient.md
+      - RitnProtoEntity: reference/prototype/RitnProtoEntity.md
+      - RitnProtoItem: reference/prototype/RitnProtoItem.md
+      - RitnProtoRecipe: reference/prototype/RitnProtoRecipe.md
+      - RitnProtoTech: reference/prototype/RitnProtoTech.md
+      - RitnProtoOre: reference/prototype/RitnProtoOre.md
+      - RitnProtoSprite: reference/prototype/RitnProtoSprite.md
+      - RitnProtoStyle: reference/prototype/RitnProtoStyle.md
+      - RitnProtoItemGroup: reference/prototype/RitnProtoItemGroup.md
+      - RitnProtoItemSubgroup: reference/prototype/RitnProtoItemSubgroup.md
+      - RitnProtoRecipeCategory: reference/prototype/RitnProtoRecipeCategory.md
+      - RitnProtoFuelCategory: reference/prototype/RitnProtoFuelCategory.md
+      - RitnProtoCustomInput: reference/prototype/RitnProtoCustomInput.md
+      - RitnProtoUtilityConst: reference/prototype/RitnProtoUtilityConst.md
+    - Settings: reference/settings/RitnLibSetting.md
+    - Bibliothèques:
+      - other-functions: reference/lualib/other-functions.md
+      - table-functions: reference/lualib/table-functions.md
+      - string-functions: reference/lualib/string-functions.md
+      - json-functions: reference/lualib/json-functions.md
+      - entity-functions: reference/lualib/entity-functions.md
+      - gui-functions: reference/lualib/gui-functions.md
+      - LuaStyle-functions: reference/lualib/LuaStyle-functions.md
+    - Couche core:
+      - class-factory: reference/core/class-factory.md
+      - constants: reference/core/constants.md
+      - event-listener: reference/core/event-listener.md
+      - interfaces: reference/core/interfaces.md
+    - Vanilla helpers:
+      - util: reference/vanilla/util.md
+      - crash-site: reference/vanilla/crash-site.md
+      - ores: reference/vanilla/ores.md
+      - types: reference/vanilla/types.md
+  - Concepts:
+    - Architecture en couches: concepts/architecture-layers.md
+    - Wrappers temporaires: concepts/temporary-wrappers.md
+    - Cycle de vie: concepts/life-cycle.md
+    - Factory OO maison: concepts/oo-factory.md
+    - Persistance déléguée: concepts/delegated-persistence.md
+    - Modèle d'events: concepts/event-model.md
+    - Contrat remote: concepts/remote-contract.md
+  - ADR:
+    - Index: adr/README.md
+    - "0001 — Factory de classes": adr/0001-class-factory.md
+    - "0002 — _G vs modules": adr/0002-globals-vs-modules.md
+    - "0003 — Fork eventListener": adr/0003-event-handler-fork.md
+    - "0004 — Stratégie FR+EN": adr/0004-fr-en-strategy.md
+  - Dette:
+    - Bugs connus: debt/known-bugs.md
+    - APIs dépréciées: debt/deprecated.md
+    - Résidus API 1.x: debt/api-1.x-residuelle.md
+    - Migration Factorio 2.0: migration-2.0.md

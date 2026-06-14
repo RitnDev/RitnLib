@@ -34,7 +34,7 @@ LuaForce.entity_build_count_statistics
 En 2.0 ces **propriétés ont été retirées** et remplacées par des **getters indexés par surface** :
 `get_item_production_statistics(surface)`, `get_fluid_production_statistics(surface)`, `get_kill_count_statistics(surface)`, `get_entity_build_count_statistics(surface)`.
 
-- **Impact** : les méthodes `:getStats*` de [`RitnLibForce`](../classes/LuaClass/RitnForce.lua) ne fonctionnent pas sur une instance de base (`self.stats` reste `nil`). Voir [bugs connus](fr/debt/known-bugs.md).
+- **Impact** : les méthodes `:getStats*` de [`RitnLibForce`](../classes/LuaClass/RitnForce.lua) ne fonctionnent pas sur une instance de base (`self.stats` reste `nil`). Voir [bugs connus](debt/known-bugs.md).
 - **Migration** : décommenter le bloc et passer aux getters 2.0 ; **trancher la sémantique surface** (statistiques globales toutes surfaces, ou par surface). Le seul consommateur prévu (`RitnForceSynth` dans RitnLeaderboard) est encore en développement.
 
 ### 1.2 `event.created_entity` — `RitnLibEvent` (`getEntity`)
@@ -53,7 +53,7 @@ Remplacement 2.0 : l'event **`on_trigger_created_entity`** — déclenché quand
 
 ### 1.4 Classes `RitnProto*` (data stage) — non révisées pour 2.0
 
-**L'ensemble** des manipulateurs de prototypes ([`RitnProtoRecipe`](fr/reference/prototype/RitnProtoRecipe.md), [`RitnProtoTech`](fr/reference/prototype/RitnProtoTech.md), et les autres `RitnProto*`) **n'ont pas été retouchés depuis Factorio 2.0** : ils conservent des constructions de l'API 1.x (variantes de difficulté `normal` / `expensive` des recettes, accès directs à `unit.*`, etc.). Ils restent largement utilisables au data stage, mais sont à auditer pour 2.0.
+**L'ensemble** des manipulateurs de prototypes ([`RitnProtoRecipe`](reference/prototype/RitnProtoRecipe.md), [`RitnProtoTech`](reference/prototype/RitnProtoTech.md), et les autres `RitnProto*`) **n'ont pas été retouchés depuis Factorio 2.0** : ils conservent des constructions de l'API 1.x (variantes de difficulté `normal` / `expensive` des recettes, accès directs à `unit.*`, etc.). Ils restent largement utilisables au data stage, mais sont à auditer pour 2.0.
 
 - **Migration** : passer en revue chaque `RitnProto*`, retirer les branches 1.x mortes et valider contre les prototypes 2.0.
 
@@ -95,8 +95,8 @@ Le normaliseur d'event ne mappe pas (encore) les events Space Age : `on_space_pl
 
 ## Voir aussi
 
-- [Bugs connus](fr/debt/known-bugs.md)
-- [Carte des classes](fr/reference/overview.md)
+- [Bugs connus](debt/known-bugs.md)
+- [Carte des classes](reference/overview.md)
 - Sources : [changelog API 2.0](https://forums.factorio.com/viewtopic.php?t=115737), [Version history 2.0.0](https://wiki.factorio.com/Version_history/2.0.0)
 
 <br>
@@ -134,7 +134,7 @@ LuaForce.entity_build_count_statistics
 In 2.0 these **properties were removed** and replaced with **per-surface getters**:
 `get_item_production_statistics(surface)`, `get_fluid_production_statistics(surface)`, `get_kill_count_statistics(surface)`, `get_entity_build_count_statistics(surface)`.
 
-- **Impact**: [`RitnLibForce`](../classes/LuaClass/RitnForce.lua)'s `:getStats*` methods don't work on a base instance (`self.stats` stays `nil`). See [known bugs](en/debt/known-bugs.md).
+- **Impact**: [`RitnLibForce`](../classes/LuaClass/RitnForce.lua)'s `:getStats*` methods don't work on a base instance (`self.stats` stays `nil`). See [known bugs](debt/known-bugs.md).
 - **Migration**: uncomment the block and move to the 2.0 getters; **decide the surface semantics** (all-surface totals vs per-surface). The only intended consumer (`RitnForceSynth` in RitnLeaderboard) is still in development.
 
 ### 1.2 `event.created_entity` — `RitnLibEvent` (`getEntity`)
@@ -153,7 +153,7 @@ The `getEntity` extractor checks `event.created_entity` first (a **1.x** field).
 
 ### 1.4 `RitnProto*` classes (data stage) — not revised for 2.0
 
-**All** the prototype manipulators ([`RitnProtoRecipe`](en/reference/prototype/RitnProtoRecipe.md), [`RitnProtoTech`](en/reference/prototype/RitnProtoTech.md), and the other `RitnProto*`) **haven't been touched since Factorio 2.0**: they keep 1.x API constructs (recipe `normal` / `expensive` difficulty variants, direct `unit.*` access, etc.). They remain largely usable at data stage, but should be audited for 2.0.
+**All** the prototype manipulators ([`RitnProtoRecipe`](reference/prototype/RitnProtoRecipe.md), [`RitnProtoTech`](reference/prototype/RitnProtoTech.md), and the other `RitnProto*`) **haven't been touched since Factorio 2.0**: they keep 1.x API constructs (recipe `normal` / `expensive` difficulty variants, direct `unit.*` access, etc.). They remain largely usable at data stage, but should be audited for 2.0.
 
 - **Migration**: review each `RitnProto*`, remove dead 1.x branches and validate against 2.0 prototypes.
 
@@ -195,6 +195,6 @@ The event normalizer doesn't (yet) map the Space Age events: `on_space_platform_
 
 ## See also
 
-- [Known bugs](en/debt/known-bugs.md)
-- [Class map](en/reference/overview.md)
+- [Known bugs](debt/known-bugs.md)
+- [Class map](reference/overview.md)
 - Sources: [2.0 API changelog](https://forums.factorio.com/viewtopic.php?t=115737), [Version history 2.0.0](https://wiki.factorio.com/Version_history/2.0.0)

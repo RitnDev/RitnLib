@@ -187,7 +187,7 @@ mod_client/control.lua
 | `script.register_metatable` | aucun |
 | Méta-objets persistés | aucun |
 
-RitnLib n'a **aucune donnée persistante propre**. Le seul cas d'état durable est `RitnLibInventory`, qui **délègue** la table de persistance au consommateur via le 2ᵉ paramètre du constructeur. Voir [Persistance déléguée](fr/concepts/persistance-deleguee.md).
+RitnLib n'a **aucune donnée persistante propre**. Le seul cas d'état durable est `RitnLibInventory`, qui **délègue** la table de persistance au consommateur via le 2ᵉ paramètre du constructeur. Voir [Persistance déléguée](concepts/delegated-persistence.md).
 
 ## 8. Évènements
 
@@ -234,7 +234,7 @@ RitnLib n'a **aucune donnée persistante propre**. Le seul cas d'état durable e
 
 ## 11. Couches d'erreur résiduelles (synthèse)
 
-Voir [debt/known-bugs.md](fr/debt/known-bugs.md) pour la liste exhaustive. Vue de surface :
+Voir [debt/known-bugs.md](debt/known-bugs.md) pour la liste exhaustive. Vue de surface :
 
 - 🔴 **14 bugs P0** identifiés (typos, références à champs non initialisés, héritages cassés).
 - 🟠 **10 zones API 1.x** mortes en 2.0 (`recipe.normal/expensive`, `force.items_launched`, `hr_version`, `icon_mipmaps`, `event.created_entity`, `data.raw.lab.inputs` format mixte).
