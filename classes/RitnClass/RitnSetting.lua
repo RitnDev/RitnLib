@@ -49,7 +49,7 @@ local json = require('__RitnLib__.lualib.json-functions')
 ---@field typeForSetting string                      Resolved `bool-setting` / `int-setting` / etc.
 ---@field defaultValue any                           Current default value
 ---@field data_setting table                         The `data:extend` payload being built
----@field TYPE { BOOL: "bool", INTEGER: "int", DOUBLE: "double", STRING: "string", COLOR: "color" }
+---@field TYPE { bool: "bool", integer: "int", double: "double", string: "string", color: "color" }
 ---@field VALUE { bool: false, int: 0, double: 0.0, string: "", color: table }
 ---@field SETTING_TYPE { startup: "startup", runtime: "runtime-global", player: "runtime-per-user" }
 ---@field SETTING_SUFFIX "-setting"
@@ -80,11 +80,11 @@ local RitnLibSetting = class.newclass(function(self, name)
 end) --[[@as RitnLibSetting]]
 ------------------ CONSTANTES -------------------
 RitnLibSetting.TYPE = {
-    BOOL = "bool",
-    INTEGER = "int",
-    DOUBLE = "double",
-    STRING = "string",
-    COLOR = "color",
+    bool = "bool",
+    int = "int",
+    double = "double",
+    string = "string",
+    color = "color",
 }
 RitnLibSetting.VALUE = {
     bool = false,
@@ -175,7 +175,7 @@ end
 ---Description: Définit `dataType` à `bool` puis appelle `:setType()`. ⚠ `:setType()` plantera sur la lecture chaînée ; en pratique seule la voie défaut du constructeur (sans appeler `setTypeBoolean`) fonctionne pour les settings bool.
 ---@return RitnLibSetting self
 function RitnLibSetting:setTypeBoolean()
-    self.dataType = self.TYPE.BOOL
+    self.dataType = self.TYPE.bool
     ---------------------------------------
     return self:setType()
 end
@@ -191,7 +191,7 @@ end
 ---Description: Définit `dataType` à `int` puis appelle `:setType()`. ⚠ Plante — la chaîne `:setType()` casse.
 ---@return RitnLibSetting self
 function RitnLibSetting:setTypeInteger()
-    self.dataType = self.TYPE.INTEGER
+    self.dataType = self.TYPE.integer
     ---------------------------------------
     return self:setType()
 end
@@ -207,7 +207,7 @@ end
 ---Description: Définit `dataType` à `double` puis appelle `:setType()`. ⚠ Plante — la chaîne `:setType()` casse.
 ---@return RitnLibSetting self
 function RitnLibSetting:setTypeDouble()
-    self.dataType = self.TYPE.DOUBLE
+    self.dataType = self.TYPE.double
     ---------------------------------------
     return self:setType()
 end
@@ -223,7 +223,7 @@ end
 ---Description: Définit `dataType` à `string` puis appelle `:setType()`. ⚠ Plante — la chaîne `:setType()` casse.
 ---@return RitnLibSetting self
 function RitnLibSetting:setTypeString()
-    self.dataType = self.TYPE.STRING
+    self.dataType = self.TYPE.string
     ---------------------------------------
     return self:setType()
 end
@@ -239,7 +239,7 @@ end
 ---Description: Définit `dataType` à `color` puis appelle `:setType()`. ⚠ Plante — la chaîne `:setType()` casse.
 ---@return RitnLibSetting self
 function RitnLibSetting:setTypeColor()
-    self.dataType = self.TYPE.COLOR
+    self.dataType = self.TYPE.color
     ---------------------------------------
     return self:setType()
 end
