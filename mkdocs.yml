@@ -59,8 +59,8 @@ nav:
   - Démarrer: getting-started.md
   - Guides:
     - Installation: guides/installation.md
-    - Premier prototype: guides/premier-prototype.md
-    - Premier handler runtime: guides/premier-handler.md
+    - Premier prototype: guides/first-prototype.md
+    - Premier handler runtime: guides/first-handler.md
     - Pattern GUI complet: guides/gui-pattern.md
     - Snapshot d'inventaire: guides/inventory-snapshot.md
     - Construire un setting: guides/settings-builder.md

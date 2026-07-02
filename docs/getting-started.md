@@ -58,7 +58,7 @@ RitnProtoRecipe("automation-science-pack")
 - `ritnlib.defines.class.prototype.recipe` est un **chemin abstrait** — RitnLib le résout vers le fichier source actuel. Pas besoin de hard-coder `__RitnLib__/classes/prototypes/Recipe`.
 - Les classes de prototype (`RitnProto*`) s'utilisent en `local … = require(...)` — elles ne polluent pas `_G`.
 
-Pour aller plus loin (recettes, technos, items, minerais, etc.) : [Mon premier prototype](guides/premier-prototype.md).
+Pour aller plus loin (recettes, technos, items, minerais, etc.) : [Mon premier prototype](guides/first-prototype.md).
 
 ## 4. Premier usage — control stage
 
@@ -82,7 +82,7 @@ end)
 - Pas de `require` pour les classes runtime — elles sont en global (`RitnLibPlayer`, `RitnLibTechnology`, `RitnLibEvent`, `RitnLibSurface`, etc.).
 - Ce sont des **vues temporaires** : tu en crées une nouvelle à chaque event. **Ne jamais** les stocker dans `storage`. Voir [Wrappers temporaires](concepts/temporary-wrappers.md) pour le détail.
 
-Pour les patterns plus avancés (snapshot d'inventaire, GUI, désactivation cascade de recettes) : [Mon premier handler runtime](guides/premier-handler.md).
+Pour les patterns plus avancés (snapshot d'inventaire, GUI, désactivation cascade de recettes) : [Mon premier handler runtime](guides/first-handler.md).
 
 ## 5. Premier usage — settings stage
 

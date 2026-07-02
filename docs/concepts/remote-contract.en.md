@@ -6,118 +6,133 @@ lang: en
 
 # Consumer remote contract (`RitnLibGui` extension)
 
-> **`RitnLibGui` is an abstract base class. It does nothing on its own. Your mod subclasses it, fills `self.gui[1]`, and registers the remote interface.**
+> **`RitnLibGui` is an abstract base class. It does nothing on its own. Your mod subclasses it, fills the four contract fields, and registers the remote interface.**
 
-This contract has been verified in several production mods (RitnMenuButton, RitnLobbyGame, RitnCharacters).
+This contract is applied in several mods (RitnMenuButton, RitnLobbyGame, RitnCharacters).
 
-## Overview
+## What `RitnLibGui` expects from the subclass
 
-`RitnLibGui` handles GUI click dispatch: when a player clicks, it identifies the clicked GUI element, walks the name chain up to the root GUI, and calls the associated remote interface. To do this, it needs three things the subclass must provide:
-
-| Property | Provided by | Expected value |
+| Field | Provided by | Expected value |
 |---|---|---|
-| `self.gui[1]` | subclass | the root `LuaGuiElement` of the GUI |
-| `self.gui_name` | subclass | logical GUI name (e.g. `"lobby"`) |
-| `self.gui_action` | `RitnLibGui.init` | `"gui_action_" .. gui_name` |
-| `self.content` | subclass | sub-element cache (can stay `{}`) |
+| `self.gui[1]` | subclass | the **container** (`player.gui.center`, etc.) — not the root frame |
+| `self.gui_name` | subclass | logical GUI slug (e.g. `"changer"`) — prefix for all elements |
+| `self.gui_action` | subclass | `{ [gui_name] = { [action] = true, ... } }` |
+| `self.content` | subclass | path lookup table used by `:getElement()` |
 
-## Implementing the contract
+`RitnLibGui.init` does **not** fill these fields — the subclass constructor does.
 
-### 1. Define the subclass
+## `RitnLibGui.init` — what it actually initialises
 
 ```lua
--- my-mod/classes/MyGui.lua
-local MyGui = ritnlib.classFactory.newclass(RitnLibGui, function(self, event, mod_name)
-    -- Parent call is mandatory
-    RitnLibGui.init(self, event, mod_name, "my-gui")
-
-    self.object_name = "MyGui"
-    self.gui_name    = "my-gui"
-
-    -- Fill self.gui[1] with the GUI root element
-    self.gui = { self.player.gui.center["my-gui-root"] }
-
-    self.content = {}
-end)
+RitnLibGui.init(self, event, mod_name, main_gui)
 ```
 
-### 2. Register the remote interface
+- `mod_name` — mod name (target of `remote.call`)
+- `main_gui` — **suffix** of the root frame, not `gui_name`. Full in-game name = `gui_name .. "-" .. main_gui` (e.g. `"changer-frame-main"`)
+
+## Element naming convention
+
+`RitnLibGuiElement(gui_name, type, name)` generates a name of the form `gui_name-normalised_type-name`:
+
+```
+"changer-frame-main"      ← RitnLibGuiElement("changer", "frame",    "main")
+"changer-button-select"   ← RitnLibGuiElement("changer", "button",   "select")
+"changer-listbox-items"   ← RitnLibGuiElement("changer", "list-box", "items")
+```
+
+Normalised types: `"list-box"` → `"listbox"`, `"drop-down"` → `"dropdown"`, `"sprite-button"` → `"button"`, `"text-box"` → `"textbox"`.
+
+## Click dispatch — how it works
+
+`on_gui_click` parses the clicked element name via the pattern `"([^-]*)-?([^-]*)-?([^-]*)"`:
+
+```
+"changer-button-select"
+    │        │       │
+   ui     element   name
+```
+
+→ `action = element .. "-" .. name` = `"button-select"`
+
+RitnLibGui checks that `self.gui_action[ui][action]` exists, then calls:
 
 ```lua
--- my-mod/control.lua
+remote.call(mod_name, "gui_action_" .. gui_name, action, event)
+```
+
+## Remote interface — exact signature
+
+```lua
 remote.add_interface("my-mod", {
-    gui_action_my_gui = function(player_index, element_name)
-        -- click handling logic
-        if element_name == "btn-ok" then
-            -- ...
-        end
-    end
+    ["gui_action_" .. gui_name] = function(action, event)
+        -- action = "button-close", "button-confirm", etc.
+        -- event  = original Factorio EventData
+    end,
 })
 ```
 
-### 3. Wire the handler
+> ⚠ The signature is `function(action, event)` — **not** `function(player_index, element_name)`.
+
+## `self.gui_action` — allowed actions table
 
 ```lua
-script.on_event(defines.events.on_gui_click, function(event)
-    local gui = MyGui(event, "my-mod")
-    gui:on_gui_click()
-    -- RitnLibGui identifies the clicked element,
-    -- then calls remote.call("my-mod", "gui_action_my-gui", player_index, element_name)
-end)
-```
-
-## Why `self.gui[1]` and not `self.gui[gui_name]`
-
-`RitnLibGui` accesses the root via `self.gui[1]` (integer index). This is intentional: at instantiation time, `gui_name` is not yet known by the base class, and the integer index is the simplest and most reliable form.
-
-⚠ `RitnLibInformatron` has a known bug related to this convention: its `getElement` reads `self.gui[self.gui_name]` (string key) instead of `self.gui[1]`. See the [reference page](../reference/runtime/RitnLibInformatron.md).
-
-## GUI element naming
-
-`RitnLibGui` reconstructs the path to the clicked element by walking up the name hierarchy. `LuaGuiElement` names must follow the `"<gui_name>-<element_name>"` convention (prefixed by gui_name).
-
-```lua
--- When building the GUI
-player.gui.center.add({
-    type = "frame",
-    name = "my-gui-root",
-    direction = "vertical",
-    children = {
-        { type = "button", name = "my-gui-btn-ok" },
-        { type = "button", name = "my-gui-btn-cancel" },
+self.gui_action = {
+    ["changer"] = {              -- key = gui_name
+        ["button-select"] = true,
+        ["button-close"]  = true,
     }
+}
+```
+
+The inner keys are `action` strings (`"type-name"`). If an action is not in this table, the dispatch is silently ignored.
+
+## Complete example — RitnCharacters
+
+```lua
+-- classes/RitnGuiChanger.lua
+
+RitnGuiCharacterChanger = ritnlib.classFactory.newclass(RitnLibGui, function(self, event)
+    RitnLibGui.init(self, event, ritnlib.defines.characters.name, "frame-main")
+    self.object_name = "RitnGuiCharacterChanger"
+    self.gui_name    = "changer"
+
+    self.gui_action = {
+        ["changer"] = {
+            ["button-select"] = true,
+            -- (open/close triggered by shortcut, not by internal click)
+        }
+    }
+
+    self.gui = { self.player.gui.center }  -- container, not the frame
+
+    self.content = fGui.getContent()
+end)
+
+-- modules/storage.lua
+
+remote.add_interface("RitnCharacters", {
+    ["gui_action_changer"] = function(action, event)
+        if action == "button-select" then
+            RitnGuiCharacterChanger(event):action_select()
+        end
+    end,
 })
 ```
 
-When the player clicks `my-gui-btn-ok`, `on_gui_click` receives `element_name = "btn-ok"` in the remote interface.
+## `self:getElement(type, name)` — navigating the GUI
 
-## Complete example — RitnMenuButton
+`getElement` walks `self.content[type][name]` as a path from `self.gui[1]`, prepending `gui_name .. "-"` to each step:
 
-RitnMenuButton is the reference mod for this pattern. It exposes a button in the menu bar (Factorio 2.0). Its structure:
-
-```
-RitnMenuButton (mod)
-└─ classes/RitnMenuButton.lua
-   └─ RitnMenuButton = newclass(RitnLibGui, function(self, event, mod_name)
-         RitnLibGui.init(self, event, mod_name, "menu-button")
-         self.gui_name = "menu-button"
-         self.gui = { self.player.gui.top["menu-button-root"] }
-      end)
-
-control.lua
-├─ remote.add_interface("RitnMenuButton", {
-│     gui_action_menu_button = function(player_index, element_name)
-│         -- handles clicks
-│     end
-│  })
-└─ script.on_event(on_gui_click, function(event)
-       local btn = RitnMenuButton(event, "RitnMenuButton")
-       btn:on_gui_click()
-   end)
+```lua
+-- content.list = { "frame-main", "frame-submain", "flow-selecter", "listbox-characters" }
+local list = self:getElement("list")
+-- → self.gui[1]["changer-frame-main"]["changer-frame-submain"]
+--                  ["changer-flow-selecter"]["changer-listbox-characters"]
 ```
 
 ## See also
 
+- [Full GUI pattern](../guides/gui-pattern.md)
 - [Event model](event-model.md)
 - [Temporary wrappers](temporary-wrappers.md)
 - [Reference: RitnLibGui](../reference/runtime/RitnLibGui.md)

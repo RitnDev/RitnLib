@@ -23,8 +23,8 @@ Nouveau venu ? Commence par :
 Tutoriels orientés tâche :
 
 - [Installation](guides/installation.md)
-- [Mon premier prototype](guides/premier-prototype.md)
-- [Mon premier handler runtime](guides/premier-handler.md)
+- [Mon premier prototype](guides/first-prototype.md)
+- [Mon premier handler runtime](guides/first-handler.md)
 - [Pattern GUI complet](guides/gui-pattern.md)
 - [Snapshot et restauration d'inventaire](guides/inventory-snapshot.md)
 - [Construire un setting](guides/settings-builder.md)
