@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.2
+Date: 02.07.2026
+  Info:
+    - Documentation: written all 7 task-oriented guides in FR and EN (installation,
+      first-prototype, first-handler, gui-pattern, inventory-snapshot,
+      settings-builder, remote-interfaces).
+    - Documentation: corrected life-cycle concept (settings stage runs before data
+      stage; "runtime stage" replaces "control stage" throughout).
+    - Documentation: corrected remote-contract concept and gui-pattern guide to
+      match the real RitnLibGui extension contract: self.gui[1] is the container
+      (not the root frame), gui_action is a table, remote interface signature is
+      function(action, event).
+    - Documentation: unified guide file names to English base names
+      (first-prototype.md, first-handler.md).
+---------------------------------------------------------------------------------------------------
 Version: 0.10.1
 Date: 21.06.2026
   Bugfixes:
