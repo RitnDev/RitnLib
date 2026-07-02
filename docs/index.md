@@ -36,7 +36,7 @@ Tutoriels orientés tâche :
 - [Carte des classes](reference/overview.md)
 - [Registre `ritnlib.defines`](reference/defines.md)
 
-### Classes runtime (control stage)
+### Classes runtime (runtime stage)
 | Classe | Wrappe | Usage |
 |---|---|---|
 | [`RitnLibEvent`](reference/runtime/RitnLibEvent.md) | n'importe quel event Factorio | normalisation de payload |
@@ -98,7 +98,7 @@ Tutoriels orientés tâche :
 ## Concepts
 
 - [Architecture en 4 couches](concepts/architecture-layers.md)
-- [Cycle de vie (data → settings → control)](concepts/life-cycle.md)
+- [Cycle de vie (settings → data → runtime)](concepts/life-cycle.md)
 - [Wrappers temporaires (règle d'or)](concepts/temporary-wrappers.md)
 - [Factory de classes orientée objet maison](concepts/oo-factory.md)
 - [Modèle d'events](concepts/event-model.md)

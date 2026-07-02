@@ -16,7 +16,7 @@ RitnLib est organisé en **4 couches superposées**. Comprendre où vit chaque c
 │  3. Classes                      classes/                      │
 │  ┌─────────────────┬─────────────────┬─────────────────────┐  │
 │  │  prototypes/    │  RitnClass/     │  LuaClass/          │  │
-│  │  (data stage)   │  (hybride)      │  (control stage)    │  │
+│  │  (data stage)   │  (hybride)      │  (runtime stage)    │  │
 │  │                 │                 │                     │  │
 │  │  RitnProto*     │  Setting,       │  Player, Surface,   │  │
 │  │  (recette,      │  Inventory,     │  Force, Entity,     │  │
@@ -71,7 +71,7 @@ Ces utilitaires sont consommés par la couche 3 mais peuvent aussi être require
 
 Le cœur de l'API publique. Trois familles :
 
-### 3a — `classes/LuaClass/` (control stage)
+### 3a — `classes/LuaClass/` (runtime stage)
 Wrappers runtime sur les objets Factorio :
 
 | Classe | Wrappe | Spécialité |
@@ -151,7 +151,7 @@ RitnLib/control.lua
 
 ## Voir aussi
 
-- [Cycle de vie data → settings → control](life-cycle.md)
+- [Cycle de vie settings → data → runtime](life-cycle.md)
 - [Wrappers temporaires](temporary-wrappers.md)
 - [Factory de classes orientée objet maison](oo-factory.md)
 - [Carte des classes](../reference/overview.md)

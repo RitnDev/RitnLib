@@ -36,7 +36,7 @@ Task-oriented tutorials:
 - [Class map](reference/overview.md)
 - [`ritnlib.defines` registry](reference/defines.md)
 
-### Runtime classes (control stage)
+### Runtime classes (runtime stage)
 | Class | Wraps | Use |
 |---|---|---|
 | [`RitnLibEvent`](reference/runtime/RitnLibEvent.md) | any Factorio event | payload normalization |
@@ -98,7 +98,7 @@ Task-oriented tutorials:
 ## Concepts
 
 - [4-layer architecture](concepts/architecture-layers.md)
-- [Life cycle (data → settings → control)](concepts/life-cycle.md)
+- [Life cycle (settings → data → runtime)](concepts/life-cycle.md)
 - [Temporary wrappers (golden rule)](concepts/temporary-wrappers.md)
 - [Custom object-oriented class factory](concepts/oo-factory.md)
 - [Event model](concepts/event-model.md)

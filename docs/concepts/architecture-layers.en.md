@@ -16,7 +16,7 @@ RitnLib is organized in **4 stacked layers**. Understanding where each piece liv
 │  3. Classes                      classes/                      │
 │  ┌─────────────────┬─────────────────┬─────────────────────┐  │
 │  │  prototypes/    │  RitnClass/     │  LuaClass/          │  │
-│  │  (data stage)   │  (hybrid)       │  (control stage)    │  │
+│  │  (data stage)   │  (hybrid)       │  (runtime stage)    │  │
 │  │                 │                 │                     │  │
 │  │  RitnProto*     │  Setting,       │  Player, Surface,   │  │
 │  │  (recipe,       │  Inventory,     │  Force, Entity,     │  │
@@ -71,7 +71,7 @@ Used by layer 3, but a consumer mod can also `require` them directly.
 
 The public API core. Three families:
 
-### 3a — `classes/LuaClass/` (control stage)
+### 3a — `classes/LuaClass/` (runtime stage)
 Runtime wrappers around Factorio objects:
 
 | Class | Wraps | Speciality |
@@ -151,7 +151,7 @@ RitnLib/control.lua
 
 ## See also
 
-- [Life cycle: data → settings → control](life-cycle.md)
+- [Life cycle: settings → data → runtime](life-cycle.md)
 - [Temporary wrappers](temporary-wrappers.md)
 - [Custom object-oriented class factory](oo-factory.md)
 - [Class map](../reference/overview.md)
