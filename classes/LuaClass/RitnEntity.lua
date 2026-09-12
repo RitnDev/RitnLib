@@ -355,13 +355,13 @@ end
 
 ---**EN**
 ---
----Description: Sets the `minable` flag on the entity.
+---Description: Sets the `minable_flag` on the entity. Since Factorio 2.1, `LuaEntity::minable` is read-only — the writable member is `minable_flag`.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Définit le flag `minable` sur l'entité.
+---Description: Définit le `minable_flag` sur l'entité. Depuis Factorio 2.1, `LuaEntity::minable` est en lecture seule — le membre inscriptible est `minable_flag`.
 ---@param value? boolean    `true` to allow mining (default), `false` to forbid
 function RitnLibEntity:setMinable(value)
     local default = true
@@ -369,7 +369,7 @@ function RitnLibEntity:setMinable(value)
         default = value
     end
 
-    self.entity.minable = default
+    self.entity.minable_flag = default
 end
 
 

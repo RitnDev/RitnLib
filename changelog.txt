@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.4
+Date: 12.09.2026
+  Bugfixes:
+    - RitnLibEntity:setMinable() no longer errors on Factorio 2.1: LuaEntity::minable became
+      read-only in 2.1.7, the write now targets LuaEntity::minable_flag.
+---------------------------------------------------------------------------------------------------
 Version: 0.10.3
 Date: 12.09.2026
   Changes:
