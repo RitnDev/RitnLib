@@ -119,6 +119,7 @@ Tutoriels orientés tâche :
 - 🕰 [Résidus API 1.x](debt/api-1.x-residuelle.md)
 - ⚠ [APIs dépréciées](debt/deprecated.md)
 - 🔧 [Migration Factorio 2.0](migration-2.0.md)
+- 🔧 [Migration Factorio 2.1](migration-2.1.md)
 
 ## Pour les mainteneurs
 

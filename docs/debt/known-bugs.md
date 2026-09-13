@@ -12,7 +12,7 @@ lang: fr
 Ce qui **n'est pas** un bug (et n'est donc pas ici) :
 
 - Les **points de contrat d'extension** — une classe de base laisse volontairement un champ vide, la sous-classe le remplit. Ex : `RitnLibGui` laisse `self.gui[1]` vide (fourni par la sous-classe + l'interface remote `gui_action_*`) — pattern prouvé en production (RitnLobbyGame, RitnMenuButton, RitnCharacters). C'est du **design**, pas un défaut.
-- Les **résidus d'API Factorio 1.x** (statistics `getStats*`, `created_entity`, `hr_version`…) → voir [Migration Factorio 2.0](../migration-2.0.md).
+- Les **résidus d'API Factorio 1.x** (statistics `getStats*`, `created_entity`, `hr_version`…) → voir [Migration Factorio 2.0](../migration-2.0.md) et [Résidus API 1.x](api-1.x-residuelle.md).
 - Les **APIs dépréciées** mais fonctionnelles → voir [APIs dépréciées](deprecated.md).
 - Les **caveats d'usage** intentionnels (`pcall` silencieux, `ifElse` à évaluation immédiate, patterns Lua dans `startsWith`…) — documentés dans les tooltips LuaLS.
 
@@ -50,5 +50,7 @@ Non comptés comme bugs de production — fonctionnalité explicitement en chant
 ## Voir aussi
 
 - [Migration Factorio 2.0](../migration-2.0.md) — résidus d'API 1.x (`getStats*`/statistics, `created_entity`, `hr_version`…)
+- [Résidus API 1.x](api-1.x-residuelle.md) — clés de prototype mortes (`icon_mipmaps`, `hide_from_player_stats`…)
+- [Migration Factorio 2.1](../migration-2.1.md) — `minable_flag`, `probability` → `independent_probability`
 - [APIs dépréciées](deprecated.md)
 - [Carte des classes](../reference/overview.md)

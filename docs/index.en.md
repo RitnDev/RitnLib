@@ -119,6 +119,7 @@ Task-oriented tutorials:
 - 🕰 [1.x API leftovers](debt/api-1.x-leftover.md)
 - ⚠ [Deprecated APIs](debt/deprecated.md)
 - 🔧 [Factorio 2.0 migration](migration-2.0.md)
+- 🔧 [Factorio 2.1 migration](migration-2.1.md)
 
 ## For maintainers
 

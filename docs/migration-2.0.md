@@ -96,6 +96,8 @@ Le normaliseur d'event ne mappe pas (encore) les events Space Age : `on_space_pl
 ## Voir aussi
 
 - [Bugs connus](debt/known-bugs.md)
+- [Résidus API 1.x](debt/api-1.x-residuelle.md) — clés de prototype mortes
+- [Migration Factorio 2.1](migration-2.1.md)
 - [Carte des classes](reference/overview.md)
 - Sources : [changelog API 2.0](https://forums.factorio.com/viewtopic.php?t=115737), [Version history 2.0.0](https://wiki.factorio.com/Version_history/2.0.0)
 
@@ -196,5 +198,7 @@ The event normalizer doesn't (yet) map the Space Age events: `on_space_platform_
 ## See also
 
 - [Known bugs](debt/known-bugs.md)
+- [1.x API leftovers](debt/api-1.x-leftover.md) — dead prototype keys
+- [Factorio 2.1 migration](migration-2.1.md)
 - [Class map](reference/overview.md)
 - Sources: [2.0 API changelog](https://forums.factorio.com/viewtopic.php?t=115737), [Version history 2.0.0](https://wiki.factorio.com/Version_history/2.0.0)

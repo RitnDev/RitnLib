@@ -50,5 +50,7 @@ Not counted as production bugs — explicitly work-in-progress.
 ## See also
 
 - [Factorio 2.0 migration](../migration-2.0.md) — 1.x API residue (`getStats*`/statistics, `created_entity`, `hr_version`…)
+- [1.x API leftovers](api-1.x-leftover.md) — dead prototype keys (`icon_mipmaps`, `hide_from_player_stats`…)
+- [Factorio 2.1 migration](../migration-2.1.md) — `minable_flag`, `probability` → `independent_probability`
 - [Deprecated APIs](deprecated.md)
 - [Class map](../reference/overview.md)
