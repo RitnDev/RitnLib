@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.5
+Date: 30.09.2026
+  Bugfixes:
+    - RitnProtoItem() and RitnProtoEntity() no longer error on a name whose prototype type
+      has no data.raw table. getItemType() and getEntityType() skip those types instead of
+      indexing them, and clear self.type when nothing matches, so the constructors leave
+      prototype nil as they were written to.
+---------------------------------------------------------------------------------------------------
 Version: 0.10.4
 Date: 12.09.2026
   Bugfixes:
