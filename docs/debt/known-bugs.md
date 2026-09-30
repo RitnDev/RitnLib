@@ -51,6 +51,6 @@ Non comptés comme bugs de production — fonctionnalité explicitement en chant
 
 - [Migration Factorio 2.0](../migration-2.0.md) — résidus d'API 1.x (`getStats*`/statistics, `created_entity`, `hr_version`…)
 - [Résidus API 1.x](api-1.x-residuelle.md) — clés de prototype mortes (`icon_mipmaps`, `hide_from_player_stats`…)
-- [Migration Factorio 2.1](../migration-2.1.md) — `minable_flag`, `probability` → `independent_probability`
+- [Migration Factorio 2.1](../migration-2.1.md) — `minable_flag`, `data.raw.tool`, `probability` → `independent_probability`
 - [APIs dépréciées](deprecated.md)
 - [Carte des classes](../reference/overview.md)

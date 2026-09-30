@@ -89,23 +89,23 @@ Removes the matching `unlock-recipe` effect. If `complete == true`, also disable
 ## Methods — science packs (research)
 
 #### `:addPack(pack, count?)` → [`RitnProtoTech`](RitnProtoTech.md)
-Adds a pack to `prototype.unit.ingredients` (`count` defaults to 1). If the pack is already present, **increments** its amount by `count`. `pack` must exist in `data.raw.tool`.
+Adds a pack to `prototype.unit.ingredients` (`count` defaults to 1). If the pack is already present, **increments** its amount by `count`. `pack` must exist as an item or tool prototype (science packs are items as of Factorio 2.1, `tool`s before that).
 
 #### `:removePack(pack)` → [`RitnProtoTech`](RitnProtoTech.md)
 Removes every entry matching `pack`.
 
 #### `:replacePack(old, new)` → [`RitnProtoTech`](RitnProtoTech.md)
-Replaces `old` with `new`, preserving the total amount. `new` must exist in `data.raw.tool`.
+Replaces `old` with `new`, preserving the total amount. `new` must exist as an item or tool prototype.
 
 ---
 
 ## Methods — packs on labs
 
 #### `:addPackLab(pack, index?)` → [`RitnProtoTech`](RitnProtoTech.md)
-Adds `pack` to the `inputs` of every lab that doesn't already contain it (position `index`, default 1). `pack` must exist in `data.raw.tool`.
+Adds `pack` to the `inputs` of every lab that doesn't already contain it (position `index`, default 1). `pack` must exist as an item or tool prototype.
 
 #### `:removePackLab(pack, lab?)` → [`RitnProtoTech`](RitnProtoTech.md)
-Removes `pack` from every lab's `inputs`, or from a specific `lab` if provided.
+Removes `pack` from every lab's `inputs`, or from a specific `lab` if provided. `pack` must exist as an item or tool prototype.
 
 ---
 

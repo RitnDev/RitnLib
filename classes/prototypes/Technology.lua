@@ -3,6 +3,31 @@
 local class = require("__RitnLib__.core.class")
 local RitnProtoBase = require("__RitnLib__.classes.RitnClass.RitnPrototype")
 local RitnProtoRecipe = require("__RitnLib__.classes.prototypes.Recipe")
+
+---**EN**
+---
+---Description: Returns the prototype of a science pack, whatever table the running
+---version keeps it in. Science packs were `type = "tool"` until Factorio 2.1.7 made them
+---plain items. The `tool` type still exists and a mod may define one, but nothing in the
+---base game does, so on a vanilla 2.1 load `data.raw.tool` is nil and indexing it errors.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retourne le prototype d'un pack de science, quelle que soit la table où la
+---version courante le range. Les packs de science étaient `type = "tool"` jusqu'à Factorio
+---2.1.7, qui en a fait des items ordinaires. Le type `tool` existe toujours et un mod peut
+---en définir un, mais plus rien dans le jeu de base ne le fait : sur un chargement 2.1
+---vanilla `data.raw.tool` vaut nil et l'indexer provoque une erreur.
+---@param pack string
+---@return table? prototype
+local function getPackPrototype(pack)
+    if pack == nil then return nil end
+    if data.raw.tool ~= nil and data.raw.tool[pack] ~= nil then return data.raw.tool[pack] end
+    if data.raw.item ~= nil then return data.raw.item[pack] end
+    return nil
+end
 ----------------------------------------------------------------
 
 ---**EN**
@@ -241,13 +266,13 @@ end
 
 ---**EN**
 ---
----Description: Adds a science pack to `prototype.unit.ingredients`, defaulting to amount 1. If the pack is already present (matched by `[1]` or `.name`), increments the existing amount by `count` instead. `pack` must exist in `data.raw.tool`.
+---Description: Adds a science pack to `prototype.unit.ingredients`, defaulting to amount 1. If the pack is already present (matched by `[1]` or `.name`), increments the existing amount by `count` instead. `pack` must exist as an item or tool prototype.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Ajoute un pack de science à `prototype.unit.ingredients`, amount 1 par défaut. Si le pack est déjà présent (matché par `[1]` ou `.name`), incrémente l'amount existant de `count`. `pack` doit exister dans `data.raw.tool`.
+---Description: Ajoute un pack de science à `prototype.unit.ingredients`, amount 1 par défaut. Si le pack est déjà présent (matché par `[1]` ou `.name`), incrémente l'amount existant de `count`. `pack` doit exister comme prototype item ou tool.
 ---@param pack string     Tool name (e.g. "automation-science-pack")
 ---@param count? integer  Default 1
 ---@return RitnProtoTech self  Chainable
@@ -255,7 +280,7 @@ function RitnProtoTech:addPack(pack, count)
     if self.prototype == nil then return self end
     if count ~= nil then self.amount_pack = count end
 
-    if data.raw.tool[pack] then
+    if getPackPrototype(pack) then
         for i, ingredient in pairs(self.prototype.unit.ingredients) do
             if ingredient[1] == pack then
                 self.addit = false
@@ -306,19 +331,19 @@ end
 
 ---**EN**
 ---
----Description: Replaces every occurrence of `old` pack with `new` pack, preserving the total amount. `new` must exist in `data.raw.tool`.
+---Description: Replaces every occurrence of `old` pack with `new` pack, preserving the total amount. `new` must exist as an item or tool prototype.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Remplace chaque occurrence du pack `old` par le pack `new`, en préservant l'amount total. `new` doit exister dans `data.raw.tool`.
+---Description: Remplace chaque occurrence du pack `old` par le pack `new`, en préservant l'amount total. `new` doit exister comme prototype item ou tool.
 ---@param old string
 ---@param new string
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:replacePack(old, new)
     if self.prototype == nil then return self end
-    if data.raw.tool[new] then
+    if getPackPrototype(new) then
         self.amount_pack = 0
 
         for i, ingredient in pairs(self.prototype.unit.ingredients) do
@@ -370,19 +395,19 @@ end
 
 ---**EN**
 ---
----Description: Removes `pack` from the `inputs` list of every lab (or a specific one if `lab` is provided). `pack` must exist in `data.raw.tool`.
+---Description: Removes `pack` from the `inputs` list of every lab (or a specific one if `lab` is provided). `pack` must exist as an item or tool prototype.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Retire `pack` de la liste `inputs` de chaque lab (ou d'un lab spécifique si `lab` est fourni). `pack` doit exister dans `data.raw.tool`.
+---Description: Retire `pack` de la liste `inputs` de chaque lab (ou d'un lab spécifique si `lab` est fourni). `pack` doit exister comme prototype item ou tool.
 ---@param pack string
 ---@param lab? string
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:removePackLab(pack, lab)
     if pack == nil then return self end
-    if data.raw.tool[pack] == nil then return self end
+    if getPackPrototype(pack) == nil then return self end
 
     if lab == nil then
         for i, labo in pairs(data.raw.lab) do
@@ -409,18 +434,18 @@ end
 
 ---**EN**
 ---
----Description: Adds `pack` to the `inputs` list of every lab that doesn't already contain it. `index` controls the insertion position (default 1, i.e. front). `pack` must exist in `data.raw.tool`.
+---Description: Adds `pack` to the `inputs` list of every lab that doesn't already contain it. `index` controls the insertion position (default 1, i.e. front). `pack` must exist as an item or tool prototype.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Ajoute `pack` à la liste `inputs` de chaque lab qui ne le contient pas déjà. `index` contrôle la position d'insertion (défaut 1, au début). `pack` doit exister dans `data.raw.tool`.
+---Description: Ajoute `pack` à la liste `inputs` de chaque lab qui ne le contient pas déjà. `index` contrôle la position d'insertion (défaut 1, au début). `pack` doit exister comme prototype item ou tool.
 ---@param pack string
 ---@param index? integer  Default 1
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:addPackLab(pack, index)
-    if data.raw.tool[pack] == nil then return self end
+    if getPackPrototype(pack) == nil then return self end
 
     for i, lab in pairs(data.raw.lab) do
         local exist = false

@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.5
+Date: 30.09.2026
+  Bugfixes:
+    - RitnProtoTech:addPack(), :replacePack(), :addPackLab() and :removePackLab() no longer
+      error on Factorio 2.1: science packs became plain items in 2.1.7 and data.raw.tool no
+      longer exists, so the pack lookup now reads whichever table the running version keeps
+      science packs in.
+---------------------------------------------------------------------------------------------------
 Version: 0.10.4
 Date: 12.09.2026
   Bugfixes:
