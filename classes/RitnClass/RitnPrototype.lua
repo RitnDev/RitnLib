@@ -41,19 +41,36 @@ end) --[[@as RitnPrototype]]
 ---
 ---Description: Iterates over `lualib.vanilla.types_item` and returns the first item-type for which `data.raw[type_name][self.name]` exists. Sets `self.type` as a side effect.
 ---
+---A type that nothing has defined a prototype of is skipped: `data.raw` only holds the types
+---something wrote to, so an entry in the list can have no table at all. Several always do,
+---whether because the engine dropped the type or because no prototype of it happens to be
+---loaded.
+---
+---With no match, `self.type` is cleared, which is what tells `RitnProtoItem`'s constructor to
+---leave `self.prototype` nil rather than index a type table that may not be there.
+---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
 ---Description: Itère sur `lualib.vanilla.types_item` et retourne le premier type-item pour lequel `data.raw[type_name][self.name]` existe. Met à jour `self.type` au passage.
+---
+---Un type dont aucun prototype n'a été défini est ignoré : `data.raw` ne contient que les
+---types dans lesquels quelque chose a écrit, donc une entrée de la liste peut n'avoir aucune
+---table. Plusieurs sont toujours dans ce cas, soit parce que le moteur a supprimé le type,
+---soit parce qu'aucun prototype de ce type n'est chargé.
+---
+---Sans match, `self.type` est remis à nil, ce qui indique au constructeur de `RitnProtoItem`
+---de laisser `self.prototype` nil au lieu d'indexer une table de type peut-être absente.
 ---@return string?  Resolved item type or nil if no match
 function RitnPrototype:getItemType()
     for i, type_name in pairs(item_types) do
-        if data.raw[type_name][self.name] then
+        if data.raw[type_name] ~= nil and data.raw[type_name][self.name] then
             self.type = type_name
             return type_name
         end
     end
+    self.type = nil
     return nil
 end
 
@@ -64,19 +81,26 @@ end
 ---
 ---Description: Iterates over `lualib.vanilla.types_entity` and returns the first entity-type for which `data.raw[type_name][self.name]` exists. Sets `self.type` as a side effect.
 ---
+---A type that nothing has defined a prototype of is skipped, and `self.type` is cleared with
+---no match, as in [`:getItemType()`](#getitemtype).
+---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
 ---Description: Itère sur `lualib.vanilla.types_entity` et retourne le premier type-entity pour lequel `data.raw[type_name][self.name]` existe. Met à jour `self.type` au passage.
+---
+---Un type dont aucun prototype n'a été défini est ignoré, et `self.type` est remis à nil sans
+---match, comme dans [`:getItemType()`](#getitemtype).
 ---@return string?  Resolved entity type or nil if no match
 function RitnPrototype:getEntityType()
     for i, type_name in pairs(entity_types) do
-        if data.raw[type_name][self.name] then
+        if data.raw[type_name] ~= nil and data.raw[type_name][self.name] then
             self.type = type_name
             return type_name
         end
     end
+    self.type = nil
     return nil
 end
 

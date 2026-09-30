@@ -51,7 +51,9 @@ Type sentinel.
 ## Methods — type resolution
 
 #### `:getItemType()` → `string?`
-Iterates over `lualib.vanilla.types_item` and returns the first item-type for which `data.raw[type][name]` exists. Updates `self.type` as a side effect. `nil` if no match.
+Iterates over `lualib.vanilla.types_item` and returns the first item-type for which `data.raw[type][name]` exists. Updates `self.type` as a side effect. `nil` if no match, and `self.type` is cleared in that case.
+
+A type no prototype is loaded for is skipped: `data.raw` only holds the types something wrote to, so an entry in the list can have no table at all. See [`types`](../vanilla/types.md).
 
 #### `:getEntityType()` → `string?`
 Same for entity types (`lualib.vanilla.types_entity`).
