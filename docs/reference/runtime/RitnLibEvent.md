@@ -30,7 +30,7 @@ Construit le wrapper et extrait tous les champs du payload **au moment de la con
 - `event` :: [`EventData`](https://lua-api.factorio.com/latest/concepts/EventData.html) — le payload reçu par ton handler.
 - `mod_name` :: `string?` — nom du mod consommateur, utilisé par les classes dérivées (GUI notamment). Défaut : `"RitnLib"`.
 
-**Valeur de retour** → [`RitnLibEvent`](RitnLibEvent.md). Si `event` est `nil`, l'instance est renvoyée avec [`isPresent`](#ispresent--boolean-read) à `false` et aucun autre champ peuplé.
+**Valeur de retour** → [`RitnLibEvent`](RitnLibEvent.md). Si `event` est `nil`, l'instance est renvoyée avec [`isPresent`](#ispresent-boolean-read) à `false` et aucun autre champ peuplé.
 
 ```lua
 script.on_event(defines.events.on_player_created, function(event)
@@ -94,7 +94,7 @@ Premier disponible parmi `buffer`, `loot`, `items`, `inventory`.
 `event.cause` (events de mort : l'entité à l'origine).
 
 #### `reason` :: [`defines.disconnect_reason`](https://lua-api.factorio.com/latest/defines.html#defines.disconnect_reason)`?` `[Read]`
-`event.reason` (events de déconnexion). Voir [`:getReason()`](#getreason--string) pour le nom symbolique.
+`event.reason` (events de déconnexion). Voir [`:getReason()`](#getreason-string) pour le nom symbolique.
 
 #### `queued_count` :: `number?` `[Read]`
 `event.queued_count` (requêtes de chunks).
@@ -128,23 +128,23 @@ Nom symbolique résolu depuis `event.gui_type` (`defines.gui_type`).
 ## Méthodes
 
 #### `:getPlayer()` → [`RitnLibPlayer`](RitnLibPlayer.md)
-Enveloppe [`player`](#player--luaplayer-read) dans un [`RitnLibPlayer`](RitnLibPlayer.md) (accès rapide force/surface/character…).
+Enveloppe [`player`](#player-luaplayer-read) dans un [`RitnLibPlayer`](RitnLibPlayer.md) (accès rapide force/surface/character…).
 
 ```lua
 local rPlayer = RitnLibEvent(event):getPlayer()
 ```
 
 #### `:getSurface()` → [`RitnLibSurface`](RitnLibSurface.md)
-Enveloppe [`surface`](#surface--luasurface-read) dans un [`RitnLibSurface`](RitnLibSurface.md).
+Enveloppe [`surface`](#surface-luasurface-read) dans un [`RitnLibSurface`](RitnLibSurface.md).
 
 #### `:getForce()` → [`RitnLibForce`](RitnLibForce.md)
-Enveloppe [`force`](#force--luaforce-read) dans un [`RitnLibForce`](RitnLibForce.md).
+Enveloppe [`force`](#force-luaforce-read) dans un [`RitnLibForce`](RitnLibForce.md).
 
 #### `:getTechnology()` → [`RitnLibTechnology`](RitnLibTechnology.md)
-Enveloppe [`technology`](#technology--luatechnology-read) dans un [`RitnLibTechnology`](RitnLibTechnology.md).
+Enveloppe [`technology`](#technology-luatechnology-read) dans un [`RitnLibTechnology`](RitnLibTechnology.md).
 
 #### `:getReason()` → `string?`
-Traduit [`reason`](#reason--definesdisconnect_reason-read) (un `defines.disconnect_reason`) en nom symbolique, pour les events de déconnexion.
+Traduit [`reason`](#reason-definesdisconnect_reason-read) (un `defines.disconnect_reason`) en nom symbolique, pour les events de déconnexion.
 
 **Valeur de retour** → `string?` — l'un de `"quit"`, `"dropped"`, `"reconnect"`, `"wrong_input"`, `"desync_limit_reached"`, `"cannot_keep_up"`, `"afk"`, `"kicked"`, `"kicked_and_deleted"`, `"banned"`, `"switching_servers"` ; `nil` si non reconnu.
 

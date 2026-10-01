@@ -40,7 +40,7 @@ local Recipe = require(ritnlib.defines.class.prototype.recipe)
 | Sub-key | Contents |
 |---|---|
 | `core` | the [class factory](core/class-factory.md) |
-| `prototype.*` | `tech`/`technology`, `ore`, `entity`, `item`, `recipe`, `group`, `subgroup`, `category`, `fuelCategory`, `style`, `sprite`, `customInput`, `utility.constants` |
+| `prototype.*` | `tech`/`technology`, `ore`, `entity`, `item`, `recipe`, `group`, `subgroup`, `category`, `fuelCategory`, `tile`, `style`, `sprite`, `customInput`, `utility.constants` |
 | `luaClass.*` | `event`, `player`, `entity`, `force`, `surface`, `recipe`, `tech`, `gui` |
 | `ritnClass.*` | `prototype`, `ingredient`, `inventory`, `setting`, `informatron` (beta) |
 | `gui.*` | `element`, `style` |

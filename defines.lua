@@ -16,6 +16,7 @@
 ---@field subgroup string
 ---@field category string
 ---@field fuelCategory string
+---@field tile string
 ---@field style string
 ---@field sprite string
 ---@field customInput string
@@ -135,6 +136,7 @@ ritnlib = {
                 subgroup = "__RitnLib__/classes/prototypes/ItemSubgroup",
                 category = "__RitnLib__/classes/prototypes/RecipeCategory",
                 fuelCategory = "__RitnLib__/classes/prototypes/FuelCategory",
+                tile = "__RitnLib__/classes/prototypes/Tile",
                 style = "__RitnLib__/classes/prototypes/Style",
                 sprite = "__RitnLib__/classes/prototypes/Sprite",
                 customInput = "__RitnLib__/classes/prototypes/CustomInput",

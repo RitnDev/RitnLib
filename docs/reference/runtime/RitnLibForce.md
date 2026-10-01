@@ -29,13 +29,13 @@ Valide l'entrée puis fige les champs. Rejette une entrée qui n'est pas une `Lu
 **Paramètres**
 - `force` :: [`LuaForce`](https://lua-api.factorio.com/latest/classes/LuaForce.html) — la force à encapsuler.
 
-**Valeur de retour** → [`RitnLibForce`](RitnLibForce.md). En cas d'entrée invalide, [`isPresent`](#ispresent--boolean-read) vaut `false`.
+**Valeur de retour** → [`RitnLibForce`](RitnLibForce.md). En cas d'entrée invalide, [`isPresent`](#ispresent-boolean-read) vaut `false`.
 
 ```lua
 local rForce = RitnLibForce(game.forces["player"])
 ```
 
-> **Note** — Le plus souvent on l'obtient via [`RitnLibPlayer:getForce()`](RitnLibPlayer.md#getforce--ritnlibforce) ou [`RitnLibEvent:getForce()`](RitnLibEvent.md#getforce--ritnlibforce).
+> **Note** — Le plus souvent on l'obtient via [`RitnLibPlayer:getForce()`](RitnLibPlayer.md#getforce-ritnlibforce) ou [`RitnLibEvent:getForce()`](RitnLibEvent.md#getforce-ritnlibforce).
 
 ---
 

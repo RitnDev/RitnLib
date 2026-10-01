@@ -23,7 +23,7 @@ Helper de **snapshot / restauration** d'inventaire joueur, basé sur `game.creat
 
 #### `RitnLibInventory(player, inventoryGlobal)` → [`RitnLibInventory`](RitnLibInventory.md)
 
-Valide le joueur (doit être un `LuaPlayer` valide **avec un `character`**) et exige une table `inventoryGlobal` non-nil. Stocke la référence vers cette table dans [`data`](#data--tablestring-table-read).
+Valide le joueur (doit être un `LuaPlayer` valide **avec un `character`**) et exige une table `inventoryGlobal` non-nil. Stocke la référence vers cette table dans [`data`](#data-tablestring-table-read).
 
 **Paramètres**
 - `player` :: [`LuaPlayer`](https://lua-api.factorio.com/latest/classes/LuaPlayer.html) — joueur dont on gère l'inventaire.
@@ -60,13 +60,13 @@ Référence vers la table `inventoryGlobal` du consommateur (persistante).
 Joueur encapsulé (référence vivante).
 
 #### `name` :: `string` `[Read]`
-Nom du joueur — sert de clé dans [`data`](#data--tablestring-table-read).
+Nom du joueur — sert de clé dans [`data`](#data-tablestring-table-read).
 
 #### `INVENTORY_SIZE_MAX` :: `65535` `[Read]`
 Taille maximale passée à `game.create_inventory`.
 
 #### `inventory_size` :: `integer` `[Read]`
-Taille effective utilisée par [`:init()`](#init--ritnlibinventory) (défaut `INVENTORY_SIZE_MAX`).
+Taille effective utilisée par [`:init()`](#init-ritnlibinventory) (défaut `INVENTORY_SIZE_MAX`).
 
 ---
 

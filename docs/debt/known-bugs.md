@@ -12,7 +12,7 @@ lang: fr
 Ce qui **n'est pas** un bug (et n'est donc pas ici) :
 
 - Les **points de contrat d'extension** — une classe de base laisse volontairement un champ vide, la sous-classe le remplit. Ex : `RitnLibGui` laisse `self.gui[1]` vide (fourni par la sous-classe + l'interface remote `gui_action_*`) — pattern prouvé en production (RitnLobbyGame, RitnMenuButton, RitnCharacters). C'est du **design**, pas un défaut.
-- Les **résidus d'API Factorio 1.x** (statistics `getStats*`, `created_entity`, `hr_version`…) → voir [Migration Factorio 2.0](../migration-2.0.md) et [Résidus API 1.x](api-1.x-residuelle.md).
+- Les **résidus d'API Factorio 1.x** (statistics `getStats*`, `created_entity`, `hr_version`…) → voir [Migration Factorio 2.0](../migration-2.0.md) et [Résidus API 1.x](api-1.x-leftover.md).
 - Les **APIs dépréciées** mais fonctionnelles → voir [APIs dépréciées](deprecated.md).
 - Les **caveats d'usage** intentionnels (`pcall` silencieux, `ifElse` à évaluation immédiate, patterns Lua dans `startsWith`…) — documentés dans les tooltips LuaLS.
 
@@ -29,7 +29,6 @@ Vrais défauts de code (vérifiés dans la source), mais sur des chemins **non e
 | `RitnLibGuiElement:text()` | `classes/RitnClass/gui/RitnGuiElement.lua` | Teste `type(tooltip)` (variable inexistante) au lieu de `type(text)` → le corps ne s'exécute jamais, le texte n'est jamais appliqué. Silencieux. Non exercé (les consommateurs passent par `:caption()` / `:tooltip()`). | — |
 | `RitnLibStyle:straitFrame()` | `classes/RitnClass/gui/RitnStyle.lua` | Appelle `self:standardFrame()` (inexistante) → exception **si appelée**. Les consommateurs utilisent `:frame()`, `:menuButton()`, etc. (qui fonctionnent). | — |
 | `RitnLibStyle:visible()` | `classes/RitnClass/gui/RitnStyle.lua` | La ligne `log` concatène `self.gui_name`, jamais défini sur `RitnLibStyle` → exception **si appelée**. | — |
-| `RitnIngredient` — helper `getItem()` | `classes/RitnClass/RitnIngredient.lua:109` | Sur la branche probability, lit `ingredient.inputs.probability` (sous-table inexistante) → « attempt to index a nil value ». Aucun usage trouvé dans les mods consommateurs — **non confirmé**. | à vérifier |
 
 ## Effet de bord mineur
 
@@ -47,10 +46,22 @@ Non comptés comme bugs de production — fonctionnalité explicitement en chant
 | `RitnLibInformatron:getElement()` · `:setPageContent()` | `classes/RitnClass/RitnInformatron.lua` | `getElement` lit `self.gui[self.gui_name]` alors que le constructeur stocke la racine en `[1]` ; `setPageContent` retourne le global indéfini `FLAG_PAGE_DISPLAY` (typo). Classe marquée `-- beta` dans `defines.lua`, exercée par aucun mod. |
 | `RitnLibSetting` | `classes/RitnClass/RitnSetting.lua` | **Classe non terminée** (dev en cours). `:getType()` / `:new()` ne produisent pas de setting valide : la chaîne `self.TYPE[self.dataType]` déréférence avec une casse de clé incohérente (clés MAJUSCULES vs valeur minuscule). Ne pas utiliser en l'état — voir [RitnLibSetting](../reference/settings/RitnLibSetting.md). |
 
+## Corrigés
+
+| Version | Classe / méthode | Défaut |
+|---|---|---|
+| 0.10.5 | `RitnIngredient` — helper `getItem()` | Lisait `ingredient.inputs.probability` (sous-table inexistante) → « attempt to index a nil value ». Plantait aussi sur une entrée item définie uniquement par `amount_min` / `amount_max`. |
+| 0.10.5 | `RitnPrototype:getItemType()` · `:getEntityType()` | Plantaient quand un type de la liste n'a aucun prototype dans `data.raw` (ex : `item-with-label` en 2.1). |
+| 0.10.5 | `RitnProtoOre:remove()` | Laissait le minerai dans le `map_gen_settings` des planètes → plantage à l'initialisation de la planète. |
+| 0.10.5 | `RitnProtoOre.active()` (`bStandard = true`) | Le helper local `resource()` était masqué par le paramètre `resource` → appel d'une string. |
+| 0.10.5 | `RitnProtoTech:addPack()` | Erreur sur une technologie sans `unit` (research trigger). |
+| 0.10.5 | `util.product_amount()` | Plantait sur un produit sans `probability`. |
+| 0.10.4 | `RitnLibEntity:setMinable()` | `LuaEntity::minable` passé en lecture seule en 2.1.7 → écrit désormais `minable_flag`. |
+
 ## Voir aussi
 
 - [Migration Factorio 2.0](../migration-2.0.md) — résidus d'API 1.x (`getStats*`/statistics, `created_entity`, `hr_version`…)
-- [Résidus API 1.x](api-1.x-residuelle.md) — clés de prototype mortes (`icon_mipmaps`, `hide_from_player_stats`…)
-- [Migration Factorio 2.1](../migration-2.1.md) — `minable_flag`, `probability` → `independent_probability`
+- [Résidus API 1.x](api-1.x-leftover.md) — clés de prototype mortes (`icon_mipmaps`, `hide_from_player_stats`…)
+- [Migration Factorio 2.1](../migration-2.1.md) — `minable_flag`, `independent_probability`, `categories`
 - [APIs dépréciées](deprecated.md)
 - [Carte des classes](../reference/overview.md)

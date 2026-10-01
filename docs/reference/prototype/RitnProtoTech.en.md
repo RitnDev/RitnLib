@@ -33,7 +33,7 @@ local RitnProtoTech = require(ritnlib.defines.class.prototype.tech)
 
 #### `RitnProtoTech(tech_name)` → [`RitnProtoTech`](RitnProtoTech.md)
 
-Sets the basics via `RitnPrototype.init` then **deep-copies** `data.raw["technology"][tech_name]` into [`prototype`](#prototype--table-read). If the technology doesn't exist, `prototype` stays `nil` (setters become no-ops).
+Sets the basics via `RitnPrototype.init` then **deep-copies** `data.raw["technology"][tech_name]` into [`prototype`](#prototype-table-read). If the technology doesn't exist, `prototype` stays `nil` (setters become no-ops).
 
 **Parameters**
 - `tech_name` :: `string` — technology name in `data.raw`.

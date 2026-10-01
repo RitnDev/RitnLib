@@ -558,7 +558,18 @@ util.parse_energy = function(energy)
 end
 
 util.product_amount = function(product)
-  return product.probability * (product.amount or ((product.amount_min + product.amount_max) / 2))
+  -- ref ItemProductPrototype::getExpectedNormalAmount (Factorio 2.1 core util)
+  local amount = product.amount or ((product.amount_min + product.amount_max) / 2)
+  if product.extra_count_fraction then
+    amount = amount + product.extra_count_fraction
+  end
+  if product.independent_probability then
+    amount = amount * product.independent_probability
+  end
+  if product.shared_probability then
+    amount = amount * (product.shared_probability.max - product.shared_probability.min)
+  end
+  return amount
 end
 
 util.empty_sprite = function(animation_length)

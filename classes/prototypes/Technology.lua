@@ -72,8 +72,6 @@ function RitnProtoTech:setCount(count)
     return self
 end
 
-
-
 --SET TIME SCIENCE PACK
 
 ---**EN**
@@ -98,8 +96,6 @@ function RitnProtoTech:setTime(time)
     return self
 end
 
-
-
 --SET INGREDIENTS SCIENCE PACK
 
 ---**EN**
@@ -123,7 +119,6 @@ function RitnProtoTech:setIngredients(ingredients)
     self:update()
     return self
 end
-
 
 --DISABLE TECHNOLOGY
 
@@ -163,7 +158,6 @@ function RitnProtoTech:disable(delete_prerequisites)
     return self
 end
 
-
 --------------------------- RECIPE ---------------------------
 --ADD RECIPE UNLOCK
 
@@ -197,7 +191,6 @@ function RitnProtoTech:addRecipe(recipe_name)
     self:update()
     return self
 end
-
 
 --REMOVE RECIPE UNLOCK
 
@@ -234,7 +227,6 @@ function RitnProtoTech:removeRecipe(recipe, complete)
     return self
 end
 
-
 --------------------------- PACK ---------------------------
 
 --ADD SCIENCE PACK
@@ -253,6 +245,7 @@ end
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:addPack(pack, count)
     if self.prototype == nil then return self end
+    if not self.prototype.unit then return self end
     if count ~= nil then self.amount_pack = count end
 
     if data.raw.tool[pack] then
@@ -275,7 +268,6 @@ function RitnProtoTech:addPack(pack, count)
     self:update()
     return self
 end
-
 
 --REMOVE SCIENCE PACK
 
@@ -300,7 +292,6 @@ function RitnProtoTech:removePack(pack)
     self:update()
     return self
 end
-
 
 --REPLACE SCIENCE PACK
 
@@ -344,7 +335,6 @@ function RitnProtoTech:replacePack(old, new)
     return self
 end
 
-
 --MULTIPLIED SCIENCE PACK
 
 ---**EN**
@@ -364,7 +354,6 @@ function RitnProtoTech:multipliedPack(coeff)
     self:update()
     return self
 end
-
 
 --REMOVE PACK ON LABS
 
@@ -474,7 +463,6 @@ function RitnProtoTech:addPrerequisite(prerequisite)
     return self
 end
 
-
 --REMOVE PRE-REQUIS
 
 ---**EN**
@@ -501,7 +489,6 @@ function RitnProtoTech:removePrerequisite(prerequisite)
     return self
 end
 
-
 --REPLACE PRE-REQUIS
 
 ---**EN**
@@ -521,8 +508,6 @@ function RitnProtoTech:replacePrerequisite(remove_prerequisite, add_prerequisite
     self:removePrerequisite(remove_prerequisite):addPrerequisite(add_prerequisite):update()
     return self
 end
-
-
 
 ----------------------------
 return RitnProtoTech

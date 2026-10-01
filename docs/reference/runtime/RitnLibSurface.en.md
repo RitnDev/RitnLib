@@ -29,9 +29,9 @@ Validates the input then freezes the fields. Rejects an input that is not a vali
 **Parameters**
 - `surface` :: [`LuaSurface`](https://lua-api.factorio.com/latest/classes/LuaSurface.html) — the surface to wrap.
 
-**Return value** → [`RitnLibSurface`](RitnLibSurface.md). On invalid input, [`isPresent`](#ispresent--boolean-read) is `false`.
+**Return value** → [`RitnLibSurface`](RitnLibSurface.md). On invalid input, [`isPresent`](#ispresent-boolean-read) is `false`.
 
-> **Note** — Most often obtained via [`RitnLibEvent:getSurface()`](RitnLibEvent.md#getsurface--ritnlibsurface) or [`RitnLibPlayer:getSurface()`](RitnLibPlayer.md#getsurface--ritnlibsurface).
+> **Note** — Most often obtained via [`RitnLibEvent:getSurface()`](RitnLibEvent.md#getsurface-ritnlibsurface) or [`RitnLibPlayer:getSurface()`](RitnLibPlayer.md#getsurface-ritnlibsurface).
 
 ---
 

@@ -1,4 +1,66 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.5
+Date: 01.10.2026
+  Features:
+    - Added RitnProtoTile (classes/prototypes/Tile.lua, ritnlib.defines.class.prototype.tile) with
+      setBlueprintable(value) to set can_be_part_of_blueprint.
+    - RitnProtoRecipe: added setCategories(categories) and addCategory(category) for the Factorio 2.1
+      RecipePrototype::categories property (replaces the removed category / additional_categories).
+    - RitnProtoRecipe: added addResult(), removeResult(), setResult() to manage recipe results.
+    - RitnProtoRecipe: added replaceIngredient(old_name, new_ingredient). With a string, the old amount
+      is kept and the type is detected from the new name.
+    - RitnProtoRecipe: added setProductivity(value) to set allow_productivity (replaces the module
+      limitation lists removed in Factorio 2.0).
+    - RitnProtoItem: added setFuelEmissionsMultiplier(value) (no-op if the item is not a fuel).
+    - RitnPrototype: added getEquipmentType() (uses the new lualib/vanilla/types_equipment.lua list).
+    - RitnProtoOre.active(): new optional 4th parameter "planets" (default {"nauvis"}): the ore is now
+      added to the map_gen_settings of those planets, otherwise it never spawned in Factorio 2.x.
+  Changes:
+    - Updated lualib/vanilla/types_item.lua: added space-platform-starter-pack, removed mining-tool,
+      "tool" moved up the list.
+    - Updated lualib/vanilla/types_entity.lua to the Factorio 2.x entity types.
+    - RitnIngredient: uses independent_probability (Factorio 2.1, renamed from probability). The legacy
+      "probability" key is still accepted as input, only independent_probability is written.
+    - RitnIngredient: every other field of an entry (temperature, ignored_by_productivity,
+      extra_count_fraction, percent_spoiled...) is now kept by add/addNew/set. When two entries are
+      combined, the extra fields come from the entry already present in the recipe.
+    - util.product_amount(): aligned with the Factorio 2.1 core util (independent_probability,
+      shared_probability, extra_count_fraction).
+    - RitnProtoRecipe:disable() hides the result item with hidden = true instead of flags = {"hidden"}.
+  Bugfixes:
+    - Fixed RitnPrototype:getItemType() / getEntityType() crashing when an item/entity type of the list
+      has no prototype in data.raw (e.g. item-with-label in Factorio 2.1).
+    - Fixed RitnProtoOre:remove() leaving the ore in the planets' map_gen_settings, which crashed the
+      game at planet setup ("<ore> is not a valid autoplace control name").
+    - Fixed RitnProtoOre.active() with bStandard = true calling a string: the local resource() helper
+      was shadowed by the "resource" parameter (helper renamed make_resource()).
+    - Fixed RitnIngredient getItem() reading ingredient.inputs.probability (undefined sub-table).
+    - Fixed RitnIngredient getItem() crashing on an item entry defined with amount_min/amount_max only.
+    - Fixed util.product_amount() crashing when a product has no probability.
+    - Fixed lualib/vanilla/ores.lua crude-oil result using the removed "probability" key.
+    - RitnProtoTech:addPack() no longer errors on a technology without a "unit" (research trigger).
+  Info:
+    - Documentation: new reference page RitnProtoTile (FR + EN), added to the navigation, the index,
+      the class map, the architecture layers and the ritnlib.defines registry page.
+    - Documentation: RitnProtoRecipe reference updated: setCategories, addCategory, replaceIngredient,
+      addResult, removeResult, setResult, setProductivity; disable() now sets hidden = true on the item;
+      setHidden() "stats" parameter flagged as inert (hide_from_player_stats is not a valid key).
+    - Documentation: RitnProtoItem (setFuelEmissionsMultiplier), RitnPrototype (getEquipmentType,
+      missing data.raw types skipped), RitnProtoOre (active() "planets" parameter, remove() also
+      cleans the planets' map_gen_settings) and RitnIngredient (independent_probability, extra fields
+      kept) reference pages updated.
+    - Documentation: vanilla util / types reference pages updated (product_amount 2.1, new types_item
+      list, types_equipment). RitnLibRecipe:getProperties() example uses "categories" (the "category"
+      read was removed in Factorio 2.1).
+    - Documentation: known bugs and Factorio 2.1 migration pages updated: the probability /
+      independent_probability items are now marked as fixed.
+    - Documentation: filled the 1.x API leftovers debt page (icon_mipmaps, hr_version,
+      hide_from_player_stats, hardness, LuaStyle.visible). Renamed api-1.x-residuelle.md (FR) /
+      api-1.x-leftover.md (EN) to api-1.x-leftover.md / api-1.x-leftover.en.md (suffix convention).
+    - Documentation: new bilingual page migration-2.1.
+    - Documentation: fixed 72 in-page anchor links that never matched on the MkDocs site (GitHub-style
+      double-dash slugs) and the broken RitnLibSetting link in the settings-builder guide.
+---------------------------------------------------------------------------------------------------
 Version: 0.10.4
 Date: 12.09.2026
   Bugfixes:

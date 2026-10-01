@@ -7,9 +7,7 @@ lang: en
 # `RitnProtoItem`
 
 
-**Data-stage** manipulator for `data.raw[<item-type>][<name>]`. The constructor **auto-detects** the item type (via `getItemType()`) and deep-copies the prototype. **No methods of its own**: use the generic mutators from [`RitnPrototype`](RitnPrototype.md).
-
-> **Warning — Factorio 1.x API**: this class hasn't been revised since Factorio 2.0. Usable at data stage, but **not validated for 2.0** — see [Factorio 2.0 migration](../../migration-2.0.md).
+**Data-stage** manipulator for `data.raw[<item-type>][<name>]`. The constructor **auto-detects** the item type (via `getItemType()`) and deep-copies the prototype.
 
 | | |
 |---|---|
@@ -34,7 +32,15 @@ Resolves the type via `:getItemType()` (iterates `lualib.vanilla.types_item`) th
 
 ## Methods
 
-No specific methods. Use the inherited mutators from [`RitnPrototype`](RitnPrototype.md): `:changePrototype`, `:setPrototype`, `:changeSubPrototype`, `:changeSubgroup`, `:getProperties`, `:update`.
+#### `:setFuelEmissionsMultiplier(value)` → [`RitnProtoItem`](RitnProtoItem.md)
+Sets `prototype.fuel_emissions_multiplier` (pollution multiplier when the item is burnt as fuel). No-op if the item has no `fuel_value` (not a fuel).
+
+**Parameters**
+- `value` :: `number` — emissions multiplier (e.g. `0.0` for a clean fuel).
+
+---
+
+For everything else, use the inherited mutators from [`RitnPrototype`](RitnPrototype.md): `:changePrototype`, `:setPrototype`, `:changeSubPrototype`, `:changeSubgroup`, `:getProperties`, `:update`.
 
 ---
 

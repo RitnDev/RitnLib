@@ -7,9 +7,7 @@ lang: fr
 # `RitnProtoItem`
 
 
-Manipulateur **data stage** pour `data.raw[<item-type>][<nom>]`. Le constructeur **auto-détecte** le type d'item (via `getItemType()`) et deep-copie le prototype. **Aucune méthode propre** : on utilise les mutateurs génériques de [`RitnPrototype`](RitnPrototype.md).
-
-> **Avertissement — API Factorio 1.x** : cette classe n'a pas été révisée depuis Factorio 2.0. Utilisable au data stage, mais **non validée pour 2.0** — voir [Migration Factorio 2.0](../../migration-2.0.md).
+Manipulateur **data stage** pour `data.raw[<item-type>][<nom>]`. Le constructeur **auto-détecte** le type d'item (via `getItemType()`) et deep-copie le prototype.
 
 | | |
 |---|---|
@@ -34,7 +32,15 @@ Résout le type via `:getItemType()` (itère `lualib.vanilla.types_item`) puis d
 
 ## Méthodes
 
-Aucune méthode spécifique. Utilise les mutateurs hérités de [`RitnPrototype`](RitnPrototype.md) : `:changePrototype`, `:setPrototype`, `:changeSubPrototype`, `:changeSubgroup`, `:getProperties`, `:update`.
+#### `:setFuelEmissionsMultiplier(value)` → [`RitnProtoItem`](RitnProtoItem.md)
+Définit `prototype.fuel_emissions_multiplier` (multiplicateur de pollution quand l'item est brûlé comme carburant). No-op si l'item n'a pas de `fuel_value` (pas un carburant).
+
+**Paramètres**
+- `value` :: `number` — multiplicateur d'émissions (ex : `0.0` pour un carburant propre).
+
+---
+
+Pour le reste, utilise les mutateurs hérités de [`RitnPrototype`](RitnPrototype.md) : `:changePrototype`, `:setPrototype`, `:changeSubPrototype`, `:changeSubgroup`, `:getProperties`, `:update`.
 
 ---
 

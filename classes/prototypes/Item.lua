@@ -38,5 +38,30 @@ local RitnProtoItem = class.newclass(RitnProtoBase, function(base, item_name)
 end) --[[@as RitnProtoItem]]
 
 
+--FUEL EMISSIONS
+
+---**EN**
+---
+---Description: Sets `prototype.fuel_emissions_multiplier` (pollution multiplier when the item is burnt as fuel). No-op if the item has no `fuel_value` (not a fuel).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Définit `prototype.fuel_emissions_multiplier` (multiplicateur de pollution quand l'item est brûlé comme carburant). No-op si l'item n'a pas de `fuel_value` (pas un carburant).
+---@param value number
+---@return RitnProtoItem self  Chainable
+function RitnProtoItem:setFuelEmissionsMultiplier(value)
+    if self.prototype == nil then return self end
+    if self.prototype.fuel_value == nil then return self end
+    if type(value) ~= "number" then return self end
+
+    self.prototype.fuel_emissions_multiplier = value
+
+    self:update()
+    return self
+end
+
+
 
 return RitnProtoItem

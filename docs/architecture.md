@@ -78,7 +78,7 @@ ritnlib = {
         class = {
             core,
             prototype = { tech, ore, entity, item, recipe, group, subgroup,
-                          category, fuelCategory, style, sprite, customInput,
+                          category, fuelCategory, tile, style, sprite, customInput,
                           utility = { constants } },
             luaClass  = { event, player, entity, force, surface, recipe, tech, gui },
             ritnClass = { prototype, ingredient, inventory, setting, informatron },
@@ -126,7 +126,7 @@ RitnPrototype ◄── RitnProtoEntity, RitnProtoItem, RitnProtoRecipe,
                   RitnProtoTechnology, RitnProtoOre, RitnProtoSprite,
                   RitnProtoStyle, RitnProtoItemGroup,
                   RitnProtoItemSubgroup, RitnProtoFuelCategory,
-                  RitnProtoCustomInput, RitnProtoUtilityConst
+                  RitnProtoTile, RitnProtoCustomInput, RitnProtoUtilityConst
 
 ⚠ RitnProtoRecipeCategory NE devrait PAS être à part — bug d'héritage
   (cf. BUG-005 dans debt/known-bugs.md)

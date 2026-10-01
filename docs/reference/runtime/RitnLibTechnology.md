@@ -30,9 +30,9 @@ Valide l'entrée puis fige les champs. Rejette une entrée qui n'est pas une `Lu
 **Paramètres**
 - `technology` :: [`LuaTechnology`](https://lua-api.factorio.com/latest/classes/LuaTechnology.html) — la techno runtime (ex. `event.research`).
 
-**Valeur de retour** → [`RitnLibTechnology`](RitnLibTechnology.md). En cas d'entrée invalide, [`isPresent`](#ispresent--boolean-read) vaut `false`.
+**Valeur de retour** → [`RitnLibTechnology`](RitnLibTechnology.md). En cas d'entrée invalide, [`isPresent`](#ispresent-boolean-read) vaut `false`.
 
-> **Note** — Le plus souvent on l'obtient via [`RitnLibForce:getTechnology(name)`](RitnLibForce.md#gettechnologytech_name--ritnlibtechnology) ou directement depuis `event.research`.
+> **Note** — Le plus souvent on l'obtient via [`RitnLibForce:getTechnology(name)`](RitnLibForce.md#gettechnologytech_name-ritnlibtechnology) ou directement depuis `event.research`.
 
 ---
 
@@ -48,7 +48,7 @@ Nom de la technologie (snapshot).
 Force à laquelle appartient la techno (snapshot).
 
 #### `entity_type` :: `string` `[Read]`
-Type d'entité ciblé par défaut par [`:updateRecipe`](#updaterecipetechfinished-disabletabrecipes-setrecipe-entitytype--ritnlibtechnology) (défaut `"assembling-machine"`).
+Type d'entité ciblé par défaut par [`:updateRecipe`](#updaterecipetechfinished-disabletabrecipes-setrecipe-entitytype-ritnlibtechnology) (défaut `"assembling-machine"`).
 
 #### `isPresent` :: `boolean` `[Read]`
 `false` si le constructeur a rejeté son entrée. À tester en garde.

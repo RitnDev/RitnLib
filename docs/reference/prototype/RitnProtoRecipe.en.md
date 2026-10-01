@@ -9,7 +9,7 @@ lang: en
 
 **Data-stage** manipulator for `data.raw["recipe"][<name>]`. A fluent toolkit to mutate a recipe: enable/disable, hide/show, add/remove/replace ingredients, propagate the science-pack tint and the subgroup to the matching item. Every setter writes back to `data.raw` (via `:update()`) and returns `self` (chainable).
 
-> **Warning — Factorio 1.x API**: this class hasn't been revised since Factorio 2.0; it keeps **1.x** API constructs (notably the `normal` / `expensive` difficulty variants). Usable at data stage, but **not validated for 2.0** — see [Factorio 2.0 migration](../../migration-2.0.md).
+> **Note — difficulty variants**: methods also walk the legacy `normal` / `expensive` branches (1.x API) in addition to `ingredients` / `results`. If those branches don't exist, they are simply no-ops. See [Factorio 2.0 migration](../../migration-2.0.md).
 
 | | |
 |---|---|
@@ -31,7 +31,7 @@ local RitnProtoRecipe = require(ritnlib.defines.class.prototype.recipe)
 
 #### `RitnProtoRecipe(recipe_name)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
 
-Sets the basics via `RitnPrototype.init` then **deep-copies** `data.raw["recipe"][recipe_name]` into [`prototype`](#prototype--table-read). If the recipe doesn't exist, `prototype` stays `nil` (all setters become no-ops).
+Sets the basics via `RitnPrototype.init` then **deep-copies** `data.raw["recipe"][recipe_name]` into [`prototype`](#prototype-table-read). If the recipe doesn't exist, `prototype` stays `nil` (all setters become no-ops).
 
 **Parameters**
 - `recipe_name` :: `string` — recipe name in `data.raw`.
@@ -81,7 +81,7 @@ RitnProtoRecipe('light-armor'):setEnabled(false)
 ```
 
 #### `:disable()` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
-Disables **and** hides the recipe, then sets `flags = {"hidden"}` on the result item (via `RitnProtoItem`).
+Disables **and** hides the recipe, then sets `hidden = true` on the result item (via `RitnProtoItem`).
 
 #### `:setHidden(value, crafting?, stats?)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
 Sets `hidden` on the prototype and its difficulty branches. If `crafting` is non-nil, also sets `hide_from_player_crafting`; if `stats` is non-nil, `hide_from_player_stats`.
@@ -90,6 +90,8 @@ Sets `hidden` on the prototype and its difficulty branches. If `crafting` is non
 - `value` :: `boolean` — flag value.
 - `crafting` :: `any?` — if non-nil, also applies to `hide_from_player_crafting`.
 - `stats` :: `any?` — if non-nil, also applies to `hide_from_player_stats`.
+
+> ⚠ `hide_from_player_stats` does not exist in the Factorio schema (the correct key is `hide_from_stats`): the `stats` parameter has no effect. See [1.x API leftovers](../../debt/api-1.x-leftover.md).
 
 ---
 
@@ -110,6 +112,13 @@ Removes the ingredient from every branch.
 #### `:removeAllIngredient()` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
 Empties every ingredient list.
 
+#### `:replaceIngredient(old_name, new_ingredient)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
+Replaces the ingredient named `old_name` by `new_ingredient` in each existing branch. If `new_ingredient` is a string, the old entry's amount is kept and the type is detected from the new name (fluid or item). If the new ingredient already exists, amounts are combined. No-op on branches that don't contain `old_name`.
+
+**Parameters**
+- `old_name` :: `string` — name of the ingredient to replace.
+- `new_ingredient` :: `table|string` — new ingredient (table or string shorthand).
+
 #### `:getIngredient(ingredient)` → `table?`
 Returns the normalized `item` payload of the first ingredient with the given name, or `nil`.
 
@@ -120,16 +129,50 @@ Returns the normalized `item` payload of the first ingredient with the given nam
 
 ---
 
+## Methods — results
+
+#### `:addResult(result)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
+Adds `result` to `prototype.results` — **combines** (sums amounts, averages `independent_probability`) if a result with the same name already exists. Creates `results` if missing.
+
+#### `:removeResult(result)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
+Removes every result matching `result`'s name from `prototype.results`.
+
+#### `:setResult(result)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
+Replaces in place every result matching `result`'s name in `prototype.results` (no combine).
+
+**Parameters** (shared by result methods): `result` :: `table|string` — product payload (`{type=, name=, amount=, independent_probability=}` or string shorthand).
+
+---
+
+## Methods — categories (Factorio 2.1+)
+
+#### `:setCategories(categories)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
+Replaces `prototype.categories` (Factorio 2.1+, replaces the removed `category` / `additional_categories` keys). Accepts a single name or a list. Also clears the legacy keys if present.
+
+**Parameters**
+- `categories` :: `string|string[]` — crafting category or categories.
+
+#### `:addCategory(category)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
+Appends a category to `prototype.categories` if not already present. If the recipe has no `categories`, starts from `{"crafting"}` (the engine default).
+
+**Parameters**
+- `category` :: `string` — category to add.
+
+---
+
 ## Methods — tint & subgroup
 
 #### `:changeTint(parameter, tint)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
-Assigns a color from [`tint`](#tint--tablestring-table-read) (by key: `"red"`, `"automation"`…) to the prototype's `parameter` field (typically `"crafting_machine_tint"`). No-op if the key is unknown.
+Assigns a color from [`tint`](#tint-tablestring-table-read) (by key: `"red"`, `"automation"`…) to the prototype's `parameter` field (typically `"crafting_machine_tint"`). No-op if the key is unknown.
 
 #### `:updatePackTint()` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
 Auto-detects science packs (name ending in `-science-pack`) and applies the matching tint to `crafting_machine_tint`.
 
 #### `:changeSubgroup(subgroup, order?)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
 Sets `subgroup` (and `order`) on the recipe **and** propagates it to the matching item (via `RitnProtoItem`). Overrides the inherited version to handle item propagation.
+
+#### `:setProductivity(value?)` → [`RitnProtoRecipe`](RitnProtoRecipe.md)
+Sets `prototype.allow_productivity` (Factorio 2.0+, replaces the removed module `limitation` lists). `value` defaults to `true`.
 
 ---
 
@@ -181,7 +224,8 @@ RitnProtoRecipe("wooden-chest"):changeSubgroup("belt")
 
 - **Data stage only** — use from `data.lua` / `data-updates.lua` / `data-final-fixes.lua`, never at runtime.
 - **Copy + write-back** — mutations apply to a copy (`prototype`); each setter calls `:update()` which writes back to `data.raw`. No need to call `data:extend` yourself.
-- **`normal` / `expensive` branches** — leftovers from Factorio 1.x recipe difficulty variants. The methods walk them in addition to `ingredients` (the 2.0 canonical); if they don't exist on the loaded prototype, those branches are simply no-ops. See [Factorio 2.0 migration](../../migration-2.0.md).
+- **`normal` / `expensive` branches** — leftovers from Factorio 1.x recipe difficulty variants. The methods walk them in addition to `ingredients` / `results` (the 2.0+ canonical); if they don't exist on the loaded prototype, those branches are simply no-ops. See [Factorio 2.0 migration](../../migration-2.0.md).
+- **`independent_probability`** — result methods use `independent_probability` (Factorio 2.1+). The legacy `probability` key is accepted as input but never written.
 
 ## See also
 

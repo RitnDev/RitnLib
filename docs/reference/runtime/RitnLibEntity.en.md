@@ -29,7 +29,7 @@ Validates the input then freezes the fields. Rejects an input that is not a vali
 **Parameters**
 - `entity` :: [`LuaEntity`](https://lua-api.factorio.com/latest/classes/LuaEntity.html) — the entity to wrap.
 
-**Return value** → [`RitnLibEntity`](RitnLibEntity.md). On invalid input, [`isPresent`](#ispresent--boolean-read) is `false`.
+**Return value** → [`RitnLibEntity`](RitnLibEntity.md). On invalid input, [`isPresent`](#ispresent-boolean-read) is `false`.
 
 ---
 

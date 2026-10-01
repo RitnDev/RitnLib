@@ -29,7 +29,7 @@ Valide l'entrée puis fige les champs. Rejette une entrée qui n'est pas un `Lua
 **Paramètres**
 - `entity` :: [`LuaEntity`](https://lua-api.factorio.com/latest/classes/LuaEntity.html) — l'entité à encapsuler.
 
-**Valeur de retour** → [`RitnLibEntity`](RitnLibEntity.md). En cas d'entrée invalide, [`isPresent`](#ispresent--boolean-read) vaut `false`.
+**Valeur de retour** → [`RitnLibEntity`](RitnLibEntity.md). En cas d'entrée invalide, [`isPresent`](#ispresent-boolean-read) vaut `false`.
 
 ---
 

@@ -23,7 +23,7 @@ A **fluent** builder for a `LuaGuiElement.add{...}` payload. Every setter return
 
 #### `RitnLibGuiElement(ui_name, element_type, element_name)` → [`RitnLibGuiElement`](RitnLibGuiElement.md)
 
-Initializes the `add{...}` payload. The `element_type` (Factorio type, e.g. `"sprite-button"`, `"text-box"`, `"scroll-pane"`) is normalized to a short form for the slug (`button`, `textbox`, `pane`…); the real Factorio type is kept in [`type`](#type--string-read).
+Initializes the `add{...}` payload. The `element_type` (Factorio type, e.g. `"sprite-button"`, `"text-box"`, `"scroll-pane"`) is normalized to a short form for the slug (`button`, `textbox`, `pane`…); the real Factorio type is kept in [`type`](#name-type-ui-string-read).
 
 **Parameters**
 - `ui_name` :: `string` — UI namespace (prefix), typically the parent GUI's `gui_name`.
@@ -50,7 +50,7 @@ Constructor arguments kept verbatim (`type` = real Factorio type, **not** the sl
 Default action key `<type>-<name>`.
 
 #### `gui_element` :: `table` `[Read]`
-The `add{...}` payload being built (returned by [`:get()`](#get--table)).
+The `add{...}` payload being built (returned by [`:get()`](#get-table)).
 
 > **Note** — The class also keeps internal validation tables (`hsp_valid`, `string_valid`, `orientation_valid`, `text_valid`, `button_valid`, `sprite_valid`, `check_valid`) that gate setters by element type.
 

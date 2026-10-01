@@ -67,6 +67,7 @@ Task-oriented tutorials:
 | [`RitnProtoItemSubgroup`](reference/prototype/RitnProtoItemSubgroup.md) | `data.raw['item-subgroup']` |
 | [`RitnProtoRecipeCategory`](reference/prototype/RitnProtoRecipeCategory.md) | `data.raw['recipe-category']` |
 | [`RitnProtoFuelCategory`](reference/prototype/RitnProtoFuelCategory.md) | `data.raw['fuel-category']` |
+| [`RitnProtoTile`](reference/prototype/RitnProtoTile.md) | `data.raw['tile']` |
 | [`RitnProtoCustomInput`](reference/prototype/RitnProtoCustomInput.md) | `data.raw['custom-input']` |
 | [`RitnProtoUtilityConst`](reference/prototype/RitnProtoUtilityConst.md) | `data.raw['utility-constants']` |
 | [`RitnIngredient`](reference/prototype/RitnIngredient.md) | ingredient normalization |

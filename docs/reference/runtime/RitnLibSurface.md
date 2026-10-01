@@ -29,9 +29,9 @@ Valide l'entrée puis fige les champs. Rejette une entrée qui n'est pas un `Lua
 **Paramètres**
 - `surface` :: [`LuaSurface`](https://lua-api.factorio.com/latest/classes/LuaSurface.html) — la surface à encapsuler.
 
-**Valeur de retour** → [`RitnLibSurface`](RitnLibSurface.md). En cas d'entrée invalide, [`isPresent`](#ispresent--boolean-read) vaut `false`.
+**Valeur de retour** → [`RitnLibSurface`](RitnLibSurface.md). En cas d'entrée invalide, [`isPresent`](#ispresent-boolean-read) vaut `false`.
 
-> **Note** — Le plus souvent on l'obtient via [`RitnLibEvent:getSurface()`](RitnLibEvent.md#getsurface--ritnlibsurface) ou [`RitnLibPlayer:getSurface()`](RitnLibPlayer.md#getsurface--ritnlibsurface).
+> **Note** — Le plus souvent on l'obtient via [`RitnLibEvent:getSurface()`](RitnLibEvent.md#getsurface-ritnlibsurface) ou [`RitnLibPlayer:getSurface()`](RitnLibPlayer.md#getsurface-ritnlibsurface).
 
 ---
 

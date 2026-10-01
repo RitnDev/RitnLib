@@ -29,13 +29,13 @@ Validates the input then freezes the fields. Rejects an input that is not a vali
 **Parameters**
 - `force` :: [`LuaForce`](https://lua-api.factorio.com/latest/classes/LuaForce.html) — the force to wrap.
 
-**Return value** → [`RitnLibForce`](RitnLibForce.md). On invalid input, [`isPresent`](#ispresent--boolean-read) is `false`.
+**Return value** → [`RitnLibForce`](RitnLibForce.md). On invalid input, [`isPresent`](#ispresent-boolean-read) is `false`.
 
 ```lua
 local rForce = RitnLibForce(game.forces["player"])
 ```
 
-> **Note** — Most often obtained via [`RitnLibPlayer:getForce()`](RitnLibPlayer.md#getforce--ritnlibforce) or [`RitnLibEvent:getForce()`](RitnLibEvent.md#getforce--ritnlibforce).
+> **Note** — Most often obtained via [`RitnLibPlayer:getForce()`](RitnLibPlayer.md#getforce-ritnlibforce) or [`RitnLibEvent:getForce()`](RitnLibEvent.md#getforce-ritnlibforce).
 
 ---
 

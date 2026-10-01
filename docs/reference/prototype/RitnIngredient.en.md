@@ -7,7 +7,7 @@ lang: en
 # `RitnIngredient`
 
 
-Normalizes a recipe ingredient (item or fluid) into a uniform `{name, type, amount, amount_min, amount_max, probability}` shape, and provides list operations (`:add`, `:addNew`, `:set`, `:remove`, `:combine`). It's the engine used internally by [`RitnProtoRecipe`](RitnProtoRecipe.md) for its ingredient methods, also usable directly.
+Normalizes a recipe entry (ingredient or product, item or fluid) into a uniform `{name, type, amount, amount_min, amount_max, independent_probability}` shape, and provides list operations (`:add`, `:addNew`, `:set`, `:remove`, `:combine`). It's the engine used internally by [`RitnProtoRecipe`](RitnProtoRecipe.md) for its ingredient and result methods, also usable directly.
 
 | | |
 |---|---|
@@ -36,16 +36,19 @@ Normalizes the input. The `type` is auto-detected (`"fluid"` if `data.raw.fluid[
 ## Attributes
 
 #### `name` :: `string` `[Read]`
-Resolved ingredient name.
+Resolved entry name.
 
 #### `type` :: `"item"`|`"fluid"`|`nil` `[Read]`
 Resolved type (auto-detected if absent).
 
-#### `amount` · `amount_min` · `amount_max` · `probability` :: `number?` `[Read]`
-Amount (floored for items), range bounds, and probability factor.
+#### `amount` · `amount_min` · `amount_max` :: `number?` `[Read]`
+Amount (floored for items) and range bounds.
+
+#### `independent_probability` :: `number?` `[Read]`
+Probability factor (Factorio 2.1+, renamed from `probability`). Read from `independent_probability`, or from the legacy `probability` key if only that one is present.
 
 #### `item` :: `table` `[Read]`
-Normalized `{name, type, amount, amount_min, amount_max, probability}` payload — this is what gets inserted into lists.
+Normalized `{name, type, amount, amount_min, amount_max, independent_probability}` payload **plus every other field of the original entry** (`temperature`, `ignored_by_productivity`, `extra_count_fraction`, `percent_spoiled`…). This is what gets inserted into lists. The array form (`[1]`, `[2]`) and the `probability` key are never copied into it.
 
 #### `object_name` :: `"RitnIngredient"` `[Read]`
 Type sentinel.
@@ -54,13 +57,13 @@ Type sentinel.
 
 ## Methods
 
-> The list operations take `listIngredients :: table[]` (a recipe's ingredient list) and modify it **in place**.
+> The list operations take `listIngredients :: table[]` (a recipe's `ingredients` or `results` list) and modify it **in place**.
 
 #### `:add(listIngredients)`
-Inserts `self`; **combines** (sums amounts, averages probabilities) if an ingredient with the same name already exists.
+Inserts `self`; **combines** (sums amounts, averages `independent_probability`) if an entry with the same name already exists.
 
 #### `:addNew(listIngredients)`
-Inserts `self` **only if** no ingredient with the same name already exists.
+Inserts `self` **only if** no entry with the same name already exists.
 
 #### `:set(listIngredients)`
 Replaces in place every entry with the same name by `self.item` (overwrite, no combine).
@@ -69,7 +72,7 @@ Replaces in place every entry with the same name by `self.item` (overwrite, no c
 Removes every entry with the same name (by `[1]` or `.name`).
 
 #### `:combine(ingredient)` → `table`
-Combines `self` with `ingredient` (same name): sums amounts, averages probabilities. Updates `self.item` and returns the combined payload.
+Combines `self` with `ingredient` (same name): sums amounts, averages `independent_probability`. Extra fields (`temperature`…) come from `ingredient`, i.e. the entry already present in the recipe. Updates `self.item` and returns the combined payload.
 
 **Parameters**: `ingredient` :: `table`.
 
@@ -86,18 +89,25 @@ RitnIngredient({ "iron-plate", 2 }):add(recipe.ingredients)   -- add or combine
 RitnIngredient("copper-plate"):remove(recipe.ingredients)     -- remove by name
 ```
 
-In practice you usually go through [`RitnProtoRecipe`](RitnProtoRecipe.md) (`:addIngredient`, `:setIngredient`…), which delegates to `RitnIngredient`.
+**A product with a probability and a temperature**:
+
+```lua
+RitnIngredient({ type = "fluid", name = "steam", amount = 10, temperature = 165,
+                 independent_probability = 0.5 }):add(recipe.results)
+```
+
+In practice you usually go through [`RitnProtoRecipe`](RitnProtoRecipe.md) (`:addIngredient`, `:addResult`…), which delegates to `RitnIngredient`.
 
 ---
 
 ## Remarks
 
-- **Data stage** — operates on `data.raw` ingredient tables.
-- ⚠ **Known bug (`getItem`)** — on the probability branch, the internal helper reads `ingredient.inputs.probability` (nonexistent sub-table) → "attempt to index a nil value" if an ingredient carries a `probability`. Latent (few ingredients have one). See [known bugs](../../debt/known-bugs.md).
-- **Input shapes** — both array (1.x) and table (2.0) forms are accepted.
+- **Data stage** — operates on `data.raw` ingredient / product tables.
+- **`probability` → `independent_probability`** — Factorio 2.1 removed `probability` from products; the legacy key is still accepted as input but only `independent_probability` is written. See [Factorio 2.1 migration](../../migration-2.1.md).
+- **Input shapes** — both array (1.x) and table (2.0) forms are accepted. An item entry defined with `amount_min` / `amount_max` only is handled.
 
 ## See also
 
 - [Class map](../overview.md)
 - [`RitnProtoRecipe`](RitnProtoRecipe.md) · [`RitnPrototype`](RitnPrototype.md)
-- [Known bugs](../../debt/known-bugs.md)
+- [Factorio 2.1 migration](../../migration-2.1.md)

@@ -9,7 +9,7 @@ lang: en
 
 **Data-stage** manipulator for `data.raw["resource"][<name>]` (ore patches). Inherits from [`RitnPrototype`](RitnPrototype.md). Provides `:remove()` (full ore purge) and the **static** `.active(...)` helper to register ores from `lualib/vanilla/ores.lua`.
 
-> **Warning — Factorio 1.x API**: this class hasn't been revised since Factorio 2.0 (the `resource()` template notably uses `hr_version`). Usable but **not validated for 2.0** — see [Factorio 2.0 migration](../../migration-2.0.md).
+> **Note — 1.x leftovers**: the internal `make_resource()` template (used when `bStandard = true`) still contains legacy keys (`hr_version`, `icon_mipmaps`) that Factorio silently ignores. See [1.x API leftovers](../../debt/api-1.x-leftover.md).
 
 | | |
 |---|---|
@@ -35,19 +35,21 @@ Deep-copies `data.raw["resource"][resource]` into `prototype`. No-op if the reso
 ## Methods
 
 #### `:remove()` → [`RitnProtoOre`](RitnProtoOre.md)
-Full purge: removes the `resource` prototype, the `autoplace-control`, the entry in every map-gen-preset's `autoplace_controls`, and the `"infinite-<name>"` companion if it exists.
+Full purge: removes the `resource` prototype, the `autoplace-control`, the entry in every map-gen-preset's `autoplace_controls` **and** in every planet's `map_gen_settings` (`autoplace_controls` + `autoplace_settings.entity.settings`, Factorio 2.0+), then does the same for the `"infinite-<name>"` companion if it exists. Without the planet cleanup, the game crashed at planet setup ("`<ore>` is not a valid autoplace control name").
 
-#### `RitnProtoOre.active(resource, bStart, bStandard)`
-**Static** helper (dot, not `:`). Initializes the patch set and registers the autoplace-control + resource via `data:extend`, from `lualib/vanilla/ores.lua`.
+#### `RitnProtoOre.active(resource, bStart, bStandard, planets?)`
+**Static** helper (dot, not `:`). Initializes the patch set and registers the autoplace-control + resource via `data:extend`, from `lualib/vanilla/ores.lua`. Also registers the ore into the `map_gen_settings` of the specified planets (required in Factorio 2.x for the ore to spawn).
 
 **Parameters**
 - `resource` :: `string` — ore key in `lualib/vanilla/ores.lua`.
 - `bStart` :: `boolean` — seed the patch set near the starting area.
 - `bStandard` :: `boolean` — if `true`, build the resource via the internal template; otherwise use `ores[resource].resource` as-is.
+- `planets` :: `string[]?` — list of planets (default `{"nauvis"}`). The ore is added to the `map_gen_settings` of those planets only.
 
 ```lua
 local RitnProtoOre = require(ritnlib.defines.class.prototype.ore)
-RitnProtoOre.active("silica-sand", true, false)
+RitnProtoOre.active("silica-sand", true, false)          -- nauvis only
+RitnProtoOre.active("silica-sand", true, false, {"nauvis", "vulcanus"})
 ```
 
 > The generic mutators (`:changePrototype`…) are inherited from [`RitnPrototype`](RitnPrototype.md).

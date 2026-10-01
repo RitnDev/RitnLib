@@ -19,6 +19,8 @@ lang: fr
 >
 > Volontairement **exclu des annotations LuaLS** de RitnLib (comme tout `vanilla/`), donc non re-documenté fonction par fonction ici.
 
+> **Version de référence** — le fork date de Factorio 1.x. Seul `util.product_amount()` a été réaligné sur le `util.lua` de Factorio **2.1** (0.10.5) : il applique `extra_count_fraction`, `independent_probability` puis `shared_probability`. Voir [Migration Factorio 2.1](../../migration-2.1.md).
+
 ## Voir aussi
 
 - [Carte des classes](../overview.md) · [`vanilla/crash-site`](crash-site.md) · [`vanilla/ores`](ores.md) · [`vanilla/types`](types.md)

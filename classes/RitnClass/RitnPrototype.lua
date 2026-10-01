@@ -3,6 +3,7 @@
 local class = require("__RitnLib__.core.class")
 local entity_types = require("__RitnLib__.lualib.vanilla.types_entity")
 local item_types = require("__RitnLib__.lualib.vanilla.types_item")
+local equipment_types = require("__RitnLib__.lualib.vanilla.types_equipment")
 ----------------------------------------------------------------
 
 ---**EN**
@@ -49,7 +50,7 @@ end) --[[@as RitnPrototype]]
 ---@return string?  Resolved item type or nil if no match
 function RitnPrototype:getItemType()
     for i, type_name in pairs(item_types) do
-        if data.raw[type_name][self.name] then
+        if data.raw[type_name] and data.raw[type_name][self.name] then
             self.type = type_name
             return type_name
         end
@@ -72,7 +73,30 @@ end
 ---@return string?  Resolved entity type or nil if no match
 function RitnPrototype:getEntityType()
     for i, type_name in pairs(entity_types) do
-        if data.raw[type_name][self.name] then
+        if data.raw[type_name] and data.raw[type_name][self.name] then
+            self.type = type_name
+            return type_name
+        end
+    end
+    return nil
+end
+
+
+-- Recupère le type parmis tous les types d'équipement possible
+
+---**EN**
+---
+---Description: Iterates over `lualib.vanilla.types_equipment` and returns the first equipment-type for which `data.raw[type_name][self.name]` exists. Sets `self.type` as a side effect.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Itère sur `lualib.vanilla.types_equipment` et retourne le premier type-equipment pour lequel `data.raw[type_name][self.name]` existe. Met à jour `self.type` au passage.
+---@return string?  Resolved equipment type or nil if no match
+function RitnPrototype:getEquipmentType()
+    for i, type_name in pairs(equipment_types) do
+        if data.raw[type_name] and data.raw[type_name][self.name] then
             self.type = type_name
             return type_name
         end

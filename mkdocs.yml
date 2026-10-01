@@ -95,6 +95,7 @@ nav:
       - RitnProtoItemSubgroup: reference/prototype/RitnProtoItemSubgroup.md
       - RitnProtoRecipeCategory: reference/prototype/RitnProtoRecipeCategory.md
       - RitnProtoFuelCategory: reference/prototype/RitnProtoFuelCategory.md
+      - RitnProtoTile: reference/prototype/RitnProtoTile.md
       - RitnProtoCustomInput: reference/prototype/RitnProtoCustomInput.md
       - RitnProtoUtilityConst: reference/prototype/RitnProtoUtilityConst.md
     - Settings: reference/settings/RitnLibSetting.md
@@ -133,6 +134,6 @@ nav:
   - Dette:
     - Bugs connus: debt/known-bugs.md
     - APIs dépréciées: debt/deprecated.md
-    - Résidus API 1.x: debt/api-1.x-residuelle.md
+    - Résidus API 1.x: debt/api-1.x-leftover.md
     - Migration Factorio 2.0: migration-2.0.md
     - Migration Factorio 2.1: migration-2.1.md

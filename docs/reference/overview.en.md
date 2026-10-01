@@ -73,6 +73,7 @@ These classes are also reachable via `require` (keys `ritnlib.defines.class.luaC
 | [`RitnProtoItemSubgroup`](prototype/RitnProtoItemSubgroup.md) | `prototype.subgroup` | `data.raw["item-subgroup"]` | Item subgroups (crafting rows). |
 | [`RitnProtoRecipeCategory`](prototype/RitnProtoRecipeCategory.md) | `prototype.category` | `data.raw["recipe-category"]` | Recipe categories. ⚠ Declared **without** inheriting `RitnPrototype`: generic mutators are not available. |
 | [`RitnProtoFuelCategory`](prototype/RitnProtoFuelCategory.md) | `prototype.fuelCategory` | `data.raw["fuel-category"]` | Fuel categories. |
+| [`RitnProtoTile`](prototype/RitnProtoTile.md) | `prototype.tile` | `data.raw["tile"]` | Floor tiles (blueprintable…). |
 | [`RitnProtoCustomInput`](prototype/RitnProtoCustomInput.md) | `prototype.customInput` | `data.raw["custom-input"]` | Custom keyboard shortcuts. |
 | [`RitnProtoUtilityConst`](prototype/RitnProtoUtilityConst.md) | `prototype.utility.constants` | `data.raw["utility-constants"].default` | Engine UI constants. |
 | [`RitnIngredient`](prototype/RitnIngredient.md) | `ritnClass.ingredient` | ingredient table | Recipe-ingredient normalization. |

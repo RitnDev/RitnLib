@@ -30,7 +30,7 @@ Builds the wrapper and extracts every field from the payload **at construction t
 - `event` :: [`EventData`](https://lua-api.factorio.com/latest/concepts/EventData.html) — the payload your handler receives.
 - `mod_name` :: `string?` — consuming mod name, used by derived classes (GUI in particular). Default: `"RitnLib"`.
 
-**Return value** → [`RitnLibEvent`](RitnLibEvent.md). If `event` is `nil`, the instance is returned with [`isPresent`](#ispresent--boolean-read) set to `false` and no other field populated.
+**Return value** → [`RitnLibEvent`](RitnLibEvent.md). If `event` is `nil`, the instance is returned with [`isPresent`](#ispresent-boolean-read) set to `false` and no other field populated.
 
 ```lua
 script.on_event(defines.events.on_player_created, function(event)
@@ -94,7 +94,7 @@ First available among `buffer`, `loot`, `items`, `inventory`.
 `event.cause` (death events: the originating entity).
 
 #### `reason` :: [`defines.disconnect_reason`](https://lua-api.factorio.com/latest/defines.html#defines.disconnect_reason)`?` `[Read]`
-`event.reason` (disconnect events). See [`:getReason()`](#getreason--string) for the symbolic name.
+`event.reason` (disconnect events). See [`:getReason()`](#getreason-string) for the symbolic name.
 
 #### `queued_count` :: `number?` `[Read]`
 `event.queued_count` (chunk requests).
@@ -128,23 +128,23 @@ Symbolic name resolved from `event.gui_type` (`defines.gui_type`).
 ## Methods
 
 #### `:getPlayer()` → [`RitnLibPlayer`](RitnLibPlayer.md)
-Wraps [`player`](#player--luaplayer-read) in a [`RitnLibPlayer`](RitnLibPlayer.md) (fast force/surface/character access…).
+Wraps [`player`](#player-luaplayer-read) in a [`RitnLibPlayer`](RitnLibPlayer.md) (fast force/surface/character access…).
 
 ```lua
 local rPlayer = RitnLibEvent(event):getPlayer()
 ```
 
 #### `:getSurface()` → [`RitnLibSurface`](RitnLibSurface.md)
-Wraps [`surface`](#surface--luasurface-read) in a [`RitnLibSurface`](RitnLibSurface.md).
+Wraps [`surface`](#surface-luasurface-read) in a [`RitnLibSurface`](RitnLibSurface.md).
 
 #### `:getForce()` → [`RitnLibForce`](RitnLibForce.md)
-Wraps [`force`](#force--luaforce-read) in a [`RitnLibForce`](RitnLibForce.md).
+Wraps [`force`](#force-luaforce-read) in a [`RitnLibForce`](RitnLibForce.md).
 
 #### `:getTechnology()` → [`RitnLibTechnology`](RitnLibTechnology.md)
-Wraps [`technology`](#technology--luatechnology-read) in a [`RitnLibTechnology`](RitnLibTechnology.md).
+Wraps [`technology`](#technology-luatechnology-read) in a [`RitnLibTechnology`](RitnLibTechnology.md).
 
 #### `:getReason()` → `string?`
-Translates [`reason`](#reason--definesdisconnect_reason-read) (a `defines.disconnect_reason`) into a symbolic name, for disconnect events.
+Translates [`reason`](#reason-definesdisconnect_reason-read) (a `defines.disconnect_reason`) into a symbolic name, for disconnect events.
 
 **Return value** → `string?` — one of `"quit"`, `"dropped"`, `"reconnect"`, `"wrong_input"`, `"desync_limit_reached"`, `"cannot_keep_up"`, `"afk"`, `"kicked"`, `"kicked_and_deleted"`, `"banned"`, `"switching_servers"`; `nil` if unmatched.
 

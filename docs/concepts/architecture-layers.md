@@ -111,6 +111,7 @@ Manipulateurs de `data.raw` :
 | `RitnProtoStyle` | `data.raw["gui-style"].default[<style>]` |
 | `RitnProtoItemGroup`, `RitnProtoItemSubgroup` | groupes |
 | `RitnProtoRecipeCategory`, `RitnProtoFuelCategory` | catégories |
+| `RitnProtoTile` | `data.raw.tile` |
 | `RitnProtoCustomInput` | `data.raw["custom-input"]` |
 | `RitnProtoUtilityConst` | `data.raw["utility-constants"].default[<key>]` |
 

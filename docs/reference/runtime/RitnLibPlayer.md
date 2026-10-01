@@ -29,14 +29,14 @@ Valide l'entrée puis fige les champs joueur. L'entrée est rejetée si ce n'est
 **Paramètres**
 - `player` :: [`LuaPlayer`](https://lua-api.factorio.com/latest/classes/LuaPlayer.html) — le joueur à encapsuler.
 
-**Valeur de retour** → [`RitnLibPlayer`](RitnLibPlayer.md). En cas d'entrée invalide, l'instance est renvoyée avec [`isPresent`](#ispresent--boolean-read) à `false` et aucun autre champ peuplé.
+**Valeur de retour** → [`RitnLibPlayer`](RitnLibPlayer.md). En cas d'entrée invalide, l'instance est renvoyée avec [`isPresent`](#ispresent-boolean-read) à `false` et aucun autre champ peuplé.
 
 ```lua
 local rPlayer = RitnLibPlayer(game.get_player(event.player_index))
 if not rPlayer.isPresent then return end
 ```
 
-> **Note** — Le plus souvent, on obtient un `RitnLibPlayer` via [`RitnLibEvent:getPlayer()`](RitnLibEvent.md#getplayer--ritnlibplayer) plutôt qu'en appelant le constructeur à la main.
+> **Note** — Le plus souvent, on obtient un `RitnLibPlayer` via [`RitnLibEvent:getPlayer()`](RitnLibEvent.md#getplayer-ritnlibplayer) plutôt qu'en appelant le constructeur à la main.
 
 ---
 
@@ -98,10 +98,10 @@ RitnLibPlayer(player):print("Hello")
 ```
 
 #### `:getForce()` → [`RitnLibForce`](RitnLibForce.md)
-Enveloppe [`force`](#force--luaforce-read) dans un [`RitnLibForce`](RitnLibForce.md).
+Enveloppe [`force`](#force-luaforce-read) dans un [`RitnLibForce`](RitnLibForce.md).
 
 #### `:getSurface()` → [`RitnLibSurface`](RitnLibSurface.md)
-Enveloppe [`surface`](#surface--luasurface-read) dans un [`RitnLibSurface`](RitnLibSurface.md).
+Enveloppe [`surface`](#surface-luasurface-read) dans un [`RitnLibSurface`](RitnLibSurface.md).
 
 #### `:cancel_all_crafting()`
 Annule toutes les entrées de la file de craft du joueur. Encapsulé dans un `pcall` — les erreurs sont silencieusement ignorées.
@@ -142,8 +142,8 @@ rPlayer.player.print({ "msg.send-request", self.name }, { r = 1, g = 0, b = 0, a
 ## Remarques
 
 - **Wrapper temporaire** — ne jamais stocker l'instance dans `storage` ; la reconstruire dans chaque handler. Voir [Wrappers temporaires](../../concepts/temporary-wrappers.md).
-- **Champs snapshot** — `surface`, `force`, `admin`, `driving`, `connected`, `vehicle` sont figés à la construction. Pour une valeur fraîche, relis depuis [`player`](#player--luaplayer-read) ou reconstruis le wrapper.
-- **God / editor** — [`character`](#character--luaentity-read) vaut `nil` dans ces contrôleurs.
+- **Champs snapshot** — `surface`, `force`, `admin`, `driving`, `connected`, `vehicle` sont figés à la construction. Pour une valeur fraîche, relis depuis [`player`](#player-luaplayer-read) ou reconstruis le wrapper.
+- **God / editor** — [`character`](#character-luaentity-read) vaut `nil` dans ces contrôleurs.
 
 ## Voir aussi
 

@@ -30,9 +30,9 @@ Validates the input then freezes the fields. Rejects an input that is not a vali
 **Parameters**
 - `technology` :: [`LuaTechnology`](https://lua-api.factorio.com/latest/classes/LuaTechnology.html) — the runtime technology (e.g. `event.research`).
 
-**Return value** → [`RitnLibTechnology`](RitnLibTechnology.md). On invalid input, [`isPresent`](#ispresent--boolean-read) is `false`.
+**Return value** → [`RitnLibTechnology`](RitnLibTechnology.md). On invalid input, [`isPresent`](#ispresent-boolean-read) is `false`.
 
-> **Note** — Most often obtained via [`RitnLibForce:getTechnology(name)`](RitnLibForce.md#gettechnologytech_name--ritnlibtechnology) or directly from `event.research`.
+> **Note** — Most often obtained via [`RitnLibForce:getTechnology(name)`](RitnLibForce.md#gettechnologytech_name-ritnlibtechnology) or directly from `event.research`.
 
 ---
 
@@ -48,7 +48,7 @@ Technology name (snapshot).
 Force the technology belongs to (snapshot).
 
 #### `entity_type` :: `string` `[Read]`
-Default entity type targeted by [`:updateRecipe`](#updaterecipetechfinished-disabletabrecipes-setrecipe-entitytype--ritnlibtechnology) (default `"assembling-machine"`).
+Default entity type targeted by [`:updateRecipe`](#updaterecipetechfinished-disabletabrecipes-setrecipe-entitytype-ritnlibtechnology) (default `"assembling-machine"`).
 
 #### `isPresent` :: `boolean` `[Read]`
 `false` if the constructor rejected its input. Test it as a guard.

@@ -19,6 +19,8 @@ A **copy** of Factorio's engine `util` file.
 >
 > Deliberately **excluded from RitnLib's LuaLS annotations** (like all of `vanilla/`), so not re-documented function by function here.
 
+> **Reference version** — the fork dates from Factorio 1.x. Only `util.product_amount()` was realigned with Factorio **2.1**'s `util.lua` (0.10.5): it applies `extra_count_fraction`, `independent_probability`, then `shared_probability`. See [Factorio 2.1 migration](../../migration-2.1.md).
+
 ## See also
 
 - [Class map](../overview.md) · [`vanilla/crash-site`](crash-site.md) · [`vanilla/ores`](ores.md) · [`vanilla/types`](types.md)

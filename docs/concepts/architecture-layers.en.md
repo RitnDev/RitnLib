@@ -111,6 +111,7 @@ Hybrid or more complex classes:
 | `RitnProtoStyle` | `data.raw["gui-style"].default[<style>]` |
 | `RitnProtoItemGroup`, `RitnProtoItemSubgroup` | groups |
 | `RitnProtoRecipeCategory`, `RitnProtoFuelCategory` | categories |
+| `RitnProtoTile` | `data.raw.tile` |
 | `RitnProtoCustomInput` | `data.raw["custom-input"]` |
 | `RitnProtoUtilityConst` | `data.raw["utility-constants"].default[<key>]` |
 

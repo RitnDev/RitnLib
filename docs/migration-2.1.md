@@ -10,7 +10,7 @@ lang: fr-en
 
 RitnLib est passée en `factorio_version = "2.1"` avec la **0.10.3**. Cette page recense ce que le passage en 2.1 a changé pour la bibliothèque. Elle est construite en croisant les sources avec `runtime-api.json` / `prototype-api.json` **2.1.17** et les **945 entrées** du `changelog.txt` officiel pour les versions 2.1.x.
 
-Contrairement à [Migration 2.0](migration-2.0.md), la surface touchée est petite : un seul cassage dur, déjà corrigé, et deux résidus.
+Contrairement à [Migration 2.0](migration-2.0.md), la surface touchée est petite. Depuis la **0.10.5**, tous les points relevés sont corrigés ; il ne reste qu'une clé morte sans effet (`setHidden`, cf. §5).
 
 ---
 
@@ -22,7 +22,7 @@ Contrairement à [Migration 2.0](migration-2.0.md), la surface touchée est peti
 
 ---
 
-## 2. À corriger — `probability` sur les produits de recette
+## 2. Corrigé — `probability` → `independent_probability` (0.10.5)
 
 `changelog.txt` [2.1.7] : *« Changed ProductPrototype into ProductPrototypeBase. Added `independent_probability`, replacing `ItemProductPrototype::probability` and `FluidProductPrototype::probability`. »*
 
@@ -31,49 +31,50 @@ Schéma 2.1.17 : ni `ItemProductPrototype` ni `FluidProductPrototype` n'exposent
 - **`independent_probability`** — remplacement direct de l'ancien `probability` (tirage indépendant par produit).
 - **`shared_probability`** — nouveauté : un tirage commun à plusieurs produits, exprimé en intervalle `{min, max}`.
 
-### 2.1 Plantage potentiel — `lualib/vanilla/util.lua:561`
+Écrite dans les `results` d'une recette, l'ancienne clé était **ignorée sans erreur**. Corrections apportées en **0.10.5** :
 
-```lua
-util.product_amount = function(product)
-  return product.probability * (product.amount or ((product.amount_min + product.amount_max) / 2))
-end
-```
+| Emplacement | Avant | Après |
+|---|---|---|
+| [`RitnIngredient`](reference/prototype/RitnIngredient.md) | normalisait vers `probability` | écrit `independent_probability` ; l'ancienne clé `probability` reste acceptée en entrée. Les champs annexes de l'entrée (`temperature`, `extra_count_fraction`…) sont désormais conservés. |
+| `RitnIngredient` — helper `getItem()` | lisait `ingredient.inputs.probability` (sous-table inexistante) | lit `independent_probability` ou `probability` |
+| `lualib/vanilla/util.lua` — `util.product_amount()` | `product.probability * amount` → plantage si `nil` | réaligné sur le `util.lua` vanilla 2.1 : `extra_count_fraction`, puis `independent_probability`, puis `shared_probability` (`max - min`) |
+| `lualib/vanilla/ores.lua` — huile brute | `probability = 1` | `independent_probability = 1` |
 
-`product.probability` vaut désormais toujours `nil` → `nil * nombre` → « attempt to perform arithmetic on a nil value ».
-
-Le `util.lua` **vanilla** de 2.1 a été réécrit pour cette rupture (`core/lualib/util.lua`) : il applique `extra_count_fraction`, puis `independent_probability`, puis `shared_probability` (via `max - min`). Le fork de RitnLib est resté sur la version 1.x.
-
-- **Atténuation** : `util.product_amount` n'est appelée **nulle part** — ni dans RitnLib, ni dans RitnWaterfill, ni dans RitnCoreGame. La fonction est morte, donc inoffensive en l'état.
-- **Migration** : réaligner le fork sur l'implémentation vanilla 2.1.
-
-### 2.2 Perte silencieuse — `classes/RitnClass/RitnIngredient.lua`
-
-La classe normalise vers `{name, type, amount, amount_min, amount_max, probability}` :
-
-| Ligne | Rôle |
-|---|---|
-| 63 | `self.probability = ingredient.probability` — lecture depuis l'ingrédient source |
-| 87 | `probability = self.probability` — construction du payload normalisé |
-| 133 | `item.probability = ingredient.inputs.probability` — déjà cassé avant 2.1, cf. [bugs connus](debt/known-bugs.md) |
-| 190-196 | `:combine()` — moyenne les `probability` des deux ingrédients |
-
-Écrite dans les `results` d'une recette, la clé `probability` est maintenant **ignorée** : la probabilité disparaît sans erreur. Le chemin est vivant — `RitnProtoRecipe` utilise `RitnIngredient` (`classes/prototypes/Recipe.lua:208-271`).
-
-- **Migration** : renommer en `independent_probability` sur le payload de sortie. La sémantique de moyennage de `:combine()` reste valable telle quelle.
-
-### 2.3 Clé morte — `lualib/vanilla/ores.lua:295`
-
-`probability = 1` dans les `results` de l'huile brute. Valeur neutre, donc aucun effet visible, mais la clé ne sert plus à rien.
+Les nouvelles méthodes [`RitnProtoRecipe`](reference/prototype/RitnProtoRecipe.md) `:addResult()` / `:removeResult()` / `:setResult()` passent par `RitnIngredient` et écrivent donc directement la bonne clé.
 
 ---
 
-## 3. Faux positifs écartés
+## 3. Nouveau — catégories de recette (0.10.5)
+
+En 2.1, `RecipePrototype` utilise la liste **`categories`** à la place des clés `category` / `additional_categories`. [`RitnProtoRecipe`](reference/prototype/RitnProtoRecipe.md) expose :
+
+- `:setCategories(categories)` — remplace la liste et supprime les clés legacy si présentes ;
+- `:addCategory(category)` — ajoute une catégorie, en partant de `{"crafting"}` si la recette n'en a pas.
+
+---
+
+## 4. Corrigé — listes de types et `data.raw` (0.10.5)
+
+- `RitnPrototype:getItemType()` / `:getEntityType()` plantaient quand un type de la liste n'existe plus dans `data.raw` (ex : `item-with-label` en 2.1). Les types absents sont désormais ignorés. Même comportement pour le nouveau `:getEquipmentType()`.
+- `lualib/vanilla/types_item.lua` : ajout de `space-platform-starter-pack`, retrait de `mining-tool`, `tool` remonté dans la liste. `types_entity.lua` aligné sur les types 2.x. Nouvelle liste `types_equipment.lua`. Voir [Listes de types](reference/vanilla/types.md).
+
+> Les corrections de [`RitnProtoOre`](reference/prototype/RitnProtoOre.md) liées aux planètes (`active()` avec `planets`, `remove()` qui nettoie le `map_gen_settings` des planètes) relèvent du modèle de planètes introduit en **2.0** : elles sont décrites dans la page de la classe.
+
+---
+
+## 5. Reste — clé morte dans `setHidden()`
+
+`RitnProtoRecipe:setHidden(value, crafting, stats)` écrit `hide_from_player_stats`, qui n'existe dans aucune version du schéma (la clé correcte est `hide_from_stats`). Le paramètre `stats` est donc sans effet. Pas lié à 2.1 : voir [Résidus API 1.x](debt/api-1.x-leftover.md).
+
+---
+
+## 6. Faux positifs écartés
 
 Remontés par le croisement automatique avec le changelog, vérifiés et écartés :
 
 | Piste | Entrée 2.1.x concernée | Pourquoi c'est un faux positif |
 |---|---|---|
-| `.active` — `classes/prototypes/Ore.lua:161` | `LuaEntity::active` write retiré | C'est `function RitnProtoOre.active(...)`, une méthode de la classe maison |
+| `.active` — `classes/prototypes/Ore.lua` | `LuaEntity::active` write retiré | C'est `function RitnProtoOre.active(...)`, une méthode de la classe maison |
 | `.inventory_size` — `classes/RitnClass/RitnInventory.lua` | `LuaItemPrototype::inventory_size` read retiré | Champ propre à `RitnLibInventory` (`= self.INVENTORY_SIZE_MAX`, 65535), passé à `game.create_inventory()` |
 | `.loot` — `classes/LuaClass/RitnEvent.lua:225` | `EntityWithHealthPrototype::loot` changé en tableau | L'event `on_entity_died` porte toujours `loot` en 2.1.17 ; l'entrée visait le data stage |
 
@@ -82,7 +83,7 @@ Remontés par le croisement automatique avec le changelog, vérifiés et écart�
 ## Voir aussi
 
 - [Migration Factorio 2.0](migration-2.0.md)
-- [Résidus API 1.x](debt/api-1.x-residuelle.md)
+- [Résidus API 1.x](debt/api-1.x-leftover.md)
 - [Bugs connus](debt/known-bugs.md)
 - Sources : [API 2.1.17](https://lua-api.factorio.com/latest/), `data/changelog.txt` de l'install Factorio 2.1
 
@@ -97,7 +98,7 @@ Remontés par le croisement automatique avec le changelog, vérifiés et écart�
 
 RitnLib moved to `factorio_version = "2.1"` in **0.10.3**. This page lists what the move to 2.1 changed for the library. It is built by cross-checking the sources against `runtime-api.json` / `prototype-api.json` **2.1.17** and the **945 entries** of the official `changelog.txt` for the 2.1.x versions.
 
-Unlike [2.0 migration](migration-2.0.md), the affected surface is small: a single hard break, already fixed, plus two leftovers.
+Unlike [2.0 migration](migration-2.0.md), the affected surface is small. Since **0.10.5**, every item found is fixed; only one dead key with no effect remains (`setHidden`, see §5).
 
 ---
 
@@ -109,7 +110,7 @@ Unlike [2.0 migration](migration-2.0.md), the affected surface is small: a singl
 
 ---
 
-## 2. To fix — `probability` on recipe products
+## 2. Fixed — `probability` → `independent_probability` (0.10.5)
 
 `changelog.txt` [2.1.7]: *"Changed ProductPrototype into ProductPrototypeBase. Added `independent_probability`, replacing `ItemProductPrototype::probability` and `FluidProductPrototype::probability`."*
 
@@ -118,49 +119,50 @@ Unlike [2.0 migration](migration-2.0.md), the affected surface is small: a singl
 - **`independent_probability`** — direct replacement for the old `probability` (independent roll per product).
 - **`shared_probability`** — new: a roll shared across several products, expressed as a `{min, max}` range.
 
-### 2.1 Potential crash — `lualib/vanilla/util.lua:561`
+Written into a recipe's `results`, the old key was **silently ignored**. Fixes made in **0.10.5**:
 
-```lua
-util.product_amount = function(product)
-  return product.probability * (product.amount or ((product.amount_min + product.amount_max) / 2))
-end
-```
+| Location | Before | After |
+|---|---|---|
+| [`RitnIngredient`](reference/prototype/RitnIngredient.en.md) | normalised to `probability` | writes `independent_probability`; the legacy `probability` key is still accepted as input. The entry's extra fields (`temperature`, `extra_count_fraction`…) are now kept. |
+| `RitnIngredient` — `getItem()` helper | read `ingredient.inputs.probability` (nonexistent sub-table) | reads `independent_probability` or `probability` |
+| `lualib/vanilla/util.lua` — `util.product_amount()` | `product.probability * amount` → crash if `nil` | realigned with the vanilla 2.1 `util.lua`: `extra_count_fraction`, then `independent_probability`, then `shared_probability` (`max - min`) |
+| `lualib/vanilla/ores.lua` — crude oil | `probability = 1` | `independent_probability = 1` |
 
-`product.probability` is now always `nil` → `nil * number` → "attempt to perform arithmetic on a nil value".
-
-The **vanilla** 2.1 `util.lua` was rewritten for this break (`core/lualib/util.lua`): it applies `extra_count_fraction`, then `independent_probability`, then `shared_probability` (via `max - min`). RitnLib's fork stayed on the 1.x version.
-
-- **Mitigation**: `util.product_amount` is called **nowhere** — not in RitnLib, not in RitnWaterfill, not in RitnCoreGame. The function is dead, hence harmless as it stands.
-- **Migration**: realign the fork with the vanilla 2.1 implementation.
-
-### 2.2 Silent loss — `classes/RitnClass/RitnIngredient.lua`
-
-The class normalises to `{name, type, amount, amount_min, amount_max, probability}`:
-
-| Line | Role |
-|---|---|
-| 63 | `self.probability = ingredient.probability` — read from the source ingredient |
-| 87 | `probability = self.probability` — building the normalised payload |
-| 133 | `item.probability = ingredient.inputs.probability` — already broken before 2.1, see [known bugs](debt/known-bugs.en.md) |
-| 190-196 | `:combine()` — averages both ingredients' `probability` |
-
-Written into a recipe's `results`, the `probability` key is now **ignored**: the probability vanishes with no error. The path is live — `RitnProtoRecipe` uses `RitnIngredient` (`classes/prototypes/Recipe.lua:208-271`).
-
-- **Migration**: rename to `independent_probability` on the output payload. `:combine()`'s averaging semantics stay valid as they are.
-
-### 2.3 Dead key — `lualib/vanilla/ores.lua:295`
-
-`probability = 1` in crude oil's `results`. A neutral value, so no visible effect, but the key no longer does anything.
+The new [`RitnProtoRecipe`](reference/prototype/RitnProtoRecipe.en.md) methods `:addResult()` / `:removeResult()` / `:setResult()` go through `RitnIngredient` and therefore write the right key directly.
 
 ---
 
-## 3. Dismissed false positives
+## 3. New — recipe categories (0.10.5)
+
+In 2.1, `RecipePrototype` uses the **`categories`** list instead of the `category` / `additional_categories` keys. [`RitnProtoRecipe`](reference/prototype/RitnProtoRecipe.en.md) provides:
+
+- `:setCategories(categories)` — replaces the list and clears the legacy keys if present;
+- `:addCategory(category)` — appends a category, starting from `{"crafting"}` if the recipe has none.
+
+---
+
+## 4. Fixed — type lists and `data.raw` (0.10.5)
+
+- `RitnPrototype:getItemType()` / `:getEntityType()` crashed when a list type no longer exists in `data.raw` (e.g. `item-with-label` in 2.1). Missing types are now skipped. Same behaviour for the new `:getEquipmentType()`.
+- `lualib/vanilla/types_item.lua`: added `space-platform-starter-pack`, removed `mining-tool`, `tool` moved up the list. `types_entity.lua` aligned with the 2.x types. New `types_equipment.lua` list. See [Type lists](reference/vanilla/types.en.md).
+
+> The planet-related [`RitnProtoOre`](reference/prototype/RitnProtoOre.en.md) fixes (`active()` with `planets`, `remove()` cleaning the planets' `map_gen_settings`) belong to the planet model introduced in **2.0**: they are described on the class page.
+
+---
+
+## 5. Remaining — dead key in `setHidden()`
+
+`RitnProtoRecipe:setHidden(value, crafting, stats)` writes `hide_from_player_stats`, which exists in no version of the schema (the correct key is `hide_from_stats`). The `stats` parameter therefore has no effect. Not related to 2.1: see [1.x API leftovers](debt/api-1.x-leftover.md).
+
+---
+
+## 6. Dismissed false positives
 
 Raised by the automated cross-check against the changelog, verified and dismissed:
 
 | Lead | Relevant 2.1.x entry | Why it is a false positive |
 |---|---|---|
-| `.active` — `classes/prototypes/Ore.lua:161` | `LuaEntity::active` write removed | It is `function RitnProtoOre.active(...)`, a method of the in-house class |
+| `.active` — `classes/prototypes/Ore.lua` | `LuaEntity::active` write removed | It is `function RitnProtoOre.active(...)`, a method of the in-house class |
 | `.inventory_size` — `classes/RitnClass/RitnInventory.lua` | `LuaItemPrototype::inventory_size` read removed | Own field of `RitnLibInventory` (`= self.INVENTORY_SIZE_MAX`, 65535), passed to `game.create_inventory()` |
 | `.loot` — `classes/LuaClass/RitnEvent.lua:225` | `EntityWithHealthPrototype::loot` changed to an array | The `on_entity_died` event still carries `loot` in 2.1.17; the entry targeted the data stage |
 

@@ -30,9 +30,9 @@ Valide l'entrée puis stocke la recette et son prototype. Rejette une entrée qu
 **Paramètres**
 - `recipe` :: [`LuaRecipe`](https://lua-api.factorio.com/latest/classes/LuaRecipe.html) — la recette runtime à encapsuler.
 
-**Valeur de retour** → [`RitnLibRecipe`](RitnLibRecipe.md). En cas d'entrée invalide, [`isPresent`](#ispresent--boolean-read) vaut `false`.
+**Valeur de retour** → [`RitnLibRecipe`](RitnLibRecipe.md). En cas d'entrée invalide, [`isPresent`](#ispresent-boolean-read) vaut `false`.
 
-> **Note** — Le plus souvent on l'obtient via [`RitnLibForce:getRecipe(name)`](RitnLibForce.md#getrecipename--ritnlibrecipe).
+> **Note** — Le plus souvent on l'obtient via [`RitnLibForce:getRecipe(name)`](RitnLibForce.md#getreciperecipe_name-ritnlibrecipe).
 
 ---
 
@@ -52,7 +52,7 @@ Le prototype de la recette (depuis `LuaRecipe.prototype`).
 ## Méthodes
 
 #### `:getProperties(propertie)` → `any`
-Lit une propriété sur le **prototype** de la recette (ex. `"category"`, `"energy_required"`, `"hidden"`).
+Lit une propriété sur le **prototype** de la recette (ex. `"categories"`, `"energy_required"`, `"hidden"`).
 
 **Paramètres** : `propertie` :: `string`.
 

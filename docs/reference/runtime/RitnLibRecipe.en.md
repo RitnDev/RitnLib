@@ -30,9 +30,9 @@ Validates the input then stores the recipe and its prototype. Rejects an input t
 **Parameters**
 - `recipe` :: [`LuaRecipe`](https://lua-api.factorio.com/latest/classes/LuaRecipe.html) — the runtime recipe to wrap.
 
-**Return value** → [`RitnLibRecipe`](RitnLibRecipe.md). On invalid input, [`isPresent`](#ispresent--boolean-read) is `false`.
+**Return value** → [`RitnLibRecipe`](RitnLibRecipe.md). On invalid input, [`isPresent`](#ispresent-boolean-read) is `false`.
 
-> **Note** — Most often obtained via [`RitnLibForce:getRecipe(name)`](RitnLibForce.md#getrecipename--ritnlibrecipe).
+> **Note** — Most often obtained via [`RitnLibForce:getRecipe(name)`](RitnLibForce.md#getreciperecipe_name-ritnlibrecipe).
 
 ---
 
@@ -52,7 +52,7 @@ The recipe's prototype (from `LuaRecipe.prototype`).
 ## Methods
 
 #### `:getProperties(propertie)` → `any`
-Reads a property from the recipe's **prototype** (e.g. `"category"`, `"energy_required"`, `"hidden"`).
+Reads a property from the recipe's **prototype** (e.g. `"categories"`, `"energy_required"`, `"hidden"`).
 
 **Parameters**: `propertie` :: `string`.
 

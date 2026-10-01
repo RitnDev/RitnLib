@@ -96,4 +96,4 @@ data:extend({
 ## Voir aussi
 
 - [Cycle de vie](../concepts/life-cycle.md)
-- [Référence : RitnLibSetting](../reference/runtime/RitnLibSetting.md)
+- [Référence : RitnLibSetting](../reference/settings/RitnLibSetting.md)

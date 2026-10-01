@@ -38,7 +38,7 @@ Pose `object_name`, `name`, `type`, et laisse `prototype` à `nil`. Les sous-cla
 Nom du prototype.
 
 #### `type` :: `string` `[Read]`
-Type résolu. Peut être mis à jour par [`:getItemType()`](#getitemtype--string) / [`:getEntityType()`](#getentitytype--string).
+Type résolu. Peut être mis à jour par [`:getItemType()`](#getitemtype-string) / [`:getEntityType()`](#getentitytype-string) / [`:getEquipmentType()`](#getequipmenttype-string).
 
 #### `prototype` :: `table?` `[Read]`
 Copie de travail de `data.raw[type][name]` (posée par la sous-classe). `nil` si l'entrée n'existe pas.
@@ -55,6 +55,11 @@ Parcourt `lualib.vanilla.types_item` et renvoie le premier type-item pour lequel
 
 #### `:getEntityType()` → `string?`
 Idem pour les types d'entité (`lualib.vanilla.types_entity`).
+
+#### `:getEquipmentType()` → `string?`
+Idem pour les types d'équipement (`lualib.vanilla.types_equipment`).
+
+> Les trois méthodes ignorent les types de la liste absents de `data.raw` (ex : `item-with-label` en Factorio 2.1) au lieu de planter.
 
 ---
 

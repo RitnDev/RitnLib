@@ -38,7 +38,7 @@ Sets `object_name`, `name`, `type`, and leaves `prototype` as `nil`. Subclasses 
 Prototype name.
 
 #### `type` :: `string` `[Read]`
-Resolved type. May be updated by [`:getItemType()`](#getitemtype--string) / [`:getEntityType()`](#getentitytype--string).
+Resolved type. May be updated by [`:getItemType()`](#getitemtype-string) / [`:getEntityType()`](#getentitytype-string) / [`:getEquipmentType()`](#getequipmenttype-string).
 
 #### `prototype` :: `table?` `[Read]`
 Working copy of `data.raw[type][name]` (set by the subclass). `nil` if the entry doesn't exist.
@@ -55,6 +55,11 @@ Iterates over `lualib.vanilla.types_item` and returns the first item-type for wh
 
 #### `:getEntityType()` → `string?`
 Same for entity types (`lualib.vanilla.types_entity`).
+
+#### `:getEquipmentType()` → `string?`
+Same for equipment types (`lualib.vanilla.types_equipment`).
+
+> All three methods skip the list types that are missing from `data.raw` (e.g. `item-with-label` in Factorio 2.1) instead of crashing.
 
 ---
 

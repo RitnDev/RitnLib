@@ -73,6 +73,7 @@ Clé `defines` = à préfixer par `ritnlib.defines.class.` dans le `require`.
 | [`RitnProtoItemSubgroup`](prototype/RitnProtoItemSubgroup.md) | `prototype.subgroup` | `data.raw["item-subgroup"]` | Sous-groupes d'items (lignes de crafting). |
 | [`RitnProtoRecipeCategory`](prototype/RitnProtoRecipeCategory.md) | `prototype.category` | `data.raw["recipe-category"]` | Catégories de recettes. ⚠ Déclarée **sans** héritage de `RitnPrototype` : les mutators génériques ne sont pas disponibles. |
 | [`RitnProtoFuelCategory`](prototype/RitnProtoFuelCategory.md) | `prototype.fuelCategory` | `data.raw["fuel-category"]` | Catégories de carburant. |
+| [`RitnProtoTile`](prototype/RitnProtoTile.md) | `prototype.tile` | `data.raw["tile"]` | Tuiles de sol (blueprintable…). |
 | [`RitnProtoCustomInput`](prototype/RitnProtoCustomInput.md) | `prototype.customInput` | `data.raw["custom-input"]` | Raccourcis clavier custom. |
 | [`RitnProtoUtilityConst`](prototype/RitnProtoUtilityConst.md) | `prototype.utility.constants` | `data.raw["utility-constants"].default` | Constantes d'interface du moteur. |
 | [`RitnIngredient`](prototype/RitnIngredient.md) | `ritnClass.ingredient` | table ingrédient | Normalisation d'un ingrédient de recette. |

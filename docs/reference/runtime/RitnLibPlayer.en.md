@@ -29,14 +29,14 @@ Validates the input then freezes the player fields. The input is rejected if it 
 **Parameters**
 - `player` :: [`LuaPlayer`](https://lua-api.factorio.com/latest/classes/LuaPlayer.html) — the player to wrap.
 
-**Return value** → [`RitnLibPlayer`](RitnLibPlayer.md). On invalid input, the instance is returned with [`isPresent`](#ispresent--boolean-read) set to `false` and no other field populated.
+**Return value** → [`RitnLibPlayer`](RitnLibPlayer.md). On invalid input, the instance is returned with [`isPresent`](#ispresent-boolean-read) set to `false` and no other field populated.
 
 ```lua
 local rPlayer = RitnLibPlayer(game.get_player(event.player_index))
 if not rPlayer.isPresent then return end
 ```
 
-> **Note** — Most of the time you get a `RitnLibPlayer` through [`RitnLibEvent:getPlayer()`](RitnLibEvent.md#getplayer--ritnlibplayer) rather than calling the constructor by hand.
+> **Note** — Most of the time you get a `RitnLibPlayer` through [`RitnLibEvent:getPlayer()`](RitnLibEvent.md#getplayer-ritnlibplayer) rather than calling the constructor by hand.
 
 ---
 
@@ -98,10 +98,10 @@ RitnLibPlayer(player):print("Hello")
 ```
 
 #### `:getForce()` → [`RitnLibForce`](RitnLibForce.md)
-Wraps [`force`](#force--luaforce-read) in a [`RitnLibForce`](RitnLibForce.md).
+Wraps [`force`](#force-luaforce-read) in a [`RitnLibForce`](RitnLibForce.md).
 
 #### `:getSurface()` → [`RitnLibSurface`](RitnLibSurface.md)
-Wraps [`surface`](#surface--luasurface-read) in a [`RitnLibSurface`](RitnLibSurface.md).
+Wraps [`surface`](#surface-luasurface-read) in a [`RitnLibSurface`](RitnLibSurface.md).
 
 #### `:cancel_all_crafting()`
 Cancels every entry in the player's crafting queue. Wrapped in a `pcall` — errors are silently swallowed.
@@ -142,8 +142,8 @@ rPlayer.player.print({ "msg.send-request", self.name }, { r = 1, g = 0, b = 0, a
 ## Remarks
 
 - **Temporary wrapper** — never store the instance in `storage`; rebuild it in each handler. See [Temporary wrappers](../../concepts/temporary-wrappers.md).
-- **Snapshot fields** — `surface`, `force`, `admin`, `driving`, `connected`, `vehicle` are frozen at construction. For a fresh value, read from [`player`](#player--luaplayer-read) or rebuild the wrapper.
-- **God / editor** — [`character`](#character--luaentity-read) is `nil` in those controllers.
+- **Snapshot fields** — `surface`, `force`, `admin`, `driving`, `connected`, `vehicle` are frozen at construction. For a fresh value, read from [`player`](#player-luaplayer-read) or rebuild the wrapper.
+- **God / editor** — [`character`](#character-luaentity-read) is `nil` in those controllers.
 
 ## See also
 

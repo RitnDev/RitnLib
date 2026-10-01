@@ -29,7 +29,6 @@ Genuine code defects (verified in source), but on paths **not exercised** by the
 | `RitnLibGuiElement:text()` | `classes/RitnClass/gui/RitnGuiElement.lua` | Tests `type(tooltip)` (undefined variable) instead of `type(text)` → the body never runs, text is never applied. Silent. Not exercised (consumers use `:caption()` / `:tooltip()`). | — |
 | `RitnLibStyle:straitFrame()` | `classes/RitnClass/gui/RitnStyle.lua` | Calls `self:standardFrame()` (nonexistent) → exception **if called**. Consumers use `:frame()`, `:menuButton()`, etc. (which work). | — |
 | `RitnLibStyle:visible()` | `classes/RitnClass/gui/RitnStyle.lua` | The `log` line concatenates `self.gui_name`, never defined on `RitnLibStyle` → exception **if called**. | — |
-| `RitnIngredient` — `getItem()` helper | `classes/RitnClass/RitnIngredient.lua:109` | On the probability branch, reads `ingredient.inputs.probability` (nonexistent sub-table) → "attempt to index a nil value". No usage found in consumer mods — **unconfirmed**. | to verify |
 
 ## Minor side effect
 
@@ -47,10 +46,22 @@ Not counted as production bugs — explicitly work-in-progress.
 | `RitnLibInformatron:getElement()` · `:setPageContent()` | `classes/RitnClass/RitnInformatron.lua` | `getElement` reads `self.gui[self.gui_name]` while the constructor stores the root under `[1]`; `setPageContent` returns the undefined global `FLAG_PAGE_DISPLAY` (typo). Class marked `-- beta` in `defines.lua`, exercised by no mod. |
 | `RitnLibSetting` | `classes/RitnClass/RitnSetting.lua` | **Unfinished class** (work in progress). `:getType()` / `:new()` don't produce a valid setting: the `self.TYPE[self.dataType]` chain dereferences with mismatched key casing (UPPERCASE keys vs lowercase value). Don't use as-is — see [RitnLibSetting](../reference/settings/RitnLibSetting.md). |
 
+## Fixed
+
+| Version | Class / method | Defect |
+|---|---|---|
+| 0.10.5 | `RitnIngredient` — `getItem()` helper | Read `ingredient.inputs.probability` (nonexistent sub-table) → "attempt to index a nil value". Also crashed on an item entry defined with `amount_min` / `amount_max` only. |
+| 0.10.5 | `RitnPrototype:getItemType()` · `:getEntityType()` | Crashed when a list type has no prototype in `data.raw` (e.g. `item-with-label` in 2.1). |
+| 0.10.5 | `RitnProtoOre:remove()` | Left the ore in the planets' `map_gen_settings` → crash at planet setup. |
+| 0.10.5 | `RitnProtoOre.active()` (`bStandard = true`) | The local `resource()` helper was shadowed by the `resource` parameter → called a string. |
+| 0.10.5 | `RitnProtoTech:addPack()` | Errored on a technology without `unit` (research trigger). |
+| 0.10.5 | `util.product_amount()` | Crashed on a product without `probability`. |
+| 0.10.4 | `RitnLibEntity:setMinable()` | `LuaEntity::minable` became read-only in 2.1.7 → now writes `minable_flag`. |
+
 ## See also
 
 - [Factorio 2.0 migration](../migration-2.0.md) — 1.x API residue (`getStats*`/statistics, `created_entity`, `hr_version`…)
 - [1.x API leftovers](api-1.x-leftover.md) — dead prototype keys (`icon_mipmaps`, `hide_from_player_stats`…)
-- [Factorio 2.1 migration](../migration-2.1.md) — `minable_flag`, `probability` → `independent_probability`
+- [Factorio 2.1 migration](../migration-2.1.md) — `minable_flag`, `independent_probability`, `categories`
 - [Deprecated APIs](deprecated.md)
 - [Class map](../reference/overview.md)

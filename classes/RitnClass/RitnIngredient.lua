@@ -5,7 +5,7 @@ local class = require("__RitnLib__.core.class")
 
 ---**EN**
 ---
----Description: Normalises a Factorio recipe ingredient (item or fluid) into a uniform `{name, type, amount, amount_min, amount_max, probability}` shape, and provides list operations: `:add`, `:addNew`, `:set`, `:remove`, `:combine`.
+---Description: Normalises a Factorio recipe ingredient (item or fluid) into a uniform `{name, type, amount, amount_min, amount_max, independent_probability}` shape, and provides list operations: `:add`, `:addNew`, `:set`, `:remove`, `:combine`.
 ---
 ---Accepts both ingredient forms in input:
 ---- Array form: `{"iron-plate", 2}` (Factorio 1.x legacy)
@@ -14,13 +14,13 @@ local class = require("__RitnLib__.core.class")
 ---
 ---For items, fractional amounts in `(0, 1)` are normalised to 1, larger amounts are floored.
 ---
----⚠ **Known bug in `getItem` helper (P0)**: `item.probability = ingredient.inputs.probability` assumes `ingredient.inputs` is a sub-table, which is not part of the standard ingredient shape. Crashes with "attempt to index a nil value" when the `ingredient.probability` branch is entered. The intended code was likely `item.probability = ingredient.probability`.
+---`independent_probability` (Factorio 2.1+, renamed from `probability`): the legacy `probability` key is still accepted in input, but only `independent_probability` is written.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Normalise un ingrédient de recette Factorio (item ou fluide) en une forme uniforme `{name, type, amount, amount_min, amount_max, probability}`, et fournit des opérations de liste : `:add`, `:addNew`, `:set`, `:remove`, `:combine`.
+---Description: Normalise un ingrédient de recette Factorio (item ou fluide) en une forme uniforme `{name, type, amount, amount_min, amount_max, independent_probability}`, et fournit des opérations de liste : `:add`, `:addNew`, `:set`, `:remove`, `:combine`.
 ---
 ---Accepte les deux formes d'ingrédient en entrée :
 ---- Forme array : `{"iron-plate", 2}` (legacy Factorio 1.x)
@@ -29,7 +29,7 @@ local class = require("__RitnLib__.core.class")
 ---
 ---Pour les items, les amounts fractionnaires dans `(0, 1)` sont normalisés à 1, les amounts plus grands sont floorés.
 ---
----⚠ **Bug connu dans le helper `getItem` (P0)** : `item.probability = ingredient.inputs.probability` suppose que `ingredient.inputs` est une sous-table, ce qui ne fait pas partie de la forme d'ingrédient standard. Plante avec "attempt to index a nil value" quand la branche `ingredient.probability` est entrée. Le code voulu était probablement `item.probability = ingredient.probability`.
+---`independent_probability` (Factorio 2.1+, renommé depuis `probability`) : l'ancienne clé `probability` est encore acceptée en entrée, mais seule `independent_probability` est écrite.
 ---@class RitnIngredient
 ---@field object_name "RitnIngredient"
 ---@field ingredient table|string                   Original input (raw)
@@ -38,12 +38,24 @@ local class = require("__RitnLib__.core.class")
 ---@field amount? number                            Resolved amount (floored for items)
 ---@field amount_min? number                        Range lower bound
 ---@field amount_max? number                        Range upper bound
----@field probability? number                       Probability factor
----@field item table                                Normalised `{name, type, amount, amount_min, amount_max, probability}` payload
+---@field independent_probability? number           Probability factor (Factorio 2.1+, was `probability`)
+---@field item table                                Normalised `{name, type, amount, amount_min, amount_max, independent_probability}` payload + every other field of the input entry
 ---@field addit boolean                             Internal flag used by `:add` / `:addNew` to track "already present"
 ---@operator call(table|string): RitnIngredient
 ---@type RitnIngredient
-local RitnIngredient = class.newclass(function(self, ingredient)
+local RitnIngredient
+
+-- Copie complète d'une entrée (garde temperature, ignored_by_productivity, ...),
+-- sans la forme array legacy {"name", n} ni l'ancienne clé `probability`
+local function copy_entry(ingredient)
+    if type(ingredient) ~= "table" then return {} end
+    local item = table.deepcopy(ingredient)
+    item[1], item[2] = nil, nil
+    item.probability = nil
+    return item
+end
+
+RitnIngredient = class.newclass(function(self, ingredient)
     if type(ingredient) ~= "table" and type(ingredient) ~= "string" then return end
     -- prototype self
     self.object_name = "RitnIngredient"
@@ -60,7 +72,7 @@ local RitnIngredient = class.newclass(function(self, ingredient)
     self.amount = ingredient.amount or ingredient[2]
     self.amount_min = ingredient.amount_min
     self.amount_max = ingredient.amount_max
-    self.probability = ingredient.probability
+    self.independent_probability = ingredient.independent_probability or ingredient.probability
     -- get basic type
     if not self.type then
         local item_type = "item"
@@ -78,14 +90,13 @@ local RitnIngredient = class.newclass(function(self, ingredient)
         end
     end
     --------------------------------------------------
-    self.item = {
-        name = self.name,
-        type = self.type,
-        amount = self.amount,
-        amount_min = self.amount_min,
-        amount_max = self.amount_max,
-        probability = self.probability
-    }
+    self.item = copy_entry(ingredient)
+    self.item.name = self.name
+    self.item.type = self.type
+    self.item.amount = self.amount
+    self.item.amount_min = self.amount_min
+    self.item.amount_max = self.amount_max
+    self.item.independent_probability = self.independent_probability
     self.addit = true
     --------------------------------------------------
 end) --[[@as RitnIngredient]]
@@ -93,21 +104,17 @@ end) --[[@as RitnIngredient]]
 
 ---**EN**
 ---
----Description: Internal: builds a normalised `{name, type, amount, ...}` payload from a raw ingredient. Used by list operations.
----
----⚠ Contains one known bug (see class-level doc): reads `ingredient.inputs.probability` (undefined sub-table) on the probability branch.
+---Description: Internal: builds a normalised `{name, type, amount, ...}` payload from a raw ingredient, keeping every other field of the entry (`temperature`, `ignored_by_productivity`, …). Used by list operations.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Interne : construit un payload normalisé `{name, type, amount, ...}` à partir d'un ingrédient brut. Utilisé par les opérations de liste.
----
----⚠ Contient un bug connu (cf. doc classe) : lit `ingredient.inputs.probability` (sous-table indéfinie) sur la branche probability.
+---Description: Interne : construit un payload normalisé `{name, type, amount, ...}` à partir d'un ingrédient brut, en gardant tous les autres champs de l'entrée (`temperature`, `ignored_by_productivity`, …). Utilisé par les opérations de liste.
 ---@param ingredient table
 ---@return table item   Normalised payload
 local function getItem(ingredient)
-    local item = {}
+    local item = copy_entry(ingredient)
 
     if ingredient.name then
         item.name = ingredient.name
@@ -130,7 +137,7 @@ local function getItem(ingredient)
         end
     end
 
-    if ingredient.probability then item.probability = ingredient.inputs.probability end
+    item.independent_probability = ingredient.independent_probability or ingredient.probability
 
     if ingredient.type then
         item.type = ingredient.type
@@ -140,7 +147,7 @@ local function getItem(ingredient)
         item.type = item_type
     end
 
-    if item.type == "item" then
+    if item.type == "item" and item.amount then
         if item.amount > 0 and item.amount < 1 then
             item.amount = 1
         else
@@ -155,22 +162,22 @@ end
 
 ---**EN**
 ---
----Description: Combines `self` with another ingredient (same name) by summing amounts and averaging probability. Updates `self.item` with the result and returns it.
+---Description: Combines `self` with another ingredient (same name) by summing amounts and averaging `independent_probability`. Other fields are taken from the existing entry (`ingredient`). Updates `self.item` with the result and returns it.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Combine `self` avec un autre ingrédient (même nom) en sommant les amounts et en moyennant la probability. Met à jour `self.item` avec le résultat et le retourne.
+---Description: Combine `self` avec un autre ingrédient (même nom) en sommant les amounts et en moyennant `independent_probability`. Les autres champs viennent de l'entrée existante (`ingredient`). Met à jour `self.item` avec le résultat et le retourne.
 ---@param ingredient table
 ---@return table item  The combined payload
 function RitnIngredient:combine(ingredient)
     --log("RitnIngredient - combine() - ingredient -> " .. ingredient.name)
-    local item = {}
     local item1 = getItem(ingredient)
-
-    item.name = item1.name
-    item.type = item1.type
+    -- on part de l'entrée existante pour garder ses champs annexes
+    local item = copy_entry(item1)
+    item.amount, item.amount_min, item.amount_max = nil, nil, nil
+    item.independent_probability = nil
 
     if item1.amount and self.amount then
         item.amount = item1.amount + self.amount
@@ -187,12 +194,12 @@ function RitnIngredient:combine(ingredient)
         end
     end
 
-    if item1.probability and self.probability then
-        item.probability = (item1.probability + self.probability) / 2
-    elseif item1.probability then
-        item.probability = (item1.probability + 1) / 2
-    elseif self.probability then
-        item.probability = (self.probability + 1) / 2
+    if item1.independent_probability and self.independent_probability then
+        item.independent_probability = (item1.independent_probability + self.independent_probability) / 2
+    elseif item1.independent_probability then
+        item.independent_probability = (item1.independent_probability + 1) / 2
+    elseif self.independent_probability then
+        item.independent_probability = (self.independent_probability + 1) / 2
     end
 
     self.item = item

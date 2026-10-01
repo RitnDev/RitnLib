@@ -35,43 +35,72 @@ end) --[[@as RitnProtoOre]]
 
 
 
+-- Retire un minerai des map-gen-presets et du map_gen_settings de chaque planète
+local function remove_from_map_gen(name)
+    for _, map_preset in pairs(data.raw["map-gen-presets"].default) do
+        if type(map_preset) == "table" and map_preset.basic_settings and map_preset.basic_settings.autoplace_controls then
+            map_preset.basic_settings.autoplace_controls[name] = nil
+        end
+    end
+
+    for _, planet in pairs(data.raw.planet or {}) do
+        local map_gen = planet.map_gen_settings
+        if map_gen then
+            if map_gen.autoplace_controls then
+                map_gen.autoplace_controls[name] = nil
+            end
+            local entity = map_gen.autoplace_settings and map_gen.autoplace_settings.entity
+            if entity and entity.settings then
+                entity.settings[name] = nil
+            end
+        end
+    end
+end
+
+
+-- Ajoute un minerai au map_gen_settings des planètes données
+local function add_to_planets(control_name, resource_name, planets)
+    for _, planet_name in pairs(planets) do
+        local planet = data.raw.planet and data.raw.planet[planet_name]
+        local map_gen = planet and planet.map_gen_settings
+        if map_gen then
+            map_gen.autoplace_controls = map_gen.autoplace_controls or {}
+            map_gen.autoplace_controls[control_name] = map_gen.autoplace_controls[control_name] or {}
+
+            map_gen.autoplace_settings = map_gen.autoplace_settings or {}
+            map_gen.autoplace_settings.entity = map_gen.autoplace_settings.entity or {}
+            map_gen.autoplace_settings.entity.settings = map_gen.autoplace_settings.entity.settings or {}
+            map_gen.autoplace_settings.entity.settings[resource_name] =
+                map_gen.autoplace_settings.entity.settings[resource_name] or {}
+        end
+    end
+end
+
+
 --REMOVE ORE
 
 ---**EN**
 ---
----Description: Full ore purge. Removes the resource prototype, the autoplace-control, the entry in every map-gen-preset's `autoplace_controls`, and also removes the optional `"infinite-<name>"` companion if it exists.
+---Description: Full ore purge. Removes the resource prototype, the autoplace-control, the entry in every map-gen-preset's `autoplace_controls` and in every planet's `map_gen_settings` (`autoplace_controls` + `autoplace_settings.entity.settings`, Factorio 2.0+), and also removes the optional `"infinite-<name>"` companion if it exists.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Suppression complète du minerai. Retire le prototype resource, l'autoplace-control, l'entrée dans `autoplace_controls` de chaque map-gen-preset, et retire aussi le compagnon optionnel `"infinite-<name>"` s'il existe.
+---Description: Suppression complète du minerai. Retire le prototype resource, l'autoplace-control, l'entrée dans `autoplace_controls` de chaque map-gen-preset et dans le `map_gen_settings` de chaque planète (`autoplace_controls` + `autoplace_settings.entity.settings`, Factorio 2.0+), et retire aussi le compagnon optionnel `"infinite-<name>"` s'il existe.
 ---@return RitnProtoOre self  Chainable
 function RitnProtoOre:remove()
     if self.prototype == nil then return self end
 
     data.raw.resource[self.name] = nil
     data.raw["autoplace-control"][self.name] = nil
+    remove_from_map_gen(self.name)
 
-    for _, map_preset in pairs(data.raw["map-gen-presets"].default) do
-        if map_preset.basic_settings then
-            if map_preset.basic_settings.autoplace_controls then
-                map_preset.basic_settings.autoplace_controls[self.name] = nil
-            end
-        end
-    end
-
-    if data.raw.resource["infinite-" .. self.name] then
-        data.raw.resource["infinite-" .. self.name] = nil
-        data.raw["autoplace-control"]["infinite-" .. self.name] = nil
-
-        for _, map_preset in pairs(data.raw["map-gen-presets"].default) do
-            if map_preset.basic_settings then
-                if map_preset.basic_settings.autoplace_controls then
-                    map_preset.basic_settings.autoplace_controls["infinite-" .. self.name] = nil
-                end
-            end
-        end
+    local infinite = "infinite-" .. self.name
+    if data.raw.resource[infinite] then
+        data.raw.resource[infinite] = nil
+        data.raw["autoplace-control"][infinite] = nil
+        remove_from_map_gen(infinite)
     end
 
     return self
@@ -79,7 +108,7 @@ end
 
 
 -- ressource
-local function resource(ore)
+local function make_resource(ore)
     if coverage == nil then coverage = 0.02 end
     if path_graphics == nil then path_graphics = "__base__/graphics/" end
 
@@ -144,7 +173,7 @@ end
 
 ---**EN**
 ---
----Description: Static activator — pulls the named ore's autoplace_control (and either a custom resource payload via the local `resource()` helper if `bStandard == true`, or the precomputed `ores[resource].resource`) from `lualib/vanilla/ores.lua`, then registers both via `data:extend({autoplace_control, ore})`. Also initialises the patch set via `ores.resource_autoplace.initialize_patch_set(resource, bStart)`.
+---Description: Static activator — pulls the named ore's autoplace_control (and either a custom resource payload via the local `make_resource()` helper if `bStandard == true`, or the precomputed `ores[resource].resource`) from `lualib/vanilla/ores.lua`, then registers both via `data:extend({autoplace_control, ore})`. Also initialises the patch set via `ores.resource_autoplace.initialize_patch_set(resource, bStart)`, and adds the ore to the `map_gen_settings` of the given planets (Factorio 2.0+; defaults to `{"nauvis"}`).
 ---
 ---⚠ Static method — call as `RitnProtoOre.active(...)`, not on an instance.
 ---
@@ -152,23 +181,25 @@ end
 ---
 ---**FR**
 ---
----Description: Activateur static — récupère l'autoplace_control du minerai nommé (et soit un payload resource construit via le helper local `resource()` si `bStandard == true`, soit le `ores[resource].resource` précalculé) depuis `lualib/vanilla/ores.lua`, puis enregistre les deux via `data:extend({autoplace_control, ore})`. Initialise aussi le patch set via `ores.resource_autoplace.initialize_patch_set(resource, bStart)`.
+---Description: Activateur static — récupère l'autoplace_control du minerai nommé (et soit un payload resource construit via le helper local `make_resource()` si `bStandard == true`, soit le `ores[resource].resource` précalculé) depuis `lualib/vanilla/ores.lua`, puis enregistre les deux via `data:extend({autoplace_control, ore})`. Initialise aussi le patch set via `ores.resource_autoplace.initialize_patch_set(resource, bStart)`, et ajoute le minerai au `map_gen_settings` des planètes données (Factorio 2.0+ ; par défaut `{"nauvis"}`).
 ---
 ---⚠ Méthode static — appeler comme `RitnProtoOre.active(...)`, pas sur une instance.
 ---@param resource string   Ore key in `lualib/vanilla/ores.lua` (e.g. "iron-ore", "copper-ore")
 ---@param bStart boolean    Whether to seed the patch set near the starting area
----@param bStandard boolean If true, build the resource payload via the local `resource()` template; else use `ores[resource].resource` as-is
-function RitnProtoOre.active(resource, bStart, bStandard)
+---@param bStandard boolean If true, build the resource payload via the local `make_resource()` template; else use `ores[resource].resource` as-is
+---@param planets? string[] Planets whose `map_gen_settings` receive the ore (default `{"nauvis"}`)
+function RitnProtoOre.active(resource, bStart, bStandard, planets)
     ores.resource_autoplace.initialize_patch_set(resource, bStart)
     local autoplace_control = ores[resource].autoplace_control
     local ore = {}
     if bStandard then
-        ore = resource(ores[resource])
+        ore = make_resource(ores[resource])
     else
         ore = ores[resource].resource
     end
 
     data:extend({ autoplace_control, ore })
+    add_to_planets(autoplace_control.name, ore.name, planets or { "nauvis" })
 end
 
 

@@ -62,12 +62,11 @@ function RitnProtoRecipe:disable()
     self.prototype.enabled = false
     self.prototype.hidden = true
 
-    RitnProtoItem(self.prototype.name):changePrototype("flags", { "hidden" })
+    RitnProtoItem(self.prototype.name):changePrototype("hidden", true)
 
     self:update()
     return self
 end
-
 
 --DISABLE RECIPE
 
@@ -109,7 +108,6 @@ function RitnProtoRecipe:setEnabled(pValue)
     self:update()
     return self
 end
-
 
 --DISABLE RECIPE
 
@@ -186,8 +184,6 @@ function RitnProtoRecipe:setHidden(value, crafting, stats)
     return self
 end
 
-
-
 --REMOVE INGREDIENT
 
 ---**EN**
@@ -247,7 +243,6 @@ function RitnProtoRecipe:removeAllIngredient()
     return self
 end
 
-
 --ADD NEW INGREDIENT (ignores if exists)
 
 ---**EN**
@@ -279,7 +274,6 @@ function RitnProtoRecipe:addNewIngredient(ingredient)
     return self
 end
 
-
 --ADD INGREDIENT (increments amount if exists)
 
 ---**EN**
@@ -309,7 +303,6 @@ function RitnProtoRecipe:addIngredient(ingredient)
     self:update()
     return self
 end
-
 
 --SET INGREDIENT
 
@@ -341,7 +334,6 @@ function RitnProtoRecipe:setIngredient(ingredient)
     self:update()
     return self
 end
-
 
 ---**EN**
 ---
@@ -381,7 +373,6 @@ function RitnProtoRecipe:getIngredient(ingredient)
 
     return nil
 end
-
 
 --INGREDIENT EXISTE (return boolean)
 
@@ -424,8 +415,6 @@ function RitnProtoRecipe:ingredientExiste(ingredient)
     return false
 end
 
-
-
 ---**EN**
 ---
 ---Description: Sets a tint-typed parameter on `self.prototype` (typically `"crafting_machine_tint"`) by name (`"red"`, `"green"`, `"automation"`, …) — looked up in `self.tint`. No-op if `tint` isn't a known key.
@@ -448,7 +437,6 @@ function RitnProtoRecipe:changeTint(parameter, tint)
     self:update()
     return self
 end
-
 
 ---**EN**
 ---
@@ -475,7 +463,6 @@ function RitnProtoRecipe:updatePackTint()
 
     return self
 end
-
 
 -- CHANGE SUBGROUP
 
@@ -509,6 +496,189 @@ function RitnProtoRecipe:changeSubgroup(subgroup, order)
     return self
 end
 
+-- CATEGORIES
 
+---**EN**
+---
+---Description: Replaces `prototype.categories` (Factorio 2.1+, replaces the removed `category` / `additional_categories`). Accepts a single category name or a list. Also clears the legacy `category` / `additional_categories` keys if present.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Remplace `prototype.categories` (Factorio 2.1+, remplace `category` / `additional_categories` supprimés). Accepte un nom de catégorie seul ou une liste. Supprime aussi les clés legacy `category` / `additional_categories` si présentes.
+---@param categories string|string[]
+---@return RitnProtoRecipe self  Chainable
+function RitnProtoRecipe:setCategories(categories)
+    if self.prototype == nil then return self end
+    if type(categories) == "string" then categories = { categories } end
+    if type(categories) ~= "table" then return self end
+
+    self.prototype.categories = table.deepcopy(categories)
+    self.prototype.category = nil
+    self.prototype.additional_categories = nil
+
+    self:update()
+    return self
+end
+
+
+---**EN**
+---
+---Description: Appends a category to `prototype.categories` if not already present. If the recipe has no `categories`, starts from `{"crafting"}` (the engine default).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Ajoute une catégorie à `prototype.categories` si elle n'y est pas déjà. Si la recette n'a pas de `categories`, part de `{"crafting"}` (le défaut du moteur).
+---@param category string
+---@return RitnProtoRecipe self  Chainable
+function RitnProtoRecipe:addCategory(category)
+    if self.prototype == nil then return self end
+    if type(category) ~= "string" then return self end
+
+    local categories = self.prototype.categories or { "crafting" }
+    for _, existing in pairs(categories) do
+        if existing == category then return self end
+    end
+    table.insert(categories, category)
+
+    return self:setCategories(categories)
+end
+
+--REPLACE INGREDIENT
+
+---**EN**
+---
+---Description: Replaces the ingredient named `old_name` by `new_ingredient` in each existing branch. If `new_ingredient` is a string, the old entry's amount is kept and the type is detected from the new name (fluid or item); if it is a table, it is used as-is. If the new ingredient already exists in the list, amounts are combined (`RitnIngredient:add`). No-op on branches that don't contain `old_name`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Remplace l'ingrédient nommé `old_name` par `new_ingredient` dans chaque branche existante. Si `new_ingredient` est une string, l'amount de l'ancienne entrée est conservé et le type est déduit du nouveau nom (fluide ou item) ; si c'est une table, elle est utilisée telle quelle. Si le nouvel ingrédient existe déjà dans la liste, les amounts sont combinés (`RitnIngredient:add`). No-op sur les branches qui ne contiennent pas `old_name`.
+---@param old_name string
+---@param new_ingredient table|string
+---@return RitnProtoRecipe self  Chainable
+function RitnProtoRecipe:replaceIngredient(old_name, new_ingredient)
+    if self.prototype == nil then return self end
+
+    local function replace(list)
+        if list == nil then return end
+        local old = nil
+        for _, ingredient in pairs(list) do
+            if RitnIngredient(ingredient).name == old_name then
+                old = RitnIngredient(ingredient)
+                break
+            end
+        end
+        if old == nil then return end
+
+        local new = new_ingredient
+        if type(new) == "string" then
+            new = { name = new, amount = old.amount, amount_min = old.amount_min, amount_max = old.amount_max }
+        end
+
+        old:remove(list)
+        RitnIngredient(new):add(list)
+    end
+
+    if self.prototype.expensive then replace(self.prototype.expensive.ingredients) end
+    if self.prototype.normal then replace(self.prototype.normal.ingredients) end
+    replace(self.prototype.ingredients)
+
+    self:update()
+    return self
+end
+
+--RESULTS
+
+---**EN**
+---
+---Description: Adds `result` to `prototype.results` — **combines** (sums amounts, averages `independent_probability`) if a result of the same name already exists. Creates `results` if missing. Uses `RitnIngredient:add`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Ajoute `result` à `prototype.results` — **combine** (somme les amounts, moyenne `independent_probability`) si un résultat du même nom existe déjà. Crée `results` s'il n'existe pas. Utilise `RitnIngredient:add`.
+---@param result table|string  Product form (`{type=, name=, amount=, independent_probability=}` or `"name"`)
+---@return RitnProtoRecipe self  Chainable
+function RitnProtoRecipe:addResult(result)
+    if self.prototype == nil then return self end
+
+    self.prototype.results = self.prototype.results or {}
+    RitnIngredient(result):add(self.prototype.results)
+
+    self:update()
+    return self
+end
+
+
+---**EN**
+---
+---Description: Removes every result matching `result`'s name from `prototype.results`. Uses `RitnIngredient:remove`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retire chaque résultat matchant le nom de `result` de `prototype.results`. Utilise `RitnIngredient:remove`.
+---@param result table|string
+---@return RitnProtoRecipe self  Chainable
+function RitnProtoRecipe:removeResult(result)
+    if self.prototype == nil then return self end
+    if self.prototype.results == nil then return self end
+
+    RitnIngredient(result):remove(self.prototype.results)
+
+    self:update()
+    return self
+end
+
+
+---**EN**
+---
+---Description: Replaces in place every result matching `result`'s name in `prototype.results` (no combine). Uses `RitnIngredient:set`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Remplace sur place chaque résultat matchant le nom de `result` dans `prototype.results` (sans combine). Utilise `RitnIngredient:set`.
+---@param result table|string
+---@return RitnProtoRecipe self  Chainable
+function RitnProtoRecipe:setResult(result)
+    if self.prototype == nil then return self end
+    if self.prototype.results == nil then return self end
+
+    RitnIngredient(result):set(self.prototype.results)
+
+    self:update()
+    return self
+end
+
+--PRODUCTIVITY
+
+---**EN**
+---
+---Description: Sets `prototype.allow_productivity` (Factorio 2.0+, replaces the removed module `limitation` lists). `value` defaults to `true`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Définit `prototype.allow_productivity` (Factorio 2.0+, remplace les listes `limitation` des modules supprimées). `value` vaut `true` par défaut.
+---@param value? boolean
+---@return RitnProtoRecipe self  Chainable
+function RitnProtoRecipe:setProductivity(value)
+    if self.prototype == nil then return self end
+
+    self.prototype.allow_productivity = value ~= false
+
+    self:update()
+    return self
+end
 
 return RitnProtoRecipe

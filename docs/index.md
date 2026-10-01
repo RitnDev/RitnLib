@@ -67,6 +67,7 @@ Tutoriels orientés tâche :
 | [`RitnProtoItemSubgroup`](reference/prototype/RitnProtoItemSubgroup.md) | `data.raw['item-subgroup']` |
 | [`RitnProtoRecipeCategory`](reference/prototype/RitnProtoRecipeCategory.md) | `data.raw['recipe-category']` |
 | [`RitnProtoFuelCategory`](reference/prototype/RitnProtoFuelCategory.md) | `data.raw['fuel-category']` |
+| [`RitnProtoTile`](reference/prototype/RitnProtoTile.md) | `data.raw['tile']` |
 | [`RitnProtoCustomInput`](reference/prototype/RitnProtoCustomInput.md) | `data.raw['custom-input']` |
 | [`RitnProtoUtilityConst`](reference/prototype/RitnProtoUtilityConst.md) | `data.raw['utility-constants']` |
 | [`RitnIngredient`](reference/prototype/RitnIngredient.md) | normalisation d'ingrédient |
@@ -116,7 +117,7 @@ Tutoriels orientés tâche :
 ## Dette et migration
 
 - 🐛 [Bugs connus](debt/known-bugs.md)
-- 🕰 [Résidus API 1.x](debt/api-1.x-residuelle.md)
+- 🕰 [Résidus API 1.x](debt/api-1.x-leftover.md)
 - ⚠ [APIs dépréciées](debt/deprecated.md)
 - 🔧 [Migration Factorio 2.0](migration-2.0.md)
 - 🔧 [Migration Factorio 2.1](migration-2.1.md)
