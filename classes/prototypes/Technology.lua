@@ -52,20 +52,23 @@ end) --[[@as RitnProtoTech]]
 
 ---**EN**
 ---
----Description: Sets the research cost count (`prototype.unit.count`).
+---Description: Sets the research cost count (`prototype.unit.count`) and removes `count_formula` if any. No-op on a technology without `unit` (research trigger).
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Définit le compte de coût de recherche (`prototype.unit.count`).
+---Description: Définit le compte de coût de recherche (`prototype.unit.count`) et retire `count_formula` s'il existe. No-op sur une technologie sans `unit` (déclencheur de recherche).
 ---@param count number
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:setCount(count)
     if self.prototype == nil then return self end
+    if not self.prototype.unit then return self end
 
     if type(count) == "number" then
         self.prototype.unit.count = count
+        -- un compte fixe remplace une éventuelle formule
+        self.prototype.unit.count_formula = nil
     end
 
     self:update()
@@ -223,6 +226,30 @@ function RitnProtoTech:removeRecipe(recipe, complete)
     end
 
     self.disable_recipe = false
+    self:update()
+    return self
+end
+
+--ADD EFFECT
+
+---**EN**
+---
+---Description: Appends `effect` (any `Modifier` table, e.g. `{type = "ammo-damage", ammo_category = "bullet", modifier = 0.1}`) to `prototype.effects`. Creates `effects` if missing.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Ajoute `effect` (n'importe quelle table `Modifier`, ex : `{type = "ammo-damage", ammo_category = "bullet", modifier = 0.1}`) à `prototype.effects`. Crée `effects` s'il n'existe pas.
+---@param effect table  Modifier
+---@return RitnProtoTech self  Chainable
+function RitnProtoTech:addEffect(effect)
+    if self.prototype == nil then return self end
+    if type(effect) ~= "table" then return self end
+
+    self.prototype.effects = self.prototype.effects or {}
+    table.insert(self.prototype.effects, effect)
+
     self:update()
     return self
 end
@@ -506,6 +533,33 @@ end
 function RitnProtoTech:replacePrerequisite(remove_prerequisite, add_prerequisite)
     if self.prototype == nil then return self end
     self:removePrerequisite(remove_prerequisite):addPrerequisite(add_prerequisite):update()
+    return self
+end
+
+--SET PREREQUISITES
+
+---**EN**
+---
+---Description: Replaces the whole prerequisite list with `prerequisites`. Names of technologies that don't exist are ignored.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Remplace toute la liste des prérequis par `prerequisites`. Les noms de technologies inexistantes sont ignorés.
+---@param prerequisites string[]
+---@return RitnProtoTech self  Chainable
+function RitnProtoTech:setPrerequisites(prerequisites)
+    if self.prototype == nil then return self end
+    if type(prerequisites) ~= "table" then return self end
+
+    local list = {}
+    for _, name in ipairs(prerequisites) do
+        if data.raw.technology[name] then table.insert(list, name) end
+    end
+    self.prototype.prerequisites = list
+
+    self:update()
     return self
 end
 

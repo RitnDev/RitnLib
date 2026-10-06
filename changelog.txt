@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.6
+Date: 01.10.2026
+  Features:
+    - RitnPrototype: added getIconLayers(scale, shift), inherited by every RitnProto* class. Returns a
+      copy of the prototype's icon layers whether it uses icon or icons; optional scale/shift are
+      applied to every layer (overlays). Returns an empty table if the prototype does not exist.
+    - RitnLibSetting: added static getStartup(name), returns the value of a startup setting or nil if
+      it does not exist (data and control stages).
+    - table-functions: added normalizePosition(value) ({x, y} or {x =, y =} -> {x =, y =}) and
+      offsetPosition(position, offset).
+    - RitnProtoTech: added addEffect(effect) to append any modifier (ammo-damage, gun-speed,
+      turret-attack...) to a technology.
+    - RitnProtoTech: added setPrerequisites(prerequisites) to replace the whole prerequisite list
+      (unknown technologies are ignored).
+  Changes:
+    - RitnProtoTech:setCount() now removes unit.count_formula and is a no-op on a technology without
+      "unit" (research trigger).
+---------------------------------------------------------------------------------------------------
 Version: 0.10.5
 Date: 01.10.2026
   Features:

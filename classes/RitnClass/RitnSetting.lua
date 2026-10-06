@@ -370,5 +370,27 @@ function RitnLibSetting:new()
     return data:extend({ self.data_setting })
 end
 
+
+-- GET STARTUP VALUE
+
+---**EN**
+---
+---Description: Static. Returns the value of the startup setting `name`, or nil if the setting does not exist. Usable in the data and control stages.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Statique. Retourne la valeur du réglage de démarrage `name`, ou nil si le réglage n'existe pas. Utilisable en phase data et control.
+---
+---⚠ Méthode statique — appeler comme `RitnLibSetting.getStartup(name)`.
+---@param name string
+---@return any
+function RitnLibSetting.getStartup(name)
+    local setting = settings.startup[name]
+    return setting and setting.value
+end
+
+
 ----------------------------------------------------------------
 return RitnLibSetting

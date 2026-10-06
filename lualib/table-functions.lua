@@ -51,6 +51,47 @@ local function isPosition(value)
 end
 
 
+---**EN**
+---
+---Description: Normalises a position given as `{x = …, y = …}` or `{x, y}` into a new `{x = …, y = …}` table. Returns nil if `value` is not a position.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Normalise une position donnée sous la forme `{x = …, y = …}` ou `{x, y}` en une nouvelle table `{x = …, y = …}`. Retourne nil si `value` n'est pas une position.
+---@param value any
+---@return MapPosition?
+local function normalizePosition(value)
+    if not isTable(value) then return nil end
+    local x, y = value.x or value[1], value.y or value[2]
+    if type(x) == "number" and type(y) == "number" then
+        return { x = x, y = y }
+    end
+    return nil
+end
+
+
+---**EN**
+---
+---Description: Returns `position` shifted by `offset` (default `{0, 0}`). Both accept the `{x = …, y = …}` and `{x, y}` forms. Returns nil if `position` is not a position.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retourne `position` décalée de `offset` (par défaut `{0, 0}`). Les deux acceptent les formes `{x = …, y = …}` et `{x, y}`. Retourne nil si `position` n'est pas une position.
+---@param position any
+---@param offset? any
+---@return MapPosition?
+local function offsetPosition(position, offset)
+    local base = normalizePosition(position)
+    if base == nil then return nil end
+    local shift = normalizePosition(offset) or { x = 0, y = 0 }
+    return { x = base.x + shift.x, y = base.y + shift.y }
+end
+
+
 -- Retourne taille du tableau
 
 ---**EN**
@@ -374,6 +415,8 @@ end
 ---@field getIndex fun(pTable: table, pPosition: integer): any?
 ---@field isTable fun(value: any): boolean
 ---@field isPosition fun(value: any): boolean
+---@field normalizePosition fun(value: any): MapPosition?
+---@field offsetPosition fun(position: any, offset?: any): MapPosition?
 ---@field containsKey fun(pTable: table, key: any): boolean
 local flib = {
     table = {
@@ -399,6 +442,8 @@ local flib = {
         getIndex = getIndex,
         isTable = isTable,
         isPosition = isPosition,
+        normalizePosition = normalizePosition,
+        offsetPosition = offsetPosition,
         containsKey = containsKey,
     }
 }

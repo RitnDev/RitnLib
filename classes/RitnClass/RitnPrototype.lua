@@ -238,6 +238,39 @@ function RitnPrototype:getProperties(propertie)
 end
 
 
+-- GET ICON LAYERS
+
+---**EN**
+---
+---Description: Returns a copy of the prototype's icon layers, whether it is defined with `icon` or `icons`. Optional `scale` and `shift` are applied to every layer (useful for overlays). Returns an empty table if the prototype does not exist.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retourne une copie des calques d'icône du prototype, qu'il soit défini avec `icon` ou `icons`. `scale` et `shift` (optionnels) sont appliqués à chaque calque (utile pour une surimpression). Retourne une table vide si le prototype n'existe pas.
+---@param scale? number
+---@param shift? table   Vector `{x, y}`
+---@return table[] layers  IconData list
+function RitnPrototype:getIconLayers(scale, shift)
+    if self.prototype == nil then return {} end
+
+    local layers
+    if self.prototype.icons then
+        layers = table.deepcopy(self.prototype.icons)
+    else
+        layers = { { icon = self.prototype.icon, icon_size = self.prototype.icon_size } }
+    end
+
+    for _, layer in pairs(layers) do
+        if scale then layer.scale = scale end
+        if shift then layer.shift = shift end
+    end
+
+    return layers
+end
+
+
 -- UPDATE PROTOTYPE
 
 ---**EN**
