@@ -90,10 +90,9 @@ function RitnProtoRecipe:setEnabled(pValue)
     end
 
 
-    if self.prototype.enabled ~= nil then
-        self.prototype.enabled = value
-        log("RitnProtoRecipe:setEnabled -> enabled")
-    end
+    -- Factorio 2.x : la cle "enabled" est souvent absente (defaut true), on l'ecrit toujours
+    self.prototype.enabled = value
+    log("RitnProtoRecipe:setEnabled -> enabled")
 
     if self.prototype.normal ~= nil then
         self.prototype.normal.enabled = value

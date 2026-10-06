@@ -5,9 +5,32 @@ local RitnProtoBase = require("__RitnLib__.classes.RitnClass.RitnPrototype")
 local RitnProtoRecipe = require("__RitnLib__.classes.prototypes.Recipe")
 ----------------------------------------------------------------
 
+-- Factorio 2.1 : un pack de science peut être n'importe quel item
+-- (les packs vanilla sont des "item", les packs moddés souvent des "tool")
+local function packExists(pack)
+    if type(pack) ~= "string" then return false end
+    return data.raw.tool[pack] ~= nil or data.raw.item[pack] ~= nil
+end
+
+-- Cible d'un déclencheur de recherche selon son type (Factorio 2.x)
+local trigger_targets = {
+    ["craft-item"] = "item",
+    ["send-item-to-orbit"] = "item",
+    ["craft-fluid"] = "fluid",
+    ["build-entity"] = "entity",
+    ["capture-spawner"] = "entity",
+    ["mine-entity"] = "entities",
+}
+
+-- Quantité d'un déclencheur de recherche selon son type (Factorio 2.x)
+local trigger_counts = {
+    ["craft-item"] = "count",
+    ["craft-fluid"] = "amount",
+}
+
 ---**EN**
 ---
----Description: Data-stage manipulator for `data.raw["technology"][<name>]`. Inherits from [`RitnPrototype`](../RitnClass/RitnPrototype.lua). Full toolkit for technologies: cost mutation (`setCount`, `setTime`, `setIngredients`, `multipliedPack`), recipe unlock add/remove, science pack add/remove/replace/lab-membership, prerequisite add/remove/replace, disable (with optional cascade purge of prerequisites referencing this tech).
+---Description: Data-stage manipulator for `data.raw["technology"][<name>]`. Inherits from [`RitnPrototype`](../RitnClass/RitnPrototype.lua). Full toolkit for technologies: cost mutation (`setCount`, `setTime`, `setIngredients`, `multipliedPack`), unlock mode check and switch (`getUnlockMode`, `setUnit`, `setTrigger`), research trigger edition (`setTriggerTarget`, `setTriggerCount`), recipe unlock add/remove, science pack add/remove/replace/lab-membership, prerequisite add/remove/replace, disable (with optional cascade purge of prerequisites referencing this tech).
 ---
 ---⚠ Mutable instance fields (`addit`, `doit`, `disable_recipe`, `amount_pack`, `delete_prerequisite`) are reset between methods to track per-operation state. Keep that in mind if chaining methods.
 ---
@@ -15,7 +38,7 @@ local RitnProtoRecipe = require("__RitnLib__.classes.prototypes.Recipe")
 ---
 ---**FR**
 ---
----Description: Manipulateur data-stage pour `data.raw["technology"][<name>]`. Hérite de [`RitnPrototype`](../RitnClass/RitnPrototype.lua). Boîte à outils complète pour les technologies : mutation des coûts (`setCount`, `setTime`, `setIngredients`, `multipliedPack`), add/remove de recette débloquée, add/remove/replace de pack de science et appartenance aux labs, add/remove/replace de pré-requis, disable (avec optionnellement purge en cascade des pré-requis qui pointent vers cette tech).
+---Description: Manipulateur data-stage pour `data.raw["technology"][<name>]`. Hérite de [`RitnPrototype`](../RitnClass/RitnPrototype.lua). Boîte à outils complète pour les technologies : mutation des coûts (`setCount`, `setTime`, `setIngredients`, `multipliedPack`), vérification et changement du mode de déblocage (`getUnlockMode`, `setUnit`, `setTrigger`), édition du déclencheur de recherche (`setTriggerTarget`, `setTriggerCount`), add/remove de recette débloquée, add/remove/replace de pack de science et appartenance aux labs, add/remove/replace de pré-requis, disable (avec optionnellement purge en cascade des pré-requis qui pointent vers cette tech).
 ---
 ---⚠ Champs d'instance mutables (`addit`, `doit`, `disable_recipe`, `amount_pack`, `delete_prerequisite`) reset entre méthodes pour tracker l'état par opération. À noter si tu chaînes les méthodes.
 ---@class RitnProtoTech : RitnPrototype
@@ -90,6 +113,7 @@ end
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:setTime(time)
     if self.prototype == nil then return self end
+    if not self.prototype.unit then return self end
 
     if type(time) == "number" then
         self.prototype.unit.time = time
@@ -114,10 +138,186 @@ end
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:setIngredients(ingredients)
     if self.prototype == nil then return self end
+    if not self.prototype.unit then return self end
 
     if type(ingredients) == "table" then
         self.prototype.unit.ingredients = ingredients
     end
+
+    self:update()
+    return self
+end
+
+--SET UNIT (research cost)
+
+---**EN**
+---
+---Description: Replaces the whole research cost (`prototype.unit`) and removes `research_trigger` if any. Turns a trigger technology (Factorio 2.x) back into a science pack technology.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Remplace tout le coût de recherche (`prototype.unit`) et retire `research_trigger` s'il existe. Repasse une technologie à déclencheur (Factorio 2.x) en technologie à packs de science.
+---@param unit table  TechnologyUnit (`{count = 100, ingredients = {{"automation-science-pack", 1}}, time = 30}`)
+---@return RitnProtoTech self  Chainable
+function RitnProtoTech:setUnit(unit)
+    if self.prototype == nil then return self end
+    if type(unit) ~= "table" then return self end
+
+    self.prototype.unit = table.deepcopy(unit)
+    self.prototype.research_trigger = nil
+
+    self:update()
+    return self
+end
+
+--GET UNLOCK MODE
+
+---**EN**
+---
+---Description: Returns how the technology is unlocked: `"unit"` (science packs, `prototype.unit`), `"trigger"` (research trigger, `prototype.research_trigger`, Factorio 2.x) or `nil` if the technology does not exist.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retourne le mode de déblocage de la technologie : `"unit"` (packs de science, `prototype.unit`), `"trigger"` (déclencheur de recherche, `prototype.research_trigger`, Factorio 2.x) ou `nil` si la technologie n'existe pas.
+---@return "unit"|"trigger"|nil mode
+function RitnProtoTech:getUnlockMode()
+    if self.prototype == nil then return nil end
+    if self.prototype.research_trigger then return "trigger" end
+    if self.prototype.unit then return "unit" end
+    return nil
+end
+
+---**EN**
+---
+---Description: `true` if the technology is unlocked with science packs (`prototype.unit`).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: `true` si la technologie se débloque avec des packs de science (`prototype.unit`).
+---@return boolean
+function RitnProtoTech:isUnit()
+    return self:getUnlockMode() == "unit"
+end
+
+---**EN**
+---
+---Description: `true` if the technology is unlocked with a research trigger (`prototype.research_trigger`, Factorio 2.x).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: `true` si la technologie se débloque avec un déclencheur de recherche (`prototype.research_trigger`, Factorio 2.x).
+---@return boolean
+function RitnProtoTech:isTrigger()
+    return self:getUnlockMode() == "trigger"
+end
+
+--SET TRIGGER (research trigger)
+
+---**EN**
+---
+---Description: Replaces the research trigger (`prototype.research_trigger`) and removes `unit` if any. Turns a science pack technology into a trigger technology (Factorio 2.x). No-op if `trigger` is not a table with a `type`.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Remplace le déclencheur de recherche (`prototype.research_trigger`) et retire `unit` s'il existe. Passe une technologie à packs de science en technologie à déclencheur (Factorio 2.x). No-op si `trigger` n'est pas une table avec un `type`.
+---@param trigger table  TechnologyTrigger (`{type = "craft-item", item = "iron-plate", count = 50}`)
+---@return RitnProtoTech self  Chainable
+function RitnProtoTech:setTrigger(trigger)
+    if self.prototype == nil then return self end
+    if type(trigger) ~= "table" or type(trigger.type) ~= "string" then return self end
+
+    self.prototype.research_trigger = table.deepcopy(trigger)
+    self.prototype.unit = nil
+
+    self:update()
+    return self
+end
+
+--GET TRIGGER
+
+---**EN**
+---
+---Description: Returns a copy of the research trigger (`prototype.research_trigger`), or `nil` if the technology has none.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Retourne une copie du déclencheur de recherche (`prototype.research_trigger`), ou `nil` si la technologie n'en a pas.
+---@return table? trigger
+function RitnProtoTech:getTrigger()
+    if self.prototype == nil then return nil end
+    if self.prototype.research_trigger == nil then return nil end
+    return table.deepcopy(self.prototype.research_trigger)
+end
+
+--SET TRIGGER TARGET
+
+---**EN**
+---
+---Description: Changes the target of the research trigger according to its type: `item` (craft-item, send-item-to-orbit), `fluid` (craft-fluid), `entity` (build-entity, capture-spawner) or `entities` (mine-entity, a single name is turned into a list). No-op on a technology without research trigger or with a trigger type without target.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Change la cible du déclencheur de recherche selon son type : `item` (craft-item, send-item-to-orbit), `fluid` (craft-fluid), `entity` (build-entity, capture-spawner) ou `entities` (mine-entity, un nom seul est transformé en liste). No-op sur une technologie sans déclencheur ou avec un type de déclencheur sans cible.
+---@param target string|string[]
+---@return RitnProtoTech self  Chainable
+function RitnProtoTech:setTriggerTarget(target)
+    if self.prototype == nil then return self end
+    local trigger = self.prototype.research_trigger
+    if trigger == nil then return self end
+
+    local key = trigger_targets[trigger.type]
+    if key == nil then return self end
+
+    if key == "entities" then
+        if type(target) == "string" then target = { target } end
+        if type(target) ~= "table" then return self end
+        trigger.entities = table.deepcopy(target)
+    else
+        if type(target) ~= "string" then return self end
+        trigger[key] = target
+    end
+
+    self:update()
+    return self
+end
+
+--SET TRIGGER COUNT
+
+---**EN**
+---
+---Description: Changes the quantity required by the research trigger: `count` (craft-item) or `amount` (craft-fluid). No-op on a technology without research trigger or with a trigger type without quantity.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Change la quantité demandée par le déclencheur de recherche : `count` (craft-item) ou `amount` (craft-fluid). No-op sur une technologie sans déclencheur ou avec un type de déclencheur sans quantité.
+---@param count number
+---@return RitnProtoTech self  Chainable
+function RitnProtoTech:setTriggerCount(count)
+    if self.prototype == nil then return self end
+    if type(count) ~= "number" then return self end
+    local trigger = self.prototype.research_trigger
+    if trigger == nil then return self end
+
+    local key = trigger_counts[trigger.type]
+    if key == nil then return self end
+
+    trigger[key] = count
 
     self:update()
     return self
@@ -260,14 +460,14 @@ end
 
 ---**EN**
 ---
----Description: Adds a science pack to `prototype.unit.ingredients`, defaulting to amount 1. If the pack is already present (matched by `[1]` or `.name`), increments the existing amount by `count` instead. `pack` must exist in `data.raw.tool`.
+---Description: Adds a science pack to `prototype.unit.ingredients`, defaulting to amount 1. If the pack is already present (matched by `[1]` or `.name`), increments the existing amount by `count` instead. `pack` must exist in `data.raw.tool` or `data.raw.item`.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Ajoute un pack de science à `prototype.unit.ingredients`, amount 1 par défaut. Si le pack est déjà présent (matché par `[1]` ou `.name`), incrémente l'amount existant de `count`. `pack` doit exister dans `data.raw.tool`.
----@param pack string     Tool name (e.g. "automation-science-pack")
+---Description: Ajoute un pack de science à `prototype.unit.ingredients`, amount 1 par défaut. Si le pack est déjà présent (matché par `[1]` ou `.name`), incrémente l'amount existant de `count`. `pack` doit exister dans `data.raw.tool` ou `data.raw.item`.
+---@param pack string     Science pack item name (e.g. "automation-science-pack")
 ---@param count? integer  Default 1
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:addPack(pack, count)
@@ -275,7 +475,7 @@ function RitnProtoTech:addPack(pack, count)
     if not self.prototype.unit then return self end
     if count ~= nil then self.amount_pack = count end
 
-    if data.raw.tool[pack] then
+    if packExists(pack) then
         for i, ingredient in pairs(self.prototype.unit.ingredients) do
             if ingredient[1] == pack then
                 self.addit = false
@@ -311,6 +511,7 @@ end
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:removePack(pack)
     if self.prototype == nil then return self end
+    if not self.prototype.unit then return self end
     for i, ingredient in pairs(self.prototype.unit.ingredients) do
         if ingredient[1] == pack or ingredient.name == pack then
             table.remove(self.prototype.unit.ingredients, i)
@@ -324,19 +525,20 @@ end
 
 ---**EN**
 ---
----Description: Replaces every occurrence of `old` pack with `new` pack, preserving the total amount. `new` must exist in `data.raw.tool`.
+---Description: Replaces every occurrence of `old` pack with `new` pack, preserving the total amount. `new` must exist in `data.raw.tool` or `data.raw.item`.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Remplace chaque occurrence du pack `old` par le pack `new`, en préservant l'amount total. `new` doit exister dans `data.raw.tool`.
+---Description: Remplace chaque occurrence du pack `old` par le pack `new`, en préservant l'amount total. `new` doit exister dans `data.raw.tool` ou `data.raw.item`.
 ---@param old string
 ---@param new string
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:replacePack(old, new)
     if self.prototype == nil then return self end
-    if data.raw.tool[new] then
+    if not self.prototype.unit then return self end
+    if packExists(new) then
         self.amount_pack = 0
 
         for i, ingredient in pairs(self.prototype.unit.ingredients) do
@@ -377,6 +579,7 @@ end
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:multipliedPack(coeff)
     if self.prototype == nil then return self end
+    if not self.prototype.unit then return self end
     self.prototype.unit.count = self.prototype.unit.count * coeff
     self:update()
     return self
@@ -386,19 +589,19 @@ end
 
 ---**EN**
 ---
----Description: Removes `pack` from the `inputs` list of every lab (or a specific one if `lab` is provided). `pack` must exist in `data.raw.tool`.
+---Description: Removes `pack` from the `inputs` list of every lab (or a specific one if `lab` is provided). `pack` must exist in `data.raw.tool` or `data.raw.item`.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Retire `pack` de la liste `inputs` de chaque lab (ou d'un lab spécifique si `lab` est fourni). `pack` doit exister dans `data.raw.tool`.
+---Description: Retire `pack` de la liste `inputs` de chaque lab (ou d'un lab spécifique si `lab` est fourni). `pack` doit exister dans `data.raw.tool` ou `data.raw.item`.
 ---@param pack string
 ---@param lab? string
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:removePackLab(pack, lab)
     if pack == nil then return self end
-    if data.raw.tool[pack] == nil then return self end
+    if not packExists(pack) then return self end
 
     if lab == nil then
         for i, labo in pairs(data.raw.lab) do
@@ -425,18 +628,18 @@ end
 
 ---**EN**
 ---
----Description: Adds `pack` to the `inputs` list of every lab that doesn't already contain it. `index` controls the insertion position (default 1, i.e. front). `pack` must exist in `data.raw.tool`.
+---Description: Adds `pack` to the `inputs` list of every lab that doesn't already contain it. `index` controls the insertion position (default 1, i.e. front). `pack` must exist in `data.raw.tool` or `data.raw.item`.
 ---
 ---──────────────────────────────
 ---
 ---**FR**
 ---
----Description: Ajoute `pack` à la liste `inputs` de chaque lab qui ne le contient pas déjà. `index` contrôle la position d'insertion (défaut 1, au début). `pack` doit exister dans `data.raw.tool`.
+---Description: Ajoute `pack` à la liste `inputs` de chaque lab qui ne le contient pas déjà. `index` contrôle la position d'insertion (défaut 1, au début). `pack` doit exister dans `data.raw.tool` ou `data.raw.item`.
 ---@param pack string
 ---@param index? integer  Default 1
 ---@return RitnProtoTech self  Chainable
 function RitnProtoTech:addPackLab(pack, index)
-    if data.raw.tool[pack] == nil then return self end
+    if not packExists(pack) then return self end
 
     for i, lab in pairs(data.raw.lab) do
         local exist = false

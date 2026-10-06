@@ -60,6 +60,8 @@ Type sentinel.
 
 ## Methods — research cost
 
+> These methods only apply to science pack technologies (`unit`). On a research trigger technology (Factorio 2.x), they do nothing.
+
 #### `:setCount(count)` → [`RitnProtoTech`](RitnProtoTech.md)
 Sets the cycle count (`prototype.unit.count`).
 
@@ -76,6 +78,75 @@ Multiplies `prototype.unit.count` by `coeff`.
 
 ---
 
+## Methods — unlock mode
+
+In Factorio 2.x, a technology is unlocked either with **science packs** (`unit`) or with a **research trigger** (`research_trigger`: craft an item, mine an entity, etc.).
+
+#### `:getUnlockMode()` → `"unit"|"trigger"|nil`
+Returns `"unit"` (science packs), `"trigger"` (research trigger) or `nil` if the technology does not exist.
+
+#### `:isUnit()` → `boolean`
+`true` if the technology is unlocked with science packs.
+
+#### `:isTrigger()` → `boolean`
+`true` if the technology is unlocked with a research trigger.
+
+#### `:setUnit(unit)` → [`RitnProtoTech`](RitnProtoTech.md)
+Replaces the whole research cost (`prototype.unit`) and removes `research_trigger`. Turns a trigger technology into a science pack technology.
+
+**Parameters**: `unit` :: `table` — `TechnologyUnit` (`{count = 100, ingredients = { {"automation-science-pack", 1} }, time = 30}`).
+
+#### `:setTrigger(trigger)` → [`RitnProtoTech`](RitnProtoTech.md)
+Replaces the research trigger (`prototype.research_trigger`) and removes `unit`. Turns a science pack technology into a trigger technology. No-op if `trigger` has no `type`.
+
+**Parameters**: `trigger` :: `table` — `TechnologyTrigger` (`{type = "craft-item", item = "iron-plate", count = 50}`).
+
+```lua
+RitnProtoTech("oil-processing"):setUnit({
+    count = 100,
+    ingredients = { {"automation-science-pack", 1}, {"logistic-science-pack", 1} },
+    time = 30
+})
+RitnProtoTech("my-tech"):setTrigger({type = "craft-item", item = "iron-plate", count = 50})
+```
+
+---
+
+## Methods — research trigger
+
+> These methods only apply to trigger technologies. On a science pack technology, they do nothing.
+
+#### `:getTrigger()` → `table?`
+Returns a copy of the research trigger, or `nil` if the technology has none.
+
+#### `:setTriggerTarget(target)` → [`RitnProtoTech`](RitnProtoTech.md)
+Changes the trigger target according to its type:
+
+| Trigger type | Field changed |
+|---|---|
+| `craft-item`, `send-item-to-orbit` | `item` |
+| `craft-fluid` | `fluid` |
+| `build-entity`, `capture-spawner` | `entity` |
+| `mine-entity` | `entities` (a single name is turned into a list) |
+
+No-op for types without target (`create-space-platform`, `scripted`).
+
+**Parameters**: `target` :: `string|string[]`
+
+#### `:setTriggerCount(count)` → [`RitnProtoTech`](RitnProtoTech.md)
+Changes the required quantity: `count` (`craft-item`) or `amount` (`craft-fluid`). No-op for other types.
+
+**Parameters**: `count` :: `number`
+
+```lua
+local tech = RitnProtoTech("steam-power")
+if tech:isTrigger() then
+    tech:setTriggerTarget("stone-brick"):setTriggerCount(20)
+end
+```
+
+---
+
 ## Methods — unlocked recipes
 
 #### `:addRecipe(recipe_name)` → [`RitnProtoTech`](RitnProtoTech.md)
@@ -88,21 +159,23 @@ Removes the matching `unlock-recipe` effect. If `complete == true`, also disable
 
 ## Methods — science packs (research)
 
+> Like the research cost methods, these do nothing on a trigger technology. A pack can be a `tool` or an `item` (Factorio 2.1: vanilla packs are `item`).
+
 #### `:addPack(pack, count?)` → [`RitnProtoTech`](RitnProtoTech.md)
-Adds a pack to `prototype.unit.ingredients` (`count` defaults to 1). If the pack is already present, **increments** its amount by `count`. `pack` must exist in `data.raw.tool`.
+Adds a pack to `prototype.unit.ingredients` (`count` defaults to 1). If the pack is already present, **increments** its amount by `count`. `pack` must exist in `data.raw.tool` or `data.raw.item`.
 
 #### `:removePack(pack)` → [`RitnProtoTech`](RitnProtoTech.md)
 Removes every entry matching `pack`.
 
 #### `:replacePack(old, new)` → [`RitnProtoTech`](RitnProtoTech.md)
-Replaces `old` with `new`, preserving the total amount. `new` must exist in `data.raw.tool`.
+Replaces `old` with `new`, preserving the total amount. `new` must exist in `data.raw.tool` or `data.raw.item`.
 
 ---
 
 ## Methods — packs on labs
 
 #### `:addPackLab(pack, index?)` → [`RitnProtoTech`](RitnProtoTech.md)
-Adds `pack` to the `inputs` of every lab that doesn't already contain it (position `index`, default 1). `pack` must exist in `data.raw.tool`.
+Adds `pack` to the `inputs` of every lab that doesn't already contain it (position `index`, default 1). `pack` must exist in `data.raw.tool` or `data.raw.item`.
 
 #### `:removePackLab(pack, lab?)` → [`RitnProtoTech`](RitnProtoTech.md)
 Removes `pack` from every lab's `inputs`, or from a specific `lab` if provided.

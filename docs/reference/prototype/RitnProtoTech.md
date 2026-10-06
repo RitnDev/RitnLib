@@ -60,6 +60,8 @@ Sentinelle de type.
 
 ## Méthodes — coût de recherche
 
+> Ces méthodes ne concernent que les technologies à packs de science (`unit`). Sur une technologie à déclencheur de recherche (Factorio 2.x), elles ne font rien.
+
 #### `:setCount(count)` → [`RitnProtoTech`](RitnProtoTech.md)
 Définit le nombre de cycles (`prototype.unit.count`).
 
@@ -76,6 +78,75 @@ Multiplie `prototype.unit.count` par `coeff`.
 
 ---
 
+## Méthodes — mode de déblocage
+
+En Factorio 2.x, une technologie se débloque soit avec des **packs de science** (`unit`), soit avec un **déclencheur de recherche** (`research_trigger` : fabriquer un item, miner une entité, etc.).
+
+#### `:getUnlockMode()` → `"unit"|"trigger"|nil`
+Retourne `"unit"` (packs de science), `"trigger"` (déclencheur) ou `nil` si la technologie n'existe pas.
+
+#### `:isUnit()` → `boolean`
+`true` si la technologie se débloque avec des packs de science.
+
+#### `:isTrigger()` → `boolean`
+`true` si la technologie se débloque avec un déclencheur de recherche.
+
+#### `:setUnit(unit)` → [`RitnProtoTech`](RitnProtoTech.md)
+Remplace tout le coût de recherche (`prototype.unit`) et retire `research_trigger`. Passe une technologie à déclencheur en technologie à packs de science.
+
+**Paramètres** : `unit` :: `table` — `TechnologyUnit` (`{count = 100, ingredients = { {"automation-science-pack", 1} }, time = 30}`).
+
+#### `:setTrigger(trigger)` → [`RitnProtoTech`](RitnProtoTech.md)
+Remplace le déclencheur de recherche (`prototype.research_trigger`) et retire `unit`. Passe une technologie à packs de science en technologie à déclencheur. No-op si `trigger` n'a pas de `type`.
+
+**Paramètres** : `trigger` :: `table` — `TechnologyTrigger` (`{type = "craft-item", item = "iron-plate", count = 50}`).
+
+```lua
+RitnProtoTech("oil-processing"):setUnit({
+    count = 100,
+    ingredients = { {"automation-science-pack", 1}, {"logistic-science-pack", 1} },
+    time = 30
+})
+RitnProtoTech("ma-techno"):setTrigger({type = "craft-item", item = "iron-plate", count = 50})
+```
+
+---
+
+## Méthodes — déclencheur de recherche
+
+> Ces méthodes ne concernent que les technologies à déclencheur. Sur une technologie à packs de science, elles ne font rien.
+
+#### `:getTrigger()` → `table?`
+Retourne une copie du déclencheur de recherche, ou `nil` si la technologie n'en a pas.
+
+#### `:setTriggerTarget(target)` → [`RitnProtoTech`](RitnProtoTech.md)
+Change la cible du déclencheur selon son type :
+
+| Type de déclencheur | Champ modifié |
+|---|---|
+| `craft-item`, `send-item-to-orbit` | `item` |
+| `craft-fluid` | `fluid` |
+| `build-entity`, `capture-spawner` | `entity` |
+| `mine-entity` | `entities` (un nom seul est transformé en liste) |
+
+No-op pour les types sans cible (`create-space-platform`, `scripted`).
+
+**Paramètres** : `target` :: `string|string[]`
+
+#### `:setTriggerCount(count)` → [`RitnProtoTech`](RitnProtoTech.md)
+Change la quantité demandée : `count` (`craft-item`) ou `amount` (`craft-fluid`). No-op pour les autres types.
+
+**Paramètres** : `count` :: `number`
+
+```lua
+local tech = RitnProtoTech("steam-power")
+if tech:isTrigger() then
+    tech:setTriggerTarget("stone-brick"):setTriggerCount(20)
+end
+```
+
+---
+
 ## Méthodes — recettes débloquées
 
 #### `:addRecipe(recipe_name)` → [`RitnProtoTech`](RitnProtoTech.md)
@@ -88,21 +159,23 @@ Retire l'effet `unlock-recipe` correspondant. Si `complete == true`, désactive 
 
 ## Méthodes — packs de science (recherche)
 
+> Comme le coût de recherche, ces méthodes ne font rien sur une technologie à déclencheur. Un pack peut être un `tool` ou un `item` (Factorio 2.1 : les packs vanilla sont des `item`).
+
 #### `:addPack(pack, count?)` → [`RitnProtoTech`](RitnProtoTech.md)
-Ajoute un pack à `prototype.unit.ingredients` (`count` défaut 1). Si le pack est déjà présent, **incrémente** son amount de `count`. `pack` doit exister dans `data.raw.tool`.
+Ajoute un pack à `prototype.unit.ingredients` (`count` défaut 1). Si le pack est déjà présent, **incrémente** son amount de `count`. `pack` doit exister dans `data.raw.tool` ou `data.raw.item`.
 
 #### `:removePack(pack)` → [`RitnProtoTech`](RitnProtoTech.md)
 Retire toutes les entrées correspondant à `pack`.
 
 #### `:replacePack(old, new)` → [`RitnProtoTech`](RitnProtoTech.md)
-Remplace `old` par `new` en préservant l'amount total. `new` doit exister dans `data.raw.tool`.
+Remplace `old` par `new` en préservant l'amount total. `new` doit exister dans `data.raw.tool` ou `data.raw.item`.
 
 ---
 
 ## Méthodes — packs sur les labs
 
 #### `:addPackLab(pack, index?)` → [`RitnProtoTech`](RitnProtoTech.md)
-Ajoute `pack` aux `inputs` de chaque lab qui ne le contient pas (position `index`, défaut 1). `pack` doit exister dans `data.raw.tool`.
+Ajoute `pack` aux `inputs` de chaque lab qui ne le contient pas (position `index`, défaut 1). `pack` doit exister dans `data.raw.tool` ou `data.raw.item`.
 
 #### `:removePackLab(pack, lab?)` → [`RitnProtoTech`](RitnProtoTech.md)
 Retire `pack` des `inputs` de tous les labs, ou d'un `lab` précis si fourni.

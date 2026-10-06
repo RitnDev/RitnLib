@@ -1,4 +1,27 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.7
+Date: 06.10.2026
+  Features:
+    - RitnProtoTech: added setUnit(unit) to replace the whole research cost and remove research_trigger
+      (turns a Factorio 2.x trigger technology back into a science pack technology).
+    - RitnProtoTech: added setTrigger(trigger) to replace the research trigger and remove unit (turns a
+      science pack technology into a trigger technology).
+    - RitnProtoTech: added getUnlockMode() ("unit", "trigger" or nil), isUnit() and isTrigger().
+    - RitnProtoTech: added getTrigger(), setTriggerTarget(target) (item, fluid, entity or entities
+      depending on the trigger type) and setTriggerCount(count) (count or amount) for trigger technologies.
+  Changes:
+    - RitnProtoTech: addPack(), replacePack(), addPackLab() and removePackLab() accept a science pack
+      defined as "tool" or "item" (Factorio 2.1 vanilla science packs are plain items).
+  Bugfixes:
+    - RitnProtoTech: setTime(), setIngredients(), removePack(), replacePack() and multipliedPack() no
+      longer crash on a technology without "unit" (research trigger): they are now no-op, like setCount()
+      and addPack().
+    - RitnProtoRecipe: setEnabled() did nothing on a recipe without an "enabled" key (default true, most
+      vanilla Factorio 2.x recipes); the key is now always written.
+  Info:
+    - Documentation: RitnProtoTech reference (FR + EN) updated with the unlock mode and research trigger
+      methods.
+---------------------------------------------------------------------------------------------------
 Version: 0.10.6
 Date: 01.10.2026
   Features:
