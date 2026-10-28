@@ -56,11 +56,23 @@
 ---@field defaut16 string
 ---@field defaut18 string
 ---@field defaut20 string
+---@field defaut22 string
+---@field defaut24 string
+---@field defaut26 string
+---@field defaut28 string
+---@field defaut30 string
+---@field defaut32 string
 ---@field bold12 string
 ---@field bold14 string
 ---@field bold16 string
 ---@field bold18 string
 ---@field bold20 string
+---@field bold22 string
+---@field bold24 string
+---@field bold26 string
+---@field bold28 string
+---@field bold30 string
+---@field bold32 string
 
 ---@class RitnLibDefinesNames
 ---@field font RitnLibDefinesNamesFont
@@ -175,11 +187,23 @@ ritnlib = {
                 defaut16 = "ritn-default-16",
                 defaut18 = "ritn-default-18",
                 defaut20 = "ritn-default-20",
+                defaut22 = "ritn-default-22",
+                defaut24 = "ritn-default-24",
+                defaut26 = "ritn-default-26",
+                defaut28 = "ritn-default-28",
+                defaut30 = "ritn-default-30",
+                defaut32 = "ritn-default-32",
                 bold12 = "ritn-default-bold-12",
                 bold14 = "ritn-default-bold-14",
                 bold16 = "ritn-default-bold-16",
                 bold18 = "ritn-default-bold-18",
                 bold20 = "ritn-default-bold-20",
+                bold22 = "ritn-default-bold-22",
+                bold24 = "ritn-default-bold-24",
+                bold26 = "ritn-default-bold-26",
+                bold28 = "ritn-default-bold-28",
+                bold30 = "ritn-default-bold-30",
+                bold32 = "ritn-default-bold-32",
             }
         },
     }
