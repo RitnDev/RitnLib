@@ -59,11 +59,21 @@ local string_valid = { string = true, table = true }
 
 -- FR : Types d'éléments concernés par chaque méthode
 -- EN : Element types concerned by each method
-local orientation_valid = { frame = true, flow = true, line = true }   -- horizontal(), vertical()
-local text_valid = { textfield = true, ["text-box"] = true }           -- text()
-local button_valid = { button = true, ["sprite-button"] = true }       -- mouseButtonFilter()
-local sprite_valid = { sprite = true, ["sprite-button"] = true }       -- spritePath()
-local check_valid = { checkbox = true, radiobutton = true }            -- checked()
+-- FR : types acceptés par horizontal(), vertical()
+-- EN : types accepted by horizontal(), vertical()
+local orientation_valid = { frame = true, flow = true, line = true }
+-- FR : types acceptés par text()
+-- EN : types accepted by text()
+local text_valid = { textfield = true, ["text-box"] = true }
+-- FR : types acceptés par mouseButtonFilter()
+-- EN : types accepted by mouseButtonFilter()
+local button_valid = { button = true, ["sprite-button"] = true }
+-- FR : types acceptés par spritePath()
+-- EN : types accepted by spritePath()
+local sprite_valid = { sprite = true, ["sprite-button"] = true }
+-- FR : types acceptés par checked()
+-- EN : types accepted by checked()
+local check_valid = { checkbox = true, radiobutton = true }
 
 
 ---**EN**
@@ -100,9 +110,15 @@ MyModGuiElement = mymod.classFactory.newclass(function(self, ui_name, element_ty
     -- FR : Nom en jeu : gui_name-type-name, ex. « mymod_panel-button-close »
     -- EN : In-game name: gui_name-type-name, e.g. "mymod_panel-button-close"
     self.gui_name = ui_name .. "-" .. short_type .. "-" .. element_name
-    self.name = element_name        -- FR : partie « name » (ex. « close ») / EN : "name" part (e.g. "close")
-    self.type = element_type        -- FR : type Factorio complet (ex. « sprite-button ») / EN : full Factorio type (e.g. "sprite-button")
-    self.ui = ui_name               -- FR : fenêtre (ex. « mymod_panel ») / EN : window (e.g. "mymod_panel")
+    -- FR : partie « name » (ex. « close »)
+    -- EN : "name" part (e.g. "close")
+    self.name = element_name
+    -- FR : type Factorio complet (ex. « sprite-button »)
+    -- EN : full Factorio type (e.g. "sprite-button")
+    self.type = element_type
+    -- FR : fenêtre (ex. « mymod_panel »)
+    -- EN : window (e.g. "mymod_panel")
+    self.ui = ui_name
     -- FR : Action déclenchée par cet élément, cherchée dans gui_action de la fenêtre (ex. « button-close »)
     -- EN : Action triggered by this element, looked up in the window's gui_action (e.g. "button-close")
     self.action = short_type .. "-" .. element_name

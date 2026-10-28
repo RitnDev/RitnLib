@@ -67,11 +67,21 @@ MyModPlayer = mymod.classFactory.newclass(function(self, LuaPlayer)
     --------------------------------------------------
     -- FR : Copie des informations du joueur utiles à MyMod
     -- EN : Copy of the player information useful to MyMod
-    self.player = LuaPlayer                 -- FR : le LuaPlayer lui-même / EN : the LuaPlayer itself
-    self.index = LuaPlayer.index            -- FR : index, clé de storage.players / EN : index, key of storage.players
-    self.name = LuaPlayer.name              -- FR : nom affiché / EN : displayed name
-    self.admin = LuaPlayer.admin            -- FR : admin ? (droit d'utiliser MyMod en multijoueur) / EN : admin? (right to use MyMod in multiplayer)
-    self.connected = LuaPlayer.connected    -- FR : connecté ? / EN : connected?
+    -- FR : le LuaPlayer lui-même
+    -- EN : the LuaPlayer itself
+    self.player = LuaPlayer
+    -- FR : index, clé de storage.players
+    -- EN : index, key of storage.players
+    self.index = LuaPlayer.index
+    -- FR : nom affiché
+    -- EN : displayed name
+    self.name = LuaPlayer.name
+    -- FR : admin ? (droit d'utiliser MyMod en multijoueur)
+    -- EN : admin? (right to use MyMod in multiplayer)
+    self.admin = LuaPlayer.admin
+    -- FR : connecté ?
+    -- EN : connected?
+    self.connected = LuaPlayer.connected
     --------------------------------------------------
 end) --[[@as MyModPlayer]]
 ----------------------------------------------------------------

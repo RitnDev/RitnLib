@@ -8,4 +8,6 @@ require("core.defines")
 
 -- FR : Prototypes
 -- EN : Prototypes
-require(mymod.defines.prototypes.custom_inputs)     -- FR : raccourcis clavier / EN : keyboard shortcuts
+-- FR : raccourcis clavier
+-- EN : keyboard shortcuts
+require(mymod.defines.prototypes.custom_inputs)

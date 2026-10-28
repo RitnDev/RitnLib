@@ -22,8 +22,8 @@ core/setup-classes.lua   loads the classes, parent before child
 core/modules.lua         list of the modules given to the event handler
 core/migrations.lua      one migration per version (if storage)
 classes/                 one global class per file, prefixed by the mod
-gui/                     window descriptions: getElement(gui_name) / getContent()
-modules/                 one domain per file, returns { events = {...}, on_init?, on_load?, ... }
+gui/                     windows: getElement / getContent
+modules/                 one domain per file, returns { events = ... }
 lualib/                  helper modules (local … return)
 prototypes/              data stage only
 types/<mod>-globals.lua  LuaLS meta-file of the globals (shipped in the zip)
@@ -73,7 +73,7 @@ Every function, method and class gets its block **when it is created**. Format (
 
 ```lua
 -- simple comment above, if any
-                                        ← empty line REQUIRED after a simple comment
+← empty line REQUIRED after a simple comment
 ---**EN**
 ---
 ---Description: Closes the panel.
@@ -98,7 +98,8 @@ function MyModGuiPanel:close(force)
 ---
 ---Description: Panel of MyMod.
 ---
----⚠ Temporary wrapper, created on each event. Do not store the instance in `storage`.
+---⚠ Temporary wrapper, created on each event.
+---Do not store the instance in `storage`.
 ---
 ---──────────────────────────────
 ---
@@ -106,7 +107,8 @@ function MyModGuiPanel:close(force)
 ---
 ---Description: Panneau de MyMod.
 ---
----⚠ Wrapper temporaire, créé à chaque évènement. Ne pas stocker l'instance dans `storage`.
+---⚠ Wrapper temporaire, créé à chaque évènement.
+---Ne pas stocker l'instance dans `storage`.
 ---@class MyModGuiPanel : RitnLibGui
 ---@field object_name string   "MyModGuiPanel"
 ---@operator call(EventData): MyModGuiPanel

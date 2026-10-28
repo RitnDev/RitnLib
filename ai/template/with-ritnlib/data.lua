@@ -8,4 +8,6 @@ require("core.defines")
 
 -- FR : Prototypes
 -- EN : Prototypes
-require(ritnlib.defines.mymod.prototypes.custom_inputs)     -- FR : raccourcis clavier / EN : keyboard shortcuts
+-- FR : raccourcis clavier
+-- EN : keyboard shortcuts
+require(ritnlib.defines.mymod.prototypes.custom_inputs)

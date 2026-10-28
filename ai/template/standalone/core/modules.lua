@@ -26,7 +26,11 @@ local modules = {}
 
 -- FR : Un module par domaine
 -- EN : One module per domain
-modules.events = require(mymod.defines.modules.events)     -- FR : cycle de vie / EN : life cycle
-modules.gui = require(mymod.defines.modules.gui)           -- FR : fenêtre panel / EN : panel window
+-- FR : cycle de vie
+-- EN : life cycle
+modules.events = require(mymod.defines.modules.events)
+-- FR : fenêtre panel
+-- EN : panel window
+modules.gui = require(mymod.defines.modules.gui)
 
 return modules

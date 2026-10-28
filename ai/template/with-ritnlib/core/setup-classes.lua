@@ -11,4 +11,6 @@ require(ritnlib.defines.setup)
 
 -- FR : Classes du mod
 -- EN : Mod classes
-require(ritnlib.defines.mymod.class.gui_panel)      -- MyModGuiPanel : extends RitnLibGui
+-- FR : MyModGuiPanel : hérite de RitnLibGui
+-- EN : MyModGuiPanel: extends RitnLibGui
+require(ritnlib.defines.mymod.class.gui_panel)

@@ -27,22 +27,22 @@ Les règles marquées *(les deux)* s'appliquent dans tous les cas.
 <Mod>/
 ├─ info.json
 ├─ changelog.txt            format changelog de Factorio, strict
-├─ settings.lua             settings stage (à la racine, imposé par Factorio)
+├─ settings.lua             settings stage (à la racine)
 ├─ data.lua                 data stage : charge defines puis prototypes/
 ├─ control.lua              control stage : defines → classes → modules
 ├─ core/
-│  ├─ defines.lua           registre de chemins (aucun require en dur ailleurs)
+│  ├─ defines.lua           registre de chemins
 │  ├─ setup-classes.lua     charge les classes (dans l'ordre d'héritage)
 │  ├─ modules.lua           liste des modules envoyés à l'event handler
 │  └─ migrations.lua        une migration par version (si storage)
 ├─ classes/                 une classe par fichier (Ritn<Mod>Xxx / Gvv<Xxx>)
-├─ gui/                     description des fenêtres : getElement / getContent
-├─ modules/                 un module par domaine, renvoie { events = {...} }
+├─ gui/                     fenêtres : getElement / getContent
+├─ modules/                 un module par domaine
 ├─ lualib/                  fonctions utilitaires (modules local … return)
-├─ prototypes/              data stage seulement (custom-inputs, styles, sprites…)
-├─ mods/                    compatibilité avec d'autres mods, un fichier par mod (si besoin)
+├─ prototypes/              data stage seulement
+├─ mods/                    compatibilité, un fichier par mod
 ├─ locale/<langue>/<mod>.cfg
-├─ types/<mod>-globals.lua  meta-file LuaLS des globals (distribué dans le zip)
+├─ types/<mod>-globals.lua  meta-file LuaLS (dans le zip)
 └─ docs/                    doc mainteneur (exclue du zip)
 ```
 
@@ -58,27 +58,81 @@ bouge, seul le registre change.
 **Avec RitnLib** — le mod ajoute son registre dans celui de RitnLib (`RitnLobbyGame/core/defines.lua`) :
 
 ```lua
-if not ritnlib then require("__RitnBaseGame__.core.defines") end   -- ou __RitnLib__.defines
+-- FR : Registre partagé de RitnLib (ou __RitnLib__.defines)
+-- EN : RitnLib shared registry (or __RitnLib__.defines)
+if not ritnlib then
+    require("__RitnBaseGame__.core.defines")
+end
+
+-- FR : Nom du mod et dossier racine
+-- EN : Mod name and root folder
 local name = "RitnLobbyGame"
 local dir = "__" .. name .. "__"
+
 local defines = {}
 defines.name = name
 defines.directory = dir
+
+-- FR : Chargement des classes
+-- EN : Classes loading
 defines.setup = dir .. ".core.setup-classes"
-defines.class = { guiLobby = dir .. ".classes.RitnGuiLobby", ... }
-defines.modules = { core = dir .. ".core.modules", events = dir .. ".modules.events", ... }
-defines.gui = { lobby = dir .. ".gui.lobby", ... }
-defines.prototypes = { customInputs = dir .. ".prototypes.custom-inputs" }
-ritnlib.defines.lobby = defines        -- clé courte du mod dans le registre partagé
+
+-- FR : Classes du mod
+-- EN : Mod classes
+defines.class = {
+    guiLobby = dir .. ".classes.RitnGuiLobby",
+}
+
+-- FR : Modules envoyés à l'event handler
+-- EN : Modules sent to the event handler
+defines.modules = {
+    core = dir .. ".core.modules",
+    events = dir .. ".modules.events",
+}
+
+-- FR : Description des fenêtres
+-- EN : Windows description
+defines.gui = {
+    lobby = dir .. ".gui.lobby",
+}
+
+-- FR : Prototypes (data stage)
+-- EN : Prototypes (data stage)
+defines.prototypes = {
+    customInputs = dir .. ".prototypes.custom-inputs",
+}
+
+-- FR : Clé courte du mod dans le registre partagé
+-- EN : Short key of the mod inside the shared registry
+ritnlib.defines.lobby = defines
 ```
 
 **Autonome** — le mod crée son propre global (`gvv/core/defines.lua`) :
 
 ```lua
+-- FR : Nom du mod et dossier racine
+-- EN : Mod name and root folder
 local name = "gvv"
 local directory = "__" .. name .. "__"
-local defines = { name = name, directory = directory, class = {...}, gui = {...}, modules = {...} }
-if not gvv then gvv = {} end
+
+-- FR : Registre des chemins (classes, gui, modules...)
+-- EN : Path registry (classes, gui, modules...)
+local defines = {
+    name = name,
+    directory = directory,
+    class = {
+        gui_main = directory .. ".classes.GvvGuiMain",
+    },
+    modules = {
+        core = directory .. ".core.modules",
+    },
+}
+
+-- FR : Global du mod
+-- EN : Mod global
+if not gvv then
+    gvv = {}
+end
 gvv.defines = defines
 ```
 
@@ -91,12 +145,31 @@ Règles :
 ## 3. Bootstrap `control.lua` *(les deux)*
 
 ```lua
-require("core.defines")                                   -- 1. registre
-require(<registre>.setup)                                 -- 2. classes (globals)
-local listener = require(<registre>.event)                -- 3. modules → event handler
-    .add_libraries(require(<registre>.modules.core))
-if script.active_mods["gvv"] then require("__gvv__.gvv")() end         -- rendre le mod lisible par gvv
-if script.active_mods["RitnTest"] then require("__RitnTest__.interface") end   -- tests en jeu (dev)
+-- FR : Registre des chemins
+-- EN : Path registry
+require("core.defines")
+
+-- FR : Classes (globales)
+-- EN : Classes (globals)
+require(<registre>.setup)
+
+-- FR : Modules envoyés à l'event handler
+-- EN : Modules sent to the event handler
+local event_handler = require(<registre>.event)
+local modules = require(<registre>.modules.core)
+local listener = event_handler.add_libraries(modules)
+
+-- FR : Rend le storage du mod lisible par gvv (si gvv est installé)
+-- EN : Makes the mod storage readable by gvv (if gvv is installed)
+if script.active_mods["gvv"] then
+    require("__gvv__.gvv")()
+end
+
+-- FR : Tests en jeu avec RitnTest (développement seulement)
+-- EN : In-game tests with RitnTest (development only)
+if script.active_mods["RitnTest"] then
+    require("__RitnTest__.interface")
+end
 ```
 
 - Event handler : `__core__.lualib.event_handler` (RitnLib l'expose via `ritnlib.defines.event`).
@@ -119,20 +192,36 @@ if script.active_mods["RitnTest"] then require("__RitnTest__.interface") end   -
 Chaque fichier de `modules/` gère un domaine et renvoie une table pour l'event handler :
 
 ```lua
-local function on_player_created(event) ... end
+-- FR : Nouveau joueur : ses données sont créées
+-- EN : New player: their data is created
+local function on_player_created(event)
+    storage.players[event.player_index] = {}
+end
 
+-- FR : Module envoyé à l'event handler
+--      (optionnels : on_init, on_load, on_configuration_changed, add_commands)
+-- EN : Module sent to the event handler
+--      (optional: on_init, on_load, on_configuration_changed, add_commands)
 local module = {events = {}}
 module.events[defines.events.on_player_created] = on_player_created
--- optionnels : module.on_init, module.on_load, module.on_configuration_changed, module.add_commands
 return module
 ```
 
 `core/modules.lua` les rassemble :
 
 ```lua
+-- FR : Liste des modules envoyés à l'event handler
+-- EN : List of the modules sent to the event handler
 local modules = {}
+
+-- FR : Cycle de vie du mod
+-- EN : Mod life cycle
 modules.events = require(<registre>.modules.events)
+
+-- FR : Évènements des fenêtres
+-- EN : Windows events
 modules.gui = require(<registre>.modules.gui)
+
 return modules
 ```
 
@@ -148,16 +237,44 @@ Règles :
 ### Description dans `gui/<fenêtre>.lua`
 
 ```lua
-local function getElement(gui_name)          -- specs passées à LuaGuiElement.add
-    return {
-        frame = { main = <Classe>Element(gui_name, "frame", "main"):vertical():get() },
-        button = { close = <Classe>Element(gui_name, "sprite-button", "close"):spritePath("utility/close"):get() },
+-- FR : Description des éléments (specs passées à LuaGuiElement.add)
+-- EN : Elements description (specs given to LuaGuiElement.add)
+local function getElement(gui_name)
+    local element = {
+        -- FR : Cadre principal
+        -- EN : Main frame
+        frame = {
+            main = <Classe>Element(gui_name, "frame", "main"):vertical():get(),
+        },
+        -- FR : Bouton fermer
+        -- EN : Close button
+        button = {
+            close = <Classe>Element(gui_name, "sprite-button", "close")
+                :spritePath("utility/close")
+                :get(),
+        },
     }
+    return element
 end
-local function getContent()                  -- chemins depuis gui[1]
-    return { frame = { main = { "frame-main" } }, button = { close = { "frame-main", "button-close" } } }
+
+-- FR : Chemins des éléments depuis gui[1], sans le préfixe gui_name
+-- EN : Element paths from gui[1], without the gui_name prefix
+local function getContent()
+    local content = {
+        frame = {
+            main = { "frame-main" },
+        },
+        button = {
+            close = { "frame-main", "button-close" },
+        },
+    }
+    return content
 end
-return { getElement = getElement, getContent = getContent }
+
+return {
+    getElement = getElement,
+    getContent = getContent,
+}
 ```
 
 `<Classe>Element` = `RitnLibGuiElement` (avec RitnLib) ou la copie locale (`GvvGuiElement`).
@@ -256,7 +373,8 @@ Classe — un seul bloc continu collé à l'assignation, puis **cast** à la fin
 ---
 ---Description: Panel of MyMod.
 ---
----⚠ Temporary wrapper, created on each event. Do not store the instance in `storage`.
+---⚠ Temporary wrapper, created on each event.
+---Do not store the instance in `storage`.
 ---
 ---──────────────────────────────
 ---
@@ -264,7 +382,8 @@ Classe — un seul bloc continu collé à l'assignation, puis **cast** à la fin
 ---
 ---Description: Panneau de MyMod.
 ---
----⚠ Wrapper temporaire, créé à chaque évènement. Ne pas stocker l'instance dans `storage`.
+---⚠ Wrapper temporaire, créé à chaque évènement.
+---Ne pas stocker l'instance dans `storage`.
 ---@class MyModGuiPanel : RitnLibGui
 ---@field object_name string   "MyModGuiPanel"
 ---@operator call(table): MyModGuiPanel
