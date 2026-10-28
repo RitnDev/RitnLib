@@ -29,6 +29,7 @@ Task-oriented tutorials:
 - [Inventory snapshot & restore](guides/inventory-snapshot.md)
 - [Building a setting](guides/settings-builder.md)
 - [Remote interfaces](guides/remote-interfaces.md)
+- [Ritn mod conventions](guides/mod-conventions.md) — shared structure, for developers and AI
 
 ## Class reference
 

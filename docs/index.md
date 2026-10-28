@@ -29,6 +29,7 @@ Tutoriels orientés tâche :
 - [Snapshot et restauration d'inventaire](guides/inventory-snapshot.md)
 - [Construire un setting](guides/settings-builder.md)
 - [Interfaces remote](guides/remote-interfaces.md)
+- [Conventions d'un mod Ritn](guides/mod-conventions.md) — structure commune, pour développeurs et IA
 
 ## Référence des classes
 

@@ -7,3 +7,4 @@ docs export-ignore
 .claude export-ignore
 mkdocs.yml export-ignore
 requirements-docs.txt export-ignore
+ai export-ignore

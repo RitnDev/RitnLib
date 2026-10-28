@@ -1,0 +1,12 @@
+{
+  "name": "MyMod",
+  "version": "0.1.0",
+  "title": "MyMod",
+  "author": "you",
+  "factorio_version": "2.1",
+  "dependencies": [
+    "base",
+    "? gvv"
+  ],
+  "description": "Mod skeleton following the Ritn mod conventions (standalone, no dependency)."
+}
