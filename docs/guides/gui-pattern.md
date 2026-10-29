@@ -236,6 +236,7 @@ return {}
 | `:caption(text)` | Texte affiché |
 | `:style(name)` | Style GUI Factorio |
 | `:tooltip(text)` | Infobulle |
+| `:tags(table)` | Données dynamiques de l'élément (relues dans les gestionnaires) |
 | `:visible(bool)` | Visibilité initiale |
 | `:enabled(bool)` | Actif/inactif |
 | `:get()` | Retourne le payload brut (à passer à `parent.add(...)`) |

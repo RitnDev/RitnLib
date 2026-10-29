@@ -236,6 +236,7 @@ return {}
 | `:caption(text)` | Displayed text |
 | `:style(name)` | Factorio GUI style |
 | `:tooltip(text)` | Tooltip |
+| `:tags(table)` | Dynamic data of the element (read back in handlers) |
 | `:visible(bool)` | Initial visibility |
 | `:enabled(bool)` | Enabled/disabled |
 | `:get()` | Returns the raw payload (to pass to `parent.add(...)`) |

@@ -286,6 +286,32 @@ end
 
 ---**EN**
 ---
+---Description: Sets the element's `tags` (dynamic data read back in the event handlers, e.g. the item of a row).
+---Only serialisable values (no function, no Lua object).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Définit les `tags` de l'élément (données dynamiques relues dans les gestionnaires, ex. l'objet d'une ligne).
+---Valeurs sérialisables seulement (ni fonction, ni objet Lua).
+---@param tags table
+---@return RitnLibGuiElement self
+function RitnLibGuiElement:tags(tags)
+    log(self.gui_name .. ' > RitnLibGuiElement:tags()')
+    -- FR : Pas une table : ignoré
+    -- EN : Not a table: ignored
+    if type(tags) ~= "table" then
+        return self
+    end
+
+    self.gui_element.tags = tags
+
+    return self
+end
+
+---**EN**
+---
 ---Description: Sets the element's `index` (insertion position in parent).
 ---
 ---──────────────────────────────
