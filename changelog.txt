@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.10
+Date: 30.10.2026
+  Features:
+    - RitnLibGuiElement: added columnCount(count) (table, creation-only), number(value) and toggled(value)
+      (sprite-button).
+    - Map setting "RitnLib: debug log" (ritnlib-debug-log, off by default): the traces of each RitnLibGuiElement
+      method are written to the log only when it is on (other.debugLog). They no longer fill the log.
+---------------------------------------------------------------------------------------------------
 Version: 0.10.9
 Date: 29.10.2026
   Features:

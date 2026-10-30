@@ -148,6 +148,30 @@ local function protect(handler, label)
     end
 end
 
+-- Trace de débogage
+
+---**EN**
+---
+---Description: Writes the message to the log only when the RitnLib "Debug log" map setting
+---(`ritnlib-debug-log`) is on; off by default, so the traces do not fill the log.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Écrit le message dans le log seulement si le réglage de carte « Journal de débogage » de RitnLib
+---(`ritnlib-debug-log`) est activé ; désactivé par défaut, les traces ne remplissent donc pas le log.
+---@param message string
+local function debugLog(message)
+    -- FR : Réglage absent (étape data) ou désactivé : rien
+    -- EN : Setting missing (data stage) or off: nothing
+    local setting = settings and settings.global and settings.global["ritnlib-debug-log"]
+    if setting == nil or not setting.value then
+        return
+    end
+    log(message)
+end
+
 -- if then else -> façon ternaire
 
 ---**EN**
@@ -803,6 +827,7 @@ end
 ---@field ifElse fun(Condition: any, Then: any, Else: any): any
 ---@field tryCatch fun(funcTry: function, funcCatch?: function)
 ---@field protect fun(handler: fun(event: table), label?: string): fun(event: table)
+---@field debugLog fun(message: string)
 ---@field isType fun(value: any, pType: string): boolean
 ---@field str_start fun(str: string, start: string): boolean
 ---@field split fun(inputstr: string, sep?: string): string[]
@@ -828,6 +853,7 @@ ritnlib = {
 	ifElse = ifElse,
 	tryCatch = tryCatch,
 	protect = protect,
+	debugLog = debugLog,
 	isType = isType,
 	str_start = str_start,
 	split = split,

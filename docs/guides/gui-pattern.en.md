@@ -237,6 +237,9 @@ return {}
 | `:style(name)` | Factorio GUI style |
 | `:tooltip(text)` | Tooltip |
 | `:tags(table)` | Dynamic data of the element (read back in handlers) |
+| `:columnCount(n)` | Column count of a `table` (creation-only) |
+| `:number(n)` | Number in the corner of a `sprite-button` |
+| `:toggled(bool)` | Pressed `sprite-button` (selected tab) |
 | `:visible(bool)` | Initial visibility |
 | `:enabled(bool)` | Enabled/disabled |
 | `:get()` | Returns the raw payload (to pass to `parent.add(...)`) |

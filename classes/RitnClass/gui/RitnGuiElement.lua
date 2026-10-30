@@ -1,5 +1,8 @@
 -- RitnLibGuiElement
 ----------------------------------------------------------------
+-- FR : Traces de chaque méthode : seulement avec le réglage « Journal de débogage » de RitnLib
+-- EN : Traces of each method: only with the RitnLib "Debug log" setting
+local other = require(ritnlib.defines.other)
 -- CLASSES DEFINES
 ----------------------------------------------------------------
 
@@ -126,7 +129,7 @@ end) --[[@as RitnLibGuiElement]]
 ---@param parent LuaGuiElement
 ---@return LuaGuiElement?
 function RitnLibGuiElement:add(parent)
-    log(self.gui_name .. ' > RitnLibGuiElement:add('.. parent.name ..')')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:add('.. parent.name ..')')
     if parent == nil then return end
     return parent.add(self.gui_element)
 end
@@ -142,7 +145,7 @@ end
 ---Description: Retourne le payload `add{...}` brut sans instancier.
 ---@return table
 function RitnLibGuiElement:get()
-    log(self.gui_name .. ' > RitnLibGuiElement:getGuiElement()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:getGuiElement()')
     return self.gui_element
 end
 
@@ -158,7 +161,7 @@ end
 ---Description: Définit `direction = "horizontal"`. Effet seulement sur frame/flow/line.
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:horizontal()
-    log(self.gui_name .. ' > RitnLibGuiElement:horizontal()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:horizontal()')
     if self.orientation_valid[self.type] then
         self.gui_element.direction = "horizontal"
     end
@@ -176,7 +179,7 @@ end
 ---Description: Définit `direction = "vertical"`. Effet seulement sur frame/flow/line.
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:vertical()
-    log(self.gui_name .. ' > RitnLibGuiElement:vertical()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:vertical()')
     if self.orientation_valid[self.type] then
         self.gui_element.direction = "vertical"
     end
@@ -196,7 +199,7 @@ end
 ---Description: Définit `auto_center = true`. Frame uniquement.
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:autoCenter()
-    log(self.gui_name .. ' > RitnLibGuiElement:autoCenter()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:autoCenter()')
     if self.type == "frame" then
         self.gui_element.auto_center = true
     end
@@ -216,7 +219,7 @@ end
 ---@param visible boolean
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:visible(visible)
-    log(self.gui_name .. ' > RitnLibGuiElement:visible()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:visible()')
     if type(visible) ~= "boolean" then return self end
 
     self.gui_element.visible = visible
@@ -236,7 +239,7 @@ end
 ---@param enabled boolean
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:enabled(enabled)
-    log(self.gui_name .. ' > RitnLibGuiElement:enabled()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:enabled()')
     if type(enabled) ~= "boolean" then return self end
 
     self.gui_element.enabled = enabled
@@ -256,7 +259,7 @@ end
 ---@param caption string|table
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:caption(caption)
-    log(self.gui_name .. ' > RitnLibGuiElement:caption()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:caption()')
     if self.string_valid[type(caption)] then
         self.gui_element.caption = caption
     end
@@ -276,7 +279,7 @@ end
 ---@param tooltip string|table
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:tooltip(tooltip)
-    log(self.gui_name .. ' > RitnLibGuiElement:tooltip()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:tooltip()')
     if not self.string_valid[type(tooltip)] then return self end
 
     self.gui_element.tooltip = tooltip
@@ -298,7 +301,7 @@ end
 ---@param tags table
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:tags(tags)
-    log(self.gui_name .. ' > RitnLibGuiElement:tags()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:tags()')
     -- FR : Pas une table : ignoré
     -- EN : Not a table: ignored
     if type(tags) ~= "table" then
@@ -306,6 +309,81 @@ function RitnLibGuiElement:tags(tags)
     end
 
     self.gui_element.tags = tags
+
+    return self
+end
+
+
+---**EN**
+---
+---Description: Sets `column_count` of a table (creation-only property: it must be in the spec).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Définit `column_count` d'un tableau (propriété de création seulement : elle doit être dans la spec).
+---@param count integer   Number of columns (at least 1)
+---@return RitnLibGuiElement self
+function RitnLibGuiElement:columnCount(count)
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:columnCount()')
+    -- FR : Pas un tableau, ou nombre invalide : ignoré
+    -- EN : Not a table, or invalid count: ignored
+    if self.type ~= "table" or type(count) ~= "number" or count < 1 then
+        return self
+    end
+
+    self.gui_element.column_count = count
+
+    return self
+end
+
+
+---**EN**
+---
+---Description: Sets the `number` shown in the corner of a sprite-button (e.g. a count or an index).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Définit le `number` affiché dans le coin d'un sprite-button (ex. une quantité ou un numéro).
+---@param value number
+---@return RitnLibGuiElement self
+function RitnLibGuiElement:number(value)
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:number()')
+    -- FR : Pas un sprite-button, ou pas un nombre : ignoré
+    -- EN : Not a sprite-button, or not a number: ignored
+    if self.type ~= "sprite-button" or type(value) ~= "number" then
+        return self
+    end
+
+    self.gui_element.number = value
+
+    return self
+end
+
+
+---**EN**
+---
+---Description: Sets `toggled` of a sprite-button (drawn pressed, e.g. the selected tab of a row of buttons).
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Définit `toggled` d'un sprite-button (dessiné enfoncé, ex. l'onglet choisi d'une rangée de boutons).
+---@param value? boolean   Default true
+---@return RitnLibGuiElement self
+function RitnLibGuiElement:toggled(value)
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:toggled()')
+    -- FR : Pas un sprite-button : ignoré
+    -- EN : Not a sprite-button: ignored
+    if self.type ~= "sprite-button" then
+        return self
+    end
+
+    self.gui_element.toggled = value ~= false
 
     return self
 end
@@ -322,7 +400,7 @@ end
 ---@param index integer
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:index(index)
-    log(self.gui_name .. ' > RitnLibGuiElement:index()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:index()')
     if type(index) ~= "number" then return self end
 
     self.gui_element.index = index
@@ -346,7 +424,7 @@ end
 ---@param text string
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:text(text)
-    log(self.gui_name .. ' > RitnLibGuiElement:text()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:text()')
     if type(tooltip) ~= "string" then return self end
 
     if self.text_valid[self.type] then
@@ -368,7 +446,7 @@ end
 ---@param style string
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:style(style)
-    log(self.gui_name .. ' > RitnLibGuiElement:style()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:style()')
     if type(style) ~= "string" then return self end
 
     self.gui_element.style = style
@@ -389,7 +467,7 @@ end
 ---@param sprite string
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:spritePath(sprite)
-    log(self.gui_name .. ' > RitnLibGuiElement:spritePath()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:spritePath()')
     if type(sprite) ~= "string" then return self end
 
     if self.sprite_valid[self.type] then
@@ -412,7 +490,7 @@ end
 ---@param hsp "auto"|"never"|"always"|"auto-and-reserve-space"|"dont-show-but-allow-scrolling"
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:horizontalScrollPolicy(hsp)
-    log(self.gui_name .. ' > RitnLibGuiElement:horizontalScrollPolicy()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:horizontalScrollPolicy()')
     if type(hsp) ~= "string" then return self end
 
     if self.hsp_valid[hsp] then
@@ -440,7 +518,7 @@ end
 ---@param vsp "auto"|"never"|"always"|"auto-and-reserve-space"|"dont-show-but-allow-scrolling"
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:verticalScrollPolicy(vsp)
-    log(self.gui_name .. ' > RitnLibGuiElement:verticalScrollPolicy()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:verticalScrollPolicy()')
     if type(vsp) ~= "string" then return self end
 
     if self.hsp_valid[vsp] then
@@ -465,7 +543,7 @@ end
 ---@param resize boolean
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:resizeSprite(resize)
-    log(self.gui_name .. ' > RitnLibGuiElement:resizeSprite()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:resizeSprite()')
     if type(resize) ~= "boolean" then return self end
 
     if self.type == "sprite" then
@@ -487,7 +565,7 @@ end
 ---@param check? boolean
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:checked(check)
-    log(self.gui_name .. ' > RitnLibGuiElement:checked()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:checked()')
     local state = true
     if check ~= nil then
         if type(check) ~= "boolean" then return self end
@@ -514,7 +592,7 @@ end
 ---@param value? number
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:progress(value)
-    log(self.gui_name .. ' > RitnLibGuiElement:progress()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:progress()')
     local valueDefault = 0
     if value ~= nil then
         if type(value) ~= "number" then return self end
@@ -542,7 +620,7 @@ end
 ---@param value? string[]
 ---@return RitnLibGuiElement self
 function RitnLibGuiElement:mouseButtonFilter(value)
-    log(self.gui_name .. ' > RitnLibGuiElement:mouseButtonFilter()')
+    other.debugLog(self.gui_name .. ' > RitnLibGuiElement:mouseButtonFilter()')
     local valueDefault = {'left'}
     if value ~= nil then
         if type(value) ~= "table" then return self end
