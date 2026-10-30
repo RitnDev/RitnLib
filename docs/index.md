@@ -30,6 +30,7 @@ Tutoriels orientés tâche :
 - [Construire un setting](guides/settings-builder.md)
 - [Interfaces remote](guides/remote-interfaces.md)
 - [Conventions d'un mod Ritn](guides/mod-conventions.md) — structure commune, pour développeurs et IA
+- [Débuter avec une IA](guides/beginner-ai.md) — créer un mod sans connaître le Lua, avec Claude Code et RitnTest
 
 ## Référence des classes
 

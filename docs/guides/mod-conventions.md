@@ -425,6 +425,9 @@ Le dossier [`ai/` de RitnLib](https://github.com/RitnDev/RitnLib/tree/main/ai) c
 - `skills/ritn-mod-conventions/` : skill Claude Code, à copier dans `.claude/skills/` ;
 - `template/with-ritnlib/` et `template/standalone/` : squelettes de mod prêts à copier (renommer `MyMod`).
 
+Pour tester en jeu avec une IA : la skill `skills/factorio-mod-ritntest/` du dépôt RitnTest. Débutant en Lua :
+voir [Débuter avec une IA](beginner-ai.md).
+
 ---
 
 ## Pour une IA — règles d'action

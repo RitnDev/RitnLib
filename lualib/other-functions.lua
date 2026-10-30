@@ -104,6 +104,50 @@ local function tryCatch(funcTry, funcCatch)
     end
 end
 
+-- Gestionnaire d'évènement protégé
+
+---**EN**
+---
+---Description: Wraps an event handler so that an error does not stop the game: the error is written to the log with
+---its call stack (`[ERROR] <label> : ...`) and shown to the player of the event, if any.
+---
+---──────────────────────────────
+---
+---**FR**
+---
+---Description: Enveloppe un gestionnaire d'évènement pour qu'une erreur n'arrête pas la partie : l'erreur est écrite
+---dans le log avec sa pile d'appels (`[ERROR] <label> : ...`) et montrée au joueur de l'évènement, s'il y en a un.
+---@param handler fun(event: table)
+---@param label? string   Prefix of the log line (e.g. mod and module name)
+---@return fun(event: table)
+local function protect(handler, label)
+    return function(event)
+        -- FR : Exécution protégée ; la pile d'appels est gardée pour le log
+        -- EN : Protected run; the call stack is kept for the log
+        local traceback = nil
+        local success, message = xpcall(handler, function(error_message)
+            traceback = debug.traceback(tostring(error_message), 2)
+            return error_message
+        end, event)
+
+        -- FR : Réussi : rien à faire
+        -- EN : Succeeded: nothing to do
+        if success then
+            return
+        end
+
+        -- FR : Message complet dans le log, message court au joueur
+        -- EN : Full message inside the log, short message to the player
+        log("[ERROR] " .. (label or "") .. " : " .. tostring(traceback or message))
+        if type(event) == "table" and event.player_index then
+            local player = game.get_player(event.player_index)
+            if player ~= nil and player.connected then
+                player.print("[" .. (label or "ERROR") .. "] " .. tostring(message))
+            end
+        end
+    end
+end
+
 -- if then else -> façon ternaire
 
 ---**EN**
@@ -758,6 +802,7 @@ end
 ---@field type fun(value: any): string
 ---@field ifElse fun(Condition: any, Then: any, Else: any): any
 ---@field tryCatch fun(funcTry: function, funcCatch?: function)
+---@field protect fun(handler: fun(event: table), label?: string): fun(event: table)
 ---@field isType fun(value: any, pType: string): boolean
 ---@field str_start fun(str: string, start: string): boolean
 ---@field split fun(inputstr: string, sep?: string): string[]
@@ -782,6 +827,7 @@ ritnlib = {
 	type = data_type,
 	ifElse = ifElse,
 	tryCatch = tryCatch,
+	protect = protect,
 	isType = isType,
 	str_start = str_start,
 	split = split,

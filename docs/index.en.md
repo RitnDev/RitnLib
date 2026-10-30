@@ -30,6 +30,7 @@ Task-oriented tutorials:
 - [Building a setting](guides/settings-builder.md)
 - [Remote interfaces](guides/remote-interfaces.md)
 - [Ritn mod conventions](guides/mod-conventions.md) — shared structure, for developers and AI
+- [Getting started with an AI](guides/beginner-ai.md) — create a mod without knowing Lua, with Claude Code and RitnTest
 
 ## Class reference
 

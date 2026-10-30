@@ -66,6 +66,7 @@ nav:
     - Construire un setting: guides/settings-builder.md
     - Interfaces remote: guides/remote-interfaces.md
     - Conventions d'un mod Ritn: guides/mod-conventions.md
+    - Débuter avec une IA: guides/beginner-ai.md
   - Référence:
     - Vue d'ensemble: reference/overview.md
     - Registre defines: reference/defines.md

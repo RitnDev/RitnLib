@@ -3,6 +3,8 @@ Version: 0.10.9
 Date: 29.10.2026
   Features:
     - RitnLibGuiElement: added tags(table) to set the element tags (dynamic data read back in the handlers).
+    - other-functions: added protect(handler, label) to wrap an event handler: an error is logged with its call
+      stack and shown to the player instead of stopping the game.
 ---------------------------------------------------------------------------------------------------
 Version: 0.10.8
 Date: 28.10.2026

@@ -423,6 +423,9 @@ The [`ai/` folder of RitnLib](https://github.com/RitnDev/RitnLib/tree/main/ai) h
 - `skills/ritn-mod-conventions/`: Claude Code skill, to copy into `.claude/skills/`;
 - `template/with-ritnlib/` and `template/standalone/`: mod skeletons ready to copy (rename `MyMod`).
 
+To test in game with an AI: the `skills/factorio-mod-ritntest/` skill of the RitnTest repository. New to Lua:
+see [Getting started with an AI](beginner-ai.md).
+
 ---
 
 ## For an AI — action rules

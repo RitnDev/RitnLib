@@ -32,6 +32,13 @@ Guide complet / Full guide : https://ritndev.github.io/RitnLib/guides/mod-conven
 4. FR : Le squelette contient une fenêtre d'exemple (Ctrl+Maj+M) : la garder comme modèle ou la remplacer.  
    EN : The skeleton has an example window (Ctrl+Shift+M): keep it as a model or replace it.
 
+## Tester en jeu / In-game tests
+
+FR : Copier aussi la skill `skills/factorio-mod-ritntest/` du dépôt [RitnTest](https://github.com/RitnDev/RitnTest) :
+l'IA teste alors le mod elle-même dans le jeu. Débutant en Lua : https://ritndev.github.io/RitnLib/guides/beginner-ai/  
+EN : Also copy the `skills/factorio-mod-ritntest/` skill of the [RitnTest](https://github.com/RitnDev/RitnTest)
+repository: the AI then tests the mod in game by itself. New to Lua: https://ritndev.github.io/RitnLib/en/guides/beginner-ai/
+
 ## Mod existant / Existing mod
 
 FR : Copier seulement `AGENTS.md`, `CLAUDE.md` et la skill ; l'IA alignera le nouveau code sur les conventions.
