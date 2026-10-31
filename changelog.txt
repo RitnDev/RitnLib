@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.11
+Date: 01.11.2026
+  Features:
+    - GUI styles technology-slot-available-ritngui, technology-slot-unavailable-ritngui,
+      technology-slot-researched-ritngui and technology-slot-conditionally_available-ritngui: buttons with the
+      backgrounds of the game technology slots (the technology_slot style cannot be used on a mod button);
+      toggled = selected. technology-ingredients-ritngui: the dark science packs band of a slot, icons centred.
+    - lualib/technology-slot.lua (ritnlib.defines.technology_slot): technology tiles like the game list for a mod
+      GUI: state (researched / available / unavailable), band icons (science packs or trigger), trigger sprite, and
+      add(parent, gui_name, name, slot) which builds the tile with its content inside the slot borders.
+---------------------------------------------------------------------------------------------------
 Version: 0.10.10
 Date: 30.10.2026
   Features:

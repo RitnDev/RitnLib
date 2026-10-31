@@ -251,3 +251,42 @@ ritnGui.graphical_set = {base = {center = {position = {25, 8}, size = {1, 1}}}}
 
 ritnGui = fGui.copyDefaultGui('list_box-transparent'..suffix, default_gui.list_box)
 ritnGui.scroll_pane_style.parent = 'list_box_scroll_pane-transparent'..suffix
+
+-- FR : Cases de technologie en bouton (le style technology_slot du jeu ne s'applique pas aux boutons des mods) :
+--      fond jaune (disponible), rouge (indisponible), vert (recherchée), orange (sous condition), avec les images
+--      des cases du jeu ; toggled = sélectionnée (fond clair). Le contenu (icône, packs) est ajouté en enfants.
+-- EN : Technology slots as buttons (the game technology_slot style does not apply to mod buttons): yellow
+--      (available), red (unavailable), green (researched), orange (conditional) background, with the images of the
+--      game slots; toggled = selected (light background). The content (icon, packs) is added as children.
+for _, state in pairs({"available", "unavailable", "researched", "conditionally_available"}) do
+  local source = default_gui[state .. "_technology_slot"]
+  default_gui["technology-slot-" .. state .. suffix] = {
+    type = "button_style",
+    parent = "button",
+    padding = 0,
+    width = 72,
+    height = 100,
+    default_graphical_set = table.deepcopy(source.default_graphical_set),
+    hovered_graphical_set = table.deepcopy(source.hovered_graphical_set),
+    clicked_graphical_set = table.deepcopy(source.clicked_graphical_set),
+    disabled_graphical_set = table.deepcopy(source.disabled_graphical_set),
+    selected_graphical_set = table.deepcopy(source.highlighted_graphical_set),
+    selected_hovered_graphical_set = table.deepcopy(source.highlighted_graphical_set),
+    selected_clicked_graphical_set = table.deepcopy(source.highlighted_graphical_set),
+  }
+end
+
+-- FR : technology-ingredients-ritngui (frame) : bande sombre des packs de science en bas d'une case de technologie.
+--      Le jeu place les enfants d'un cadre à 4 px du bord : marge -2 pour centrer les icônes de 16 px dans 20 px.
+-- EN : technology-ingredients-ritngui (frame): dark band of the science packs at the bottom of a technology slot.
+--      The game places the children of a frame 4 px from the edge: padding -2 to centre the 16 px icons in 20 px.
+default_gui["technology-ingredients" .. suffix] = {
+  type = "frame_style",
+  padding = 0,
+  top_padding = -2,
+  left_padding = -2,
+  height = 20,
+  horizontally_stretchable = "on",
+  horizontal_flow_style = {type = "horizontal_flow_style", parent = "hflow" .. suffix, horizontal_spacing = -4},
+  graphical_set = {base = table.deepcopy(default_gui.technology_slot.default_ingredients_background)},
+}
