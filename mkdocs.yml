@@ -110,6 +110,7 @@ nav:
       - gui-functions: reference/lualib/gui-functions.md
       - LuaStyle-functions: reference/lualib/LuaStyle-functions.md
       - technology-slot: reference/lualib/technology-slot.md
+      - entity-info: reference/lualib/entity-info.md
     - Couche core:
       - class-factory: reference/core/class-factory.md
       - constants: reference/core/constants.md

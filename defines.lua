@@ -86,6 +86,7 @@
 ---@field string string                               Path to lualib/string-functions.lua.
 ---@field json string                                 Path to lualib/json-functions.lua (rxi/json).
 ---@field technology_slot string                      Path to lualib/technology-slot.lua (technology tiles like the game list, control stage).
+---@field entity_info string                          Path to lualib/entity-info.lua (what an entity can do: inventories by role, state, progress, fluids, recipes; control stage).
 ---@field vanilla RitnLibDefinesVanilla               Forks of Factorio vanilla helpers.
 ---@field fonts string                                Path to prototypes/fonts.lua — require from your data.lua to register ritn-default-* fonts.
 ---@field gui_styles string                           Path to prototypes/gui-style.lua — require from your data.lua to register *-ritngui styles.
@@ -117,6 +118,7 @@ ritnlib = {
         string = "__RitnLib__/lualib/string-functions",
         json = "__RitnLib__/lualib/json-functions",
         technology_slot = "__RitnLib__/lualib/technology-slot",
+        entity_info = "__RitnLib__/lualib/entity-info",
         vanilla = {
             util = "__RitnLib__/lualib/vanilla/util",
             crash_site = "__RitnLib__/lualib/vanilla/crash-site",

@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.10.12
+Date: 02.11.2026
+  Features:
+    - lualib/entity-info.lua (ritnlib.defines.entity_info): reads what an entity can do, without a list of types:
+      inventories sorted by role (fuel, input, output, modules...), game state (text and colour), progress, health,
+      fluids, recipes accepted by the machine and already unlocked.
+---------------------------------------------------------------------------------------------------
 Version: 0.10.11
 Date: 01.11.2026
   Features:
